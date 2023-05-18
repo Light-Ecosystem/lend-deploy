@@ -43,8 +43,10 @@ export const getAlchemyKey = (net: eNetwork) => {
       return process.env.POLYGON_MUMBAI_ALCHEMY_KEY || ALCHEMY_KEY;
     case ePolygonNetwork.polygon:
       return process.env.POLYGON_ALCHEMY_KEY || ALCHEMY_KEY;
-    case eEthereumNetwork.görli:
-      return process.env.GÖRLI_ALCHEMY_KEY || ALCHEMY_KEY;
+    case eEthereumNetwork.goerli:
+      return process.env.GORLI_ALCHEMY_KEY || ALCHEMY_KEY;
+    case eEthereumNetwork.sepolia:
+      return process.env.SEPOLIA_ALCHEMY_KEY || ALCHEMY_KEY;
     default:
       return ALCHEMY_KEY;
   }
@@ -82,8 +84,11 @@ export const NETWORKS_RPC_URL: iParamsPerNetwork<string> = {
   [eOptimismNetwork.testnet]: `https://opt-goerli.g.alchemy.com/v2/demo`,
   [eOptimismNetwork.main]: `https://mainnet.optimism.io`,
   tenderly: `https://rpc.tenderly.co/fork/${TENDERLY_FORK_ID}`,
-  [eEthereumNetwork.görli]: `https://eth-goerli.alchemyapi.io/v2/${getAlchemyKey(
-    eEthereumNetwork.görli
+  [eEthereumNetwork.goerli]: `https://eth-goerli.alchemyapi.io/v2/${getAlchemyKey(
+    eEthereumNetwork.goerli
+  )}`,
+  [eEthereumNetwork.sepolia]: `https://eth-sepolia.g.alchemy.com/v2/${getAlchemyKey(
+    eEthereumNetwork.sepolia
   )}`,
   [eArbitrumNetwork.görliNitro]: `https://goerli-rollup.arbitrum.io/rpc`,
 };
@@ -147,6 +152,8 @@ export const getCommonNetworkConfig = (
 });
 
 const MNEMONICS: iParamsPerNetwork<string> = {
+  [eEthereumNetwork.sepolia]: process.env.TEST_MNEMONIC,
+  [eEthereumNetwork.goerli]: process.env.TEST_MNEMONIC,
   [eAvalancheNetwork.fuji]: process.env.FUJI_MNEMONIC,
   [eFantomNetwork.testnet]: process.env.FANTOM_MNEMONIC,
   [eHarmonyNetwork.testnet]: process.env.HARMONY_MNEMONIC,
@@ -169,11 +176,11 @@ export const hardhatNetworkSettings = {
   accounts:
     FORK && !!MNEMONIC
       ? {
-          mnemonic: MNEMONIC,
-          path: MNEMONIC_PATH,
-          initialIndex: 0,
-          count: 10,
-        }
+        mnemonic: MNEMONIC,
+        path: MNEMONIC_PATH,
+        initialIndex: 0,
+        count: 10,
+      }
       : undefined,
 };
 

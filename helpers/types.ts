@@ -40,7 +40,8 @@ export enum eEthereumNetwork {
   hardhat = "hardhat",
   tenderly = "tenderly",
   rinkeby = "rinkeby",
-  görli = "görli",
+  goerli = "goerli",
+  sepolia = "sepolia",
 }
 
 export enum ePolygonNetwork {
@@ -423,8 +424,8 @@ export type iParamsPerNetworkWithDefault<T> = {
 
 export interface iParamsPerNetworkAll<T>
   extends iEthereumParamsPerNetwork<T>,
-    iPolygonParamsPerNetwork<T>,
-    iXDaiParamsPerNetwork<T> {}
+  iPolygonParamsPerNetwork<T>,
+  iXDaiParamsPerNetwork<T> { }
 
 export interface iEthereumParamsPerNetwork<T> {
   [eEthereumNetwork.kovan]: T;
@@ -520,9 +521,18 @@ export interface IBaseConfiguration {
     total: number;
     protocol: number;
   };
+  HOPEAddress: iParamsPerNetwork<tEthereumAddress>;
+  StakingHOPEAddress: iParamsPerNetwork<tEthereumAddress>;
+  GaugeControllerAddress: iParamsPerNetwork<tEthereumAddress>;
+  MinterAddress: iParamsPerNetwork<tEthereumAddress>;
+  LTAddress: iParamsPerNetwork<tEthereumAddress>;
+  VotingEscrowAddress: iParamsPerNetwork<tEthereumAddress>;
+  BurnerManagerAddress: iParamsPerNetwork<tEthereumAddress>;
+  UnderlyingBurnerAddress: iParamsPerNetwork<tEthereumAddress>;
+  Permit2Address: iParamsPerNetwork<tEthereumAddress>;
 }
 
-export interface ICommonConfiguration extends IBaseConfiguration {}
+export interface ICommonConfiguration extends IBaseConfiguration { }
 
 export interface IHopeLendConfiguration extends ICommonConfiguration {
   //ReservesConfig: iHopeLendPoolAssets<IReserveParams>;

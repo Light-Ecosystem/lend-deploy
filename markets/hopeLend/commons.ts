@@ -158,4 +158,49 @@ export const CommonsConfig: ICommonConfiguration = {
     total: 0.0005e4,
     protocol: 0.0004e4,
   },
+  HOPEAddress: {
+    [eEthereumNetwork.sepolia]: "0xeba0e37F77e2ddC6512d6982B5222297Eb3a37D4",
+    [eEthereumNetwork.goerli]: "",
+    [eEthereumNetwork.main]: "",
+  },
+  StakingHOPEAddress: {
+    [eEthereumNetwork.sepolia]: "0xeba0e37F77e2ddC6512d6982B5222297Eb3a37D4",
+    [eEthereumNetwork.goerli]: "",
+    [eEthereumNetwork.main]: "",
+  },
+  GaugeControllerAddress: {
+    [eEthereumNetwork.sepolia]: "0xeba0e37F77e2ddC6512d6982B5222297Eb3a37D4",
+    [eEthereumNetwork.goerli]: "",
+    [eEthereumNetwork.main]: "",
+  },
+  MinterAddress: {
+    [eEthereumNetwork.sepolia]: "0x4BDB0F69f233C02bd82d5e5fBdF7e6F206E9FdE5",
+    [eEthereumNetwork.goerli]: "",
+    [eEthereumNetwork.main]: "",
+  },
+  LTAddress: {
+    [eEthereumNetwork.sepolia]: "0x6EC9cA983B57e9eE89fC06Fa4AC0dC0213fe155E",
+    [eEthereumNetwork.goerli]: "",
+    [eEthereumNetwork.main]: "",
+  },
+  VotingEscrowAddress: {
+    [eEthereumNetwork.sepolia]: "0xcb4DD14E9b4899f582E7aD7826431e0411B2C59e",
+    [eEthereumNetwork.goerli]: "",
+    [eEthereumNetwork.main]: "",
+  },
+  BurnerManagerAddress: {
+    [eEthereumNetwork.sepolia]: "0x9bA97e0913Dd0fbd4E5fedA936db9D1f1C632273",
+    [eEthereumNetwork.goerli]: "",
+    [eEthereumNetwork.main]: "",
+  },
+  UnderlyingBurnerAddress: {
+    [eEthereumNetwork.sepolia]: "0xaAfAa8d21eCDE9cD8C150cAA93413AaDc604D88a",
+    [eEthereumNetwork.goerli]: "",
+    [eEthereumNetwork.main]: "",
+  },
+  Permit2Address: {
+    [eEthereumNetwork.sepolia]: "0x5aB6249458227De13a2384bBeA5E231Cab2f5723",
+    [eEthereumNetwork.goerli]: "",
+    [eEthereumNetwork.main]: "",
+  }
 };

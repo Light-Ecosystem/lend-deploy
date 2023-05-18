@@ -34,3 +34,11 @@ export const ATOKEN_PREFIX = `-HToken-${MARKET_NAME}`;
 export const VARIABLE_DEBT_PREFIX = `-VariableDebtToken-${MARKET_NAME}`;
 export const STABLE_DEBT_PREFIX = `-StableDebtToken-${MARKET_NAME}`;
 export const L2_ENCODER = "L2Encoder";
+
+export const LT_ID = "LT";
+export const VOTING_ESCROW_ID = "VotingEscrow";
+export const GAUGE_CONTROLLER_ID = "GaugeController";
+export const MINTER_ID = "Minter";
+export const PERMIT2_ID = "Permit2";
+export const BURNER_MANAGER_ID = "BurnerManager";
+export const UNDERLYING_BURNER_ID = "UnderlyingBurner";

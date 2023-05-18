@@ -108,7 +108,8 @@ export default {
       420
     ),
     [eOptimismNetwork.main]: getCommonNetworkConfig(eOptimismNetwork.main, 10),
-    [eEthereumNetwork.görli]: getCommonNetworkConfig(eEthereumNetwork.görli, 5),
+    [eEthereumNetwork.goerli]: getCommonNetworkConfig(eEthereumNetwork.goerli, 5),
+    [eEthereumNetwork.sepolia]: getCommonNetworkConfig(eEthereumNetwork.sepolia, 11155111),
     [eArbitrumNetwork.görliNitro]: getCommonNetworkConfig(
       eArbitrumNetwork.görliNitro,
       421613
@@ -181,7 +182,9 @@ export default {
   deterministicDeployment: DETERMINISTIC_DEPLOYMENT
     ? DETERMINISTIC_FACTORIES
     : undefined,
-  etherscan: {
-    apiKey: ETHERSCAN_KEY,
-  },
+  verify: {
+    etherscan: {
+      apiKey: ETHERSCAN_KEY
+    }
+  }
 };
