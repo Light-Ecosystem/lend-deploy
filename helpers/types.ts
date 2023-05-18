@@ -375,7 +375,9 @@ export enum TokenContractId {
   AVAX = "AVAX",
 }
 
-export interface IReserveParams extends IReserveBorrowParams, IReserveCollateralParams {
+export interface IReserveParams
+  extends IReserveBorrowParams,
+    IReserveCollateralParams {
   hTokenImpl: eContractid;
   reserveFactor: string;
   supplyCap: string;
@@ -424,8 +426,8 @@ export type iParamsPerNetworkWithDefault<T> = {
 
 export interface iParamsPerNetworkAll<T>
   extends iEthereumParamsPerNetwork<T>,
-  iPolygonParamsPerNetwork<T>,
-  iXDaiParamsPerNetwork<T> { }
+    iPolygonParamsPerNetwork<T>,
+    iXDaiParamsPerNetwork<T> {}
 
 export interface iEthereumParamsPerNetwork<T> {
   [eEthereumNetwork.kovan]: T;
@@ -532,7 +534,7 @@ export interface IBaseConfiguration {
   Permit2Address: iParamsPerNetwork<tEthereumAddress>;
 }
 
-export interface ICommonConfiguration extends IBaseConfiguration { }
+export interface ICommonConfiguration extends IBaseConfiguration {}
 
 export interface IHopeLendConfiguration extends ICommonConfiguration {
   //ReservesConfig: iHopeLendPoolAssets<IReserveParams>;
