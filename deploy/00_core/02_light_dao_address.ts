@@ -1,6 +1,8 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 import LTArtifact from "../../extendedArtifacts/LT.json";
+import HOPEArtifact from "../../extendedArtifacts/HOPE.json";
+import StakingHOPEArtifact from "../../extendedArtifacts/StakingHOPE.json";
 import VotingEscrowArtifact from "../../extendedArtifacts/VotingEscrow.json";
 import Permit2Artifact from "../../extendedArtifacts/Permit2.json";
 import GaugeControllerArtifact from "../../extendedArtifacts/GaugeController.json";
@@ -12,9 +14,11 @@ import { time } from "@nomicfoundation/hardhat-network-helpers";
 import {
   BURNER_MANAGER_ID,
   GAUGE_CONTROLLER_ID,
+  HOPE_ID,
   LT_ID,
   MINTER_ID,
   PERMIT2_ID,
+  STAKING_HOPE_ID,
   UNDERLYING_BURNER_ID,
   VOTING_ESCROW_ID,
   ZERO_ADDRESS,
@@ -34,6 +38,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const {
     LTAddress,
+    HOPEAddress,
+    StakingHOPEAddress,
     VotingEscrowAddress,
     GaugeControllerAddress,
     MinterAddress,
@@ -48,6 +54,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     save(LT_ID, {
       address: ltAddress,
       abi: LTArtifact.abi,
+    });
+    save(HOPE_ID, {
+      address: getParamPerNetwork(HOPEAddress, network) as string,
+      abi: HOPEArtifact.abi,
+    });
+    save(STAKING_HOPE_ID, {
+      address: getParamPerNetwork(StakingHOPEAddress, network) as string,
+      abi: StakingHOPEArtifact.abi,
     });
     save(VOTING_ESCROW_ID, {
       address: getParamPerNetwork(VotingEscrowAddress, network) as string,

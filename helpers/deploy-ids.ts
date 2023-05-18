@@ -35,6 +35,8 @@ export const VARIABLE_DEBT_PREFIX = `-VariableDebtToken-${MARKET_NAME}`;
 export const STABLE_DEBT_PREFIX = `-StableDebtToken-${MARKET_NAME}`;
 export const L2_ENCODER = "L2Encoder";
 
+export const HOPE_ID = "HOPE";
+export const STAKING_HOPE_ID = "Staking HOPE";
 export const LT_ID = "LT";
 export const VOTING_ESCROW_ID = "VotingEscrow";
 export const GAUGE_CONTROLLER_ID = "GaugeController";
