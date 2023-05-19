@@ -15,7 +15,7 @@ import {
 } from "../../helpers/constants";
 import { getContract, waitForTx } from "../../helpers/utilities/tx";
 import {
-  HopeLendOracle,
+  HopeOracle,
   PoolAddressesProvider,
   PriceOracle__factory,
 } from "../../typechain";
@@ -65,21 +65,21 @@ const func: DeployFunction = async function ({
   }
 
   // 2. Set fallback oracle
-  const hopeLendOracle = (await getContract(
-    "HopeLendOracle",
+  const hopeOracle = (await getContract(
+    "HopeOracle",
     await addressesProviderInstance.getPriceOracle()
-  )) as HopeLendOracle;
+  )) as HopeOracle;
 
   const configFallbackOracle = (await deployments.get(FALLBACK_ORACLE_ID))
     .address;
-  const stateFallbackOracle = await hopeLendOracle.getFallbackOracle();
+  const stateFallbackOracle = await hopeOracle.getFallbackOracle();
 
   if (getAddress(configFallbackOracle) === getAddress(stateFallbackOracle)) {
     console.log("[hope-oracle] Fallback oracle already set. Skipping tx.");
   } else {
-    await waitForTx(await hopeLendOracle.setFallbackOracle(configFallbackOracle));
+    await waitForTx(await hopeOracle.setFallbackOracle(configFallbackOracle));
     console.log(
-      `[Deployment] Added Fallback oracle ${configPriceOracle} to HopeLendOracle`
+      `[Deployment] Added Fallback oracle ${configPriceOracle} to HopeOracle`
     );
   }
 

@@ -1,6 +1,6 @@
 import { PullRewardsTransferStrategy } from "./../typechain";
 import {
-  HopeLendOracle,
+  HopeOracle,
   ACLManager,
   HToken,
   BorrowLogic,
@@ -139,7 +139,7 @@ export const getPool = async (address?: tEthereumAddress): Promise<Pool> =>
 
 export const getPriceOracle = async (
   address?: tEthereumAddress
-): Promise<HopeLendOracle> => getContract("PriceOracle", address);
+): Promise<HopeOracle> => getContract("PriceOracle", address);
 
 export const getIRStrategy = async (
   address: tEthereumAddress
@@ -166,11 +166,11 @@ export const getHopeLendProtocolDataProvider = async (
     address || (await hre.deployments.get(POOL_DATA_PROVIDER)).address
   );
 
-export const getHopeLendOracle = async (
+export const getHopeOracle = async (
   address?: tEthereumAddress
-): Promise<HopeLendOracle> =>
+): Promise<HopeOracle> =>
   getContract(
-    "HopeLendOracle",
+    "HopeOracle",
     address || (await hre.deployments.get(ORACLE_ID)).address
   );
 

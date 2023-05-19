@@ -8,7 +8,7 @@ import { MintableERC20 } from "../typechain";
 import { deployContract } from "./utilities/tx";
 import { POOL_ADDRESSES_PROVIDER_ID } from "./deploy-ids";
 import {
-  HopeLendOracle,
+  HopeOracle,
   HopeLendProtocolDataProvider,
   ACLManager,
   HToken,
@@ -127,7 +127,7 @@ export const deployPriceOracle = async () =>
 export const deployMockAggregator = async (price: tStringTokenSmallUnits) =>
   await deployContract<MockAggregator>("MockAggregator", [price]);
 
-export const deployHopeLendOracle = async (
+export const deployHopeOracle = async (
   args: [
     tEthereumAddress,
     tEthereumAddress[],
@@ -136,7 +136,7 @@ export const deployHopeLendOracle = async (
     tEthereumAddress,
     string
   ]
-) => deployContract<HopeLendOracle>("HopeLendOracle", args);
+) => deployContract<HopeOracle>("HopeOracle", args);
 
 export const deployMockFlashLoanReceiver = async (
   addressesProvider: tEthereumAddress

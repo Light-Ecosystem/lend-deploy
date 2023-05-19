@@ -125,7 +125,7 @@ export default {
     paths: [
       "lend-core/contracts/protocol/configuration/PoolAddressesProviderRegistry.sol",
       "lend-core/contracts/protocol/configuration/PoolAddressesProvider.sol",
-      "lend-core/contracts/misc/HopeLendOracle.sol",
+      "lend-core/contracts/misc/HopeOracle.sol",
       "lend-core/contracts/protocol/tokenization/HToken.sol",
       "lend-core/contracts/protocol/tokenization/DelegationAwareHToken.sol",
       "lend-core/contracts/protocol/tokenization/StableDebtToken.sol",

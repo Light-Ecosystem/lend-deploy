@@ -15,7 +15,7 @@ import chai from "chai";
 import { PoolAddressesProvider } from "../../typechain";
 import { PoolAddressesProviderRegistry } from "../../typechain";
 import {
-  HopeLendOracle,
+  HopeOracle,
   ERC20Faucet,
   IERC20,
   StableDebtToken,
@@ -55,7 +55,7 @@ export interface TestEnv {
   users: SignerWithAddress[];
   pool: Pool;
   configurator: PoolConfigurator;
-  oracle: HopeLendOracle;
+  oracle: HopeOracle;
   helpersContract: HopeLendProtocolDataProvider;
   weth: WETH9;
   hWETH: HToken;
@@ -86,7 +86,7 @@ const testEnv: TestEnv = {
   pool: {} as Pool,
   configurator: {} as PoolConfigurator,
   helpersContract: {} as HopeLendProtocolDataProvider,
-  oracle: {} as HopeLendOracle,
+  oracle: {} as HopeOracle,
   weth: {} as WETH9,
   hWETH: {} as HToken,
   dai: {} as IERC20,
@@ -162,9 +162,9 @@ export async function initializeMakeSuite() {
     addressesProviderRegistryArtifact.address
   )) as PoolAddressesProviderRegistry;
   testEnv.oracle = (await ethers.getContractAt(
-    "HopeLendOracle",
+    "HopeOracle",
     priceOracleArtifact.address
-  )) as HopeLendOracle;
+  )) as HopeOracle;
 
   testEnv.helpersContract = (await ethers.getContractAt(
     dataProviderArtifact.abi,

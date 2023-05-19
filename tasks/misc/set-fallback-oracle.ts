@@ -1,4 +1,4 @@
-import { getHopeLendOracle } from "./../../helpers/contract-getters";
+import { getHopeOracle } from "./../../helpers/contract-getters";
 import { getAddressFromJson, waitForTx } from "../../helpers/utilities/tx";
 import { task } from "hardhat/config";
 import { FORK } from "../../helpers/hardhat-config-helpers";
@@ -18,15 +18,15 @@ task(`set-fallback-oracle`)
       ? getAddress(address)
       : ZERO_ADDRESS;
 
-    const hopeLendOracle = await (
-      await getHopeLendOracle(await getAddressFromJson(network, ORACLE_ID))
+    const hopeOracle = await (
+      await getHopeOracle(await getAddressFromJson(network, ORACLE_ID))
     ).connect(signer);
 
     await waitForTx(
-      await hopeLendOracle.setFallbackOracle(newFallbackOracleAddress)
+      await hopeOracle.setFallbackOracle(newFallbackOracleAddress)
     );
 
-    const updatedFallbackOracle = await hopeLendOracle.getFallbackOracle();
+    const updatedFallbackOracle = await hopeOracle.getFallbackOracle();
 
     console.table({
       "Fallback oracle": updatedFallbackOracle,

@@ -50,7 +50,7 @@ const func: DeployFunction = async function ({
     chainlinkAggregators
   );
 
-  // Deploy HopeLendOracle
+  // Deploy HopeOracle
   await deploy(ORACLE_ID, {
     from: deployer,
     args: [
@@ -62,7 +62,7 @@ const func: DeployFunction = async function ({
       parseUnits("1", OracleQuoteUnit),
     ],
     ...COMMON_DEPLOY_PARAMS,
-    contract: "HopeLendOracle",
+    contract: "HopeOracle",
   });
 
   // Deploy FallbackOracle
