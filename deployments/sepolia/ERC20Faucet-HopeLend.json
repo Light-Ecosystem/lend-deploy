@@ -1,0 +1,76 @@
+{
+  "address": "0xA249fFA2e10B925C8c84Df0e073C76F24B7D88b0",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_token",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "mint",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x52c168fb2cfa790aa5493ab559ea122d2345c288772b77988c0fdbc92227a3e8",
+  "receipt": {
+    "to": null,
+    "from": "0x3141f8D6BE4e4d9137577798C1e127Db81D196d7",
+    "contractAddress": "0xA249fFA2e10B925C8c84Df0e073C76F24B7D88b0",
+    "transactionIndex": 22,
+    "gasUsed": "141761",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x744bf8a34c7e57921e76f632bb92762505ea736d5c8025e561308913d15a825a",
+    "transactionHash": "0x52c168fb2cfa790aa5493ab559ea122d2345c288772b77988c0fdbc92227a3e8",
+    "logs": [],
+    "blockNumber": 3515440,
+    "cumulativeGasUsed": "2303991",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "639e216459d5c68e72bf73f33e875321",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"mint\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"mint(address,uint256)\":{\"details\":\"Proxy function to mint Testnet tokens to msg.sender\",\"params\":{\"_amount\":\"The amount to mint\",\"_token\":\"The address of the token\"},\"returns\":{\"_0\":\"The amount minted*\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/testnet-helpers/ERC20Faucet.sol\":\"ERC20Faucet\"},\"evmVersion\":\"berlin\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":100000},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v4.6.0) (token/ERC20/IERC20.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Interface of the ERC20 standard as defined in the EIP.\\n */\\ninterface IERC20 {\\n    /**\\n     * @dev Emitted when `value` tokens are moved from one account (`from`) to\\n     * another (`to`).\\n     *\\n     * Note that `value` may be zero.\\n     */\\n    event Transfer(address indexed from, address indexed to, uint256 value);\\n\\n    /**\\n     * @dev Emitted when the allowance of a `spender` for an `owner` is set by\\n     * a call to {approve}. `value` is the new allowance.\\n     */\\n    event Approval(address indexed owner, address indexed spender, uint256 value);\\n\\n    /**\\n     * @dev Returns the amount of tokens in existence.\\n     */\\n    function totalSupply() external view returns (uint256);\\n\\n    /**\\n     * @dev Returns the amount of tokens owned by `account`.\\n     */\\n    function balanceOf(address account) external view returns (uint256);\\n\\n    /**\\n     * @dev Moves `amount` tokens from the caller's account to `to`.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transfer(address to, uint256 amount) external returns (bool);\\n\\n    /**\\n     * @dev Returns the remaining number of tokens that `spender` will be\\n     * allowed to spend on behalf of `owner` through {transferFrom}. This is\\n     * zero by default.\\n     *\\n     * This value changes when {approve} or {transferFrom} are called.\\n     */\\n    function allowance(address owner, address spender) external view returns (uint256);\\n\\n    /**\\n     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * IMPORTANT: Beware that changing an allowance with this method brings the risk\\n     * that someone may use both the old and the new allowance by unfortunate\\n     * transaction ordering. One possible solution to mitigate this race\\n     * condition is to first reduce the spender's allowance to 0 and set the\\n     * desired value afterwards:\\n     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729\\n     *\\n     * Emits an {Approval} event.\\n     */\\n    function approve(address spender, uint256 amount) external returns (bool);\\n\\n    /**\\n     * @dev Moves `amount` tokens from `from` to `to` using the\\n     * allowance mechanism. `amount` is then deducted from the caller's\\n     * allowance.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transferFrom(\\n        address from,\\n        address to,\\n        uint256 amount\\n    ) external returns (bool);\\n}\\n\",\"keccak256\":\"0x9750c6b834f7b43000631af5cc30001c5f547b3ceb3635488f140f60e897ea6b\",\"license\":\"MIT\"},\"contracts/testnet-helpers/ERC20Faucet.sol\":{\"content\":\"pragma solidity >=0.8.7;\\n\\nimport {IERC20Faucet} from \\\"./IERC20Faucet.sol\\\";\\nimport {ITestnetERC20} from \\\"./ITestnetERC20.sol\\\";\\n\\ncontract ERC20Faucet is IERC20Faucet {\\n    /// @inheritdoc IERC20Faucet\\n    function mint(address _token, uint256 _amount)\\n        external\\n        override\\n        returns (uint256)\\n    {\\n        ITestnetERC20(_token).mint(msg.sender, _amount);\\n        return _amount;\\n    }\\n}\\n\",\"keccak256\":\"0xafdd3c9dcab038eef52efe8f1fd3411c18bfdfed1f8d1274c872e4f72d553f56\"},\"contracts/testnet-helpers/IERC20Faucet.sol\":{\"content\":\"pragma solidity >=0.8.7;\\n\\ninterface IERC20Faucet {\\n    /**\\n     * @dev Proxy function to mint Testnet tokens to msg.sender\\n     * @param _token The address of the token\\n     * @param _amount The amount to mint\\n     * @return The amount minted\\n     **/\\n    function mint(address _token, uint256 _amount) external returns (uint256);\\n}\\n\",\"keccak256\":\"0x8bb03ba200ee5d3722ae6f353515357ab72ff9b032c25bf9f0c849c0a5249e10\"},\"contracts/testnet-helpers/ITestnetERC20.sol\":{\"content\":\"pragma solidity >=0.8.7;\\n\\nimport \\\"@openzeppelin/contracts/token/ERC20/IERC20.sol\\\";\\n\\ninterface ITestnetERC20 is IERC20 {\\n    function mint(address account, uint256 amount) external returns (bool);\\n}\\n\",\"keccak256\":\"0x1513ad4d0c334bfff34e644fe8a28691e65be02a68aa55d15c4a4344afd90a89\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5061019b806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c806340c10f1914610030575b600080fd5b61004361003e3660046100f7565b610055565b60405190815260200160405180910390f35b6040517f40c10f190000000000000000000000000000000000000000000000000000000081523360048201526024810182905260009073ffffffffffffffffffffffffffffffffffffffff8416906340c10f19906044016020604051808303816000875af11580156100cb573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906100ef919061013c565b509092915050565b6000806040838503121561010a57600080fd5b823573ffffffffffffffffffffffffffffffffffffffff8116811461012e57600080fd5b946020939093013593505050565b60006020828403121561014e57600080fd5b8151801515811461015e57600080fd5b939250505056fea26469706673582212200b43b76d058f13c47ff0843369658a66e8ae0e46fefbd737e8160855465ea8fe64736f6c63430008110033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061002b5760003560e01c806340c10f1914610030575b600080fd5b61004361003e3660046100f7565b610055565b60405190815260200160405180910390f35b6040517f40c10f190000000000000000000000000000000000000000000000000000000081523360048201526024810182905260009073ffffffffffffffffffffffffffffffffffffffff8416906340c10f19906044016020604051808303816000875af11580156100cb573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906100ef919061013c565b509092915050565b6000806040838503121561010a57600080fd5b823573ffffffffffffffffffffffffffffffffffffffff8116811461012e57600080fd5b946020939093013593505050565b60006020828403121561014e57600080fd5b8151801515811461015e57600080fd5b939250505056fea26469706673582212200b43b76d058f13c47ff0843369658a66e8ae0e46fefbd737e8160855465ea8fe64736f6c63430008110033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "mint(address,uint256)": {
+        "details": "Proxy function to mint Testnet tokens to msg.sender",
+        "params": {
+          "_amount": "The amount to mint",
+          "_token": "The address of the token"
+        },
+        "returns": {
+          "_0": "The amount minted*"
+        }
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}

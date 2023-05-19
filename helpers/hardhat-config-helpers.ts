@@ -52,6 +52,17 @@ export const getAlchemyKey = (net: eNetwork) => {
   }
 };
 
+export const getInfuraKey = (net: eNetwork) => {
+  switch (net) {
+    case eEthereumNetwork.goerli:
+      return process.env.GORLI_INFURA_KEY || INFURA_KEY;
+    case eEthereumNetwork.sepolia:
+      return process.env.SEPOLIA_INFURA_KEY || INFURA_KEY;
+    default:
+      return INFURA_KEY;
+  }
+};
+
 export const NETWORKS_RPC_URL: iParamsPerNetwork<string> = {
   [eEthereumNetwork.kovan]: `https://eth-kovan.alchemyapi.io/v2/${getAlchemyKey(
     eEthereumNetwork.kovan
@@ -84,10 +95,10 @@ export const NETWORKS_RPC_URL: iParamsPerNetwork<string> = {
   [eOptimismNetwork.testnet]: `https://opt-goerli.g.alchemy.com/v2/demo`,
   [eOptimismNetwork.main]: `https://mainnet.optimism.io`,
   tenderly: `https://rpc.tenderly.co/fork/${TENDERLY_FORK_ID}`,
-  [eEthereumNetwork.goerli]: `https://eth-goerli.alchemyapi.io/v2/${getAlchemyKey(
+  [eEthereumNetwork.goerli]: `https://goerli.infura.io/v3/${getInfuraKey(
     eEthereumNetwork.goerli
   )}`,
-  [eEthereumNetwork.sepolia]: `https://eth-sepolia.g.alchemy.com/v2/${getAlchemyKey(
+  [eEthereumNetwork.sepolia]: `https://sepolia.infura.io/v3/${getInfuraKey(
     eEthereumNetwork.sepolia
   )}`,
   [eArbitrumNetwork.görliNitro]: `https://goerli-rollup.arbitrum.io/rpc`,
@@ -140,14 +151,18 @@ export const getCommonNetworkConfig = (
   blockGasLimit: DEFAULT_BLOCK_GAS_LIMIT,
   chainId,
   gasPrice: GAS_PRICE_PER_NET[networkName] || undefined,
-  ...((!!MNEMONICS[networkName] || !!MNEMONIC) && {
-    accounts: {
-      mnemonic: MNEMONICS[networkName] || MNEMONIC,
-      path: MNEMONIC_PATH,
-      initialIndex: 0,
-      count: 10,
-    },
-  }),
+  accounts: [
+    `${process.env.ACCOUNT1_SECRETKEY}`,
+    `${process.env.ACCOUNT2_SECRETKEY}`,
+  ],
+  // ...((!!MNEMONICS[networkName] || !!MNEMONIC) && {
+  //   accounts: {
+  //     mnemonic: MNEMONICS[networkName] || MNEMONIC,
+  //     path: MNEMONIC_PATH,
+  //     initialIndex: 0,
+  //     count: 10,
+  //   },
+  // }),
   live: LIVE_NETWORKS[networkName] || false,
 });
 
@@ -176,11 +191,11 @@ export const hardhatNetworkSettings = {
   accounts:
     FORK && !!MNEMONIC
       ? {
-        mnemonic: MNEMONIC,
-        path: MNEMONIC_PATH,
-        initialIndex: 0,
-        count: 10,
-      }
+          mnemonic: MNEMONIC,
+          path: MNEMONIC_PATH,
+          initialIndex: 0,
+          count: 10,
+        }
       : undefined,
 };
 

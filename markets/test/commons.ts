@@ -174,12 +174,12 @@ export const CommonsConfig: ICommonConfiguration = {
     protocol: 0,
   },
   HOPEAddress: {
-    [eEthereumNetwork.sepolia]: "0xeba0e37F77e2ddC6512d6982B5222297Eb3a37D4",
+    [eEthereumNetwork.sepolia]: "0xf49Eb6f1E7a5C48E14dB30cBfDB264430FA6cBcc",
     [eEthereumNetwork.goerli]: "",
     [eEthereumNetwork.main]: "",
   },
   StakingHOPEAddress: {
-    [eEthereumNetwork.sepolia]: "0xeba0e37F77e2ddC6512d6982B5222297Eb3a37D4",
+    [eEthereumNetwork.sepolia]: "0x5f79a791225803F1039fC6316c94B269D7eE9cb1",
     [eEthereumNetwork.goerli]: "",
     [eEthereumNetwork.main]: "",
   },

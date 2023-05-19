@@ -1,0 +1,15 @@
+{
+  "PoolAddressesProviderRegistry": 1684477481,
+  "LogicLibraries": 1684477947,
+  "Treasury": 1684478007,
+  "PoolAddressesProvider:HopeLend:lend-core@1.0.0": 1684478173,
+  "MockPriceAggregators:HopeLend:lend-core@1.0.0": 1684478307,
+  "ACLManager:HopeLend:lend-core@1.0.0": 1684478408,
+  "Oracles:HopeLend:lend-core@1.0.0": 1684478450,
+  "InitOracles:HopeLend:lend-core@1.0.0": 1684478654,
+  "PoolInitalization:HopeLend:lend-core@1.0.0": 1684478715,
+  "Incentives:HopeLend:lend-periphery@1.0.0": 1684478787,
+  "TokenImplementations:HopeLend:lend-core@1.0.0": 1684479280,
+  "ReservesInit:HopeLend:lend-core@1.0.0": 1684479446,
+  "PeripheryInit:HopeLend:lend-periphery@1.0.0": 1684479457
+}
