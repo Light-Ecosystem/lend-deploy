@@ -1,5 +1,41 @@
 [
-  "function addReserveToReservesList(address)",
-  "function getReservesList() view returns (address[])",
-  "function initialize(address)"
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "reserve",
+        "type": "address"
+      }
+    ],
+    "name": "addReserveToReservesList",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getReservesList",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "provider",
+        "type": "address"
+      }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
 ]

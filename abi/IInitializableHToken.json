@@ -1,4 +1,105 @@
 [
-  "event Initialized(address indexed,address indexed,address,address,uint8,string,string,bytes)",
-  "function initialize(address,address,address,address,uint8,string,string,bytes)"
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "underlyingAsset",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "pool",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "treasury",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "incentivesController",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "hTokenDecimals",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "hTokenName",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "hTokenSymbol",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes",
+        "name": "params",
+        "type": "bytes"
+      }
+    ],
+    "name": "Initialized",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract IPool",
+        "name": "pool",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "treasury",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "underlyingAsset",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IHopeLendIncentivesController",
+        "name": "incentivesController",
+        "type": "address"
+      },
+      {
+        "internalType": "uint8",
+        "name": "hTokenDecimals",
+        "type": "uint8"
+      },
+      {
+        "internalType": "string",
+        "name": "hTokenName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "hTokenSymbol",
+        "type": "string"
+      },
+      {
+        "internalType": "bytes",
+        "name": "params",
+        "type": "bytes"
+      }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
 ]

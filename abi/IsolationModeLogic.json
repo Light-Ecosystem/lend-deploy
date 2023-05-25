@@ -1,3 +1,21 @@
 [
-  "event IsolationModeTotalDebtUpdated(address indexed,uint256)"
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "asset",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "totalDebt",
+        "type": "uint256"
+      }
+    ],
+    "name": "IsolationModeTotalDebtUpdated",
+    "type": "event"
+  }
 ]

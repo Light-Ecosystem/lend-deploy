@@ -38,7 +38,8 @@ export default {
     runOnCompile: true,   // whether to automatically export ABIs during compilation
     clear: true,          // whether to delete old ABI files in path on compilation
     flat: true,           // whether to flatten output directory (may cause name collisions)
-    pretty: true,         // whether to use interface-style formatting of output for better readability
+    pretty: false,         // whether to use interface-style formatting of output for better readability
+    except: ["@openzeppelin/contracts/token/ERC20/IERC20.sol"]
   },
   contractSizer: {
     alphaSort: true,
