@@ -1,0 +1,7 @@
+[
+  "function borrowETH(address,uint256,uint256,uint16)",
+  "function depositETH(address,address,uint16) payable",
+  "function repayETH(address,uint256,uint256,address) payable",
+  "function withdrawETH(address,uint256,address)",
+  "function withdrawETHWithPermit(address,uint256,address,uint256,uint8,bytes32,bytes32)"
+]

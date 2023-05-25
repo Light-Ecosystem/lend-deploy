@@ -1,0 +1,21 @@
+[
+  "function ADDRESSES_PROVIDER() view returns (address)",
+  "function getAllHTokens() view returns (tuple(string,address)[])",
+  "function getAllReservesTokens() view returns (tuple(string,address)[])",
+  "function getDebtCeiling(address) view returns (uint256)",
+  "function getDebtCeilingDecimals() pure returns (uint256)",
+  "function getFlashLoanEnabled(address) view returns (bool)",
+  "function getHTokenTotalSupply(address) view returns (uint256)",
+  "function getInterestRateStrategyAddress(address) view returns (address)",
+  "function getLiquidationProtocolFee(address) view returns (uint256)",
+  "function getPaused(address) view returns (bool)",
+  "function getReserveCaps(address) view returns (uint256, uint256)",
+  "function getReserveConfigurationData(address) view returns (uint256, uint256, uint256, uint256, uint256, bool, bool, bool, bool, bool)",
+  "function getReserveData(address) view returns (uint256, uint256, uint256, uint256, uint256, uint256, uint256, uint256, uint256, uint256, uint256, uint40)",
+  "function getReserveEModeCategory(address) view returns (uint256)",
+  "function getReserveTokensAddresses(address) view returns (address, address, address)",
+  "function getSiloedBorrowing(address) view returns (bool)",
+  "function getTotalDebt(address) view returns (uint256)",
+  "function getUnbackedMintCap(address) view returns (uint256)",
+  "function getUserReserveData(address,address) view returns (uint256, uint256, uint256, uint256, uint256, uint256, uint256, uint40, bool)"
+]

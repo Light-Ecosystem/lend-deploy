@@ -1,0 +1,7 @@
+[
+  "function approve(address,address,address,uint256)",
+  "function cancelStream(address,uint256) returns (bool)",
+  "function createStream(address,address,uint256,address,uint256,uint256) returns (uint256)",
+  "function transfer(address,address,address,uint256)",
+  "function withdrawFromStream(address,uint256,uint256) returns (bool)"
+]

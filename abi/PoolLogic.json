@@ -1,0 +1,4 @@
+[
+  "event IsolationModeTotalDebtUpdated(address indexed,uint256)",
+  "event MintedToTreasury(address indexed,uint256)"
+]

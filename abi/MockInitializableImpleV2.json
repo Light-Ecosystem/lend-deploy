@@ -1,0 +1,9 @@
+[
+  "function REVISION() view returns (uint256)",
+  "function initialize(uint256,string,uint256[])",
+  "function setValue(uint256)",
+  "function setValueViaProxy(uint256)",
+  "function text() view returns (string)",
+  "function value() view returns (uint256)",
+  "function values(uint256) view returns (uint256)"
+]

@@ -1,0 +1,8 @@
+[
+  "event Burn(address indexed,address indexed,uint256,uint256,uint256)",
+  "event Mint(address indexed,address indexed,uint256,uint256,uint256)",
+  "function getPreviousIndex(address) view returns (uint256)",
+  "function getScaledUserBalanceAndSupply(address) view returns (uint256, uint256)",
+  "function scaledBalanceOf(address) view returns (uint256)",
+  "function scaledTotalSupply() view returns (uint256)"
+]

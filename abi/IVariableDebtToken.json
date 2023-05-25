@@ -1,0 +1,13 @@
+[
+  "event Burn(address indexed,address indexed,uint256,uint256,uint256)",
+  "event Initialized(address indexed,address indexed,address,uint8,string,string,bytes)",
+  "event Mint(address indexed,address indexed,uint256,uint256,uint256)",
+  "function UNDERLYING_ASSET_ADDRESS() view returns (address)",
+  "function burn(address,uint256,uint256) returns (uint256)",
+  "function getPreviousIndex(address) view returns (uint256)",
+  "function getScaledUserBalanceAndSupply(address) view returns (uint256, uint256)",
+  "function initialize(address,address,address,uint8,string,string,bytes)",
+  "function mint(address,address,uint256,uint256) returns (bool, uint256)",
+  "function scaledBalanceOf(address) view returns (uint256)",
+  "function scaledTotalSupply() view returns (uint256)"
+]

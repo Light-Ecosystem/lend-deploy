@@ -1,0 +1,7 @@
+[
+  "event NewFundsAdmin(address indexed)",
+  "function ETH_MOCK_ADDRESS() pure returns (address)",
+  "function approve(address,address,uint256)",
+  "function getFundsAdmin() view returns (address)",
+  "function transfer(address,address,uint256)"
+]

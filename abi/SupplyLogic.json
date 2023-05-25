@@ -1,0 +1,6 @@
+[
+  "event ReserveUsedAsCollateralDisabled(address indexed,address indexed)",
+  "event ReserveUsedAsCollateralEnabled(address indexed,address indexed)",
+  "event Supply(address indexed,address,address indexed,uint256,uint16 indexed)",
+  "event Withdraw(address indexed,address indexed,address indexed,uint256)"
+]

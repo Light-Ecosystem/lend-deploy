@@ -1,0 +1,13 @@
+[
+  "function borrow(bytes32)",
+  "function liquidationCall(bytes32,bytes32)",
+  "function rebalanceStableBorrowRate(bytes32)",
+  "function repay(bytes32) returns (uint256)",
+  "function repayWithHTokens(bytes32) returns (uint256)",
+  "function repayWithPermit(bytes32,bytes32,bytes32) returns (uint256)",
+  "function setUserUseReserveAsCollateral(bytes32)",
+  "function supply(bytes32)",
+  "function supplyWithPermit(bytes32,bytes32,bytes32)",
+  "function swapBorrowRateMode(bytes32)",
+  "function withdraw(bytes32)"
+]

@@ -1,0 +1,15 @@
+[
+  "constructor(address,address,address)",
+  "event OwnershipTransferred(address indexed,address indexed)",
+  "function borrowETH(address,uint256,uint256,uint16)",
+  "function depositETH(address,address,uint16) payable",
+  "function emergencyEtherTransfer(address,uint256)",
+  "function emergencyTokenTransfer(address,address,uint256)",
+  "function getWETHAddress() view returns (address)",
+  "function owner() view returns (address)",
+  "function renounceOwnership()",
+  "function repayETH(address,uint256,uint256,address) payable",
+  "function transferOwnership(address)",
+  "function withdrawETH(address,uint256,address)",
+  "function withdrawETHWithPermit(address,uint256,address,uint256,uint8,bytes32,bytes32)"
+]

@@ -1,0 +1,7 @@
+[
+  "event OwnershipTransferred(address indexed,address indexed)",
+  "function configureReserves(address,tuple(address,uint256,uint256,uint256,uint256,uint256,uint256,bool,bool,bool)[])",
+  "function owner() view returns (address)",
+  "function renounceOwnership()",
+  "function transferOwnership(address)"
+]

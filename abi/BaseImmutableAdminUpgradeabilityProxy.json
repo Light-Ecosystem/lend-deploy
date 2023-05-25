@@ -1,0 +1,8 @@
+[
+  "constructor(address)",
+  "event Upgraded(address indexed)",
+  "function admin() returns (address)",
+  "function implementation() returns (address)",
+  "function upgradeTo(address)",
+  "function upgradeToAndCall(address,bytes) payable"
+]

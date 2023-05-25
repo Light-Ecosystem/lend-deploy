@@ -1,0 +1,5 @@
+[
+  "function BASE_CURRENCY() view returns (address)",
+  "function BASE_CURRENCY_UNIT() view returns (uint256)",
+  "function getAssetPrice(address) view returns (uint256)"
+]

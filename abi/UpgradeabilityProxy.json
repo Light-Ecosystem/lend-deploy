@@ -1,0 +1,4 @@
+[
+  "constructor(address,bytes) payable",
+  "event Upgraded(address indexed)"
+]

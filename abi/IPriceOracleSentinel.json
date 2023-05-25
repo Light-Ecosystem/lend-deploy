@@ -1,0 +1,11 @@
+[
+  "event GracePeriodUpdated(uint256)",
+  "event SequencerOracleUpdated(address)",
+  "function ADDRESSES_PROVIDER() view returns (address)",
+  "function getGracePeriod() view returns (uint256)",
+  "function getSequencerOracle() view returns (address)",
+  "function isBorrowAllowed() view returns (bool)",
+  "function isLiquidationAllowed() view returns (bool)",
+  "function setGracePeriod(uint256)",
+  "function setSequencerOracle(address)"
+]

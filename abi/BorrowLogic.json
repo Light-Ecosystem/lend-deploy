@@ -1,0 +1,7 @@
+[
+  "event Borrow(address indexed,address,address indexed,uint256,uint8,uint256,uint16 indexed)",
+  "event IsolationModeTotalDebtUpdated(address indexed,uint256)",
+  "event RebalanceStableBorrowRate(address indexed,address indexed)",
+  "event Repay(address indexed,address indexed,address indexed,uint256,bool)",
+  "event SwapBorrowRateMode(address indexed,address indexed,uint8)"
+]

@@ -1,0 +1,11 @@
+[
+  "event AdminChanged(address,address)",
+  "event Upgraded(address indexed)",
+  "function admin() returns (address)",
+  "function changeAdmin(address)",
+  "function implementation() returns (address)",
+  "function initialize(address,address,bytes) payable",
+  "function initialize(address,bytes) payable",
+  "function upgradeTo(address)",
+  "function upgradeToAndCall(address,bytes) payable"
+]

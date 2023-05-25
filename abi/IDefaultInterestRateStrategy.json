@@ -1,0 +1,16 @@
+[
+  "function ADDRESSES_PROVIDER() view returns (address)",
+  "function MAX_EXCESS_STABLE_TO_TOTAL_DEBT_RATIO() view returns (uint256)",
+  "function MAX_EXCESS_USAGE_RATIO() view returns (uint256)",
+  "function OPTIMAL_STABLE_TO_TOTAL_DEBT_RATIO() view returns (uint256)",
+  "function OPTIMAL_USAGE_RATIO() view returns (uint256)",
+  "function calculateInterestRates(tuple(uint256,uint256,uint256,uint256,uint256,uint256,uint256,address,address)) view returns (uint256, uint256, uint256)",
+  "function getBaseStableBorrowRate() view returns (uint256)",
+  "function getBaseVariableBorrowRate() view returns (uint256)",
+  "function getMaxVariableBorrowRate() view returns (uint256)",
+  "function getStableRateExcessOffset() view returns (uint256)",
+  "function getStableRateSlope1() view returns (uint256)",
+  "function getStableRateSlope2() view returns (uint256)",
+  "function getVariableRateSlope1() view returns (uint256)",
+  "function getVariableRateSlope2() view returns (uint256)"
+]

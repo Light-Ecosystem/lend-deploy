@@ -1,0 +1,11 @@
+[
+  "event CancelStream(uint256 indexed,address indexed,address indexed,uint256,uint256)",
+  "event CreateStream(uint256 indexed,address indexed,address indexed,uint256,address,uint256,uint256)",
+  "event WithdrawFromStream(uint256 indexed,address indexed,uint256)",
+  "function balanceOf(uint256,address) view returns (uint256)",
+  "function cancelStream(uint256) returns (bool)",
+  "function createStream(address,uint256,address,uint256,uint256) returns (uint256)",
+  "function getStream(uint256) view returns (address, address, uint256, address, uint256, uint256, uint256, uint256)",
+  "function initialize(address)",
+  "function withdrawFromStream(uint256,uint256) returns (bool)"
+]

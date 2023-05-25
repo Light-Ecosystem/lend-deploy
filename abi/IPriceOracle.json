@@ -1,0 +1,4 @@
+[
+  "function getAssetPrice(address) view returns (uint256)",
+  "function setAssetPrice(address,uint256)"
+]

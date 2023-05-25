@@ -1,0 +1,5 @@
+[
+  "function DOMAIN_SEPARATOR() view returns (bytes32)",
+  "function EIP712_REVISION() view returns (bytes)",
+  "function nonces(address) view returns (uint256)"
+]

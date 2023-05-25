@@ -1,0 +1,5 @@
+[
+  "function REVISION() view returns (uint256)",
+  "function initialize(uint256)",
+  "function value() view returns (uint256)"
+]

@@ -22,6 +22,7 @@ import "@nomicfoundation/hardhat-toolbox";
 import "hardhat-deploy";
 import "hardhat-contract-sizer";
 import "hardhat-dependency-compiler";
+import "hardhat-abi-exporter";
 
 const SKIP_LOAD = process.env.SKIP_LOAD === "true";
 const TASK_FOLDERS = ["misc", "market-registry"];
@@ -32,6 +33,13 @@ if (!SKIP_LOAD) {
 }
 
 export default {
+  abiExporter: {
+    path: "./abi",        // path to ABI export directory (relative to Hardhat root)
+    runOnCompile: true,   // whether to automatically export ABIs during compilation
+    clear: true,          // whether to delete old ABI files in path on compilation
+    flat: true,           // whether to flatten output directory (may cause name collisions)
+    pretty: true,         // whether to use interface-style formatting of output for better readability
+  },
   contractSizer: {
     alphaSort: true,
     runOnCompile: false,
@@ -108,8 +116,14 @@ export default {
       420
     ),
     [eOptimismNetwork.main]: getCommonNetworkConfig(eOptimismNetwork.main, 10),
-    [eEthereumNetwork.goerli]: getCommonNetworkConfig(eEthereumNetwork.goerli, 5),
-    [eEthereumNetwork.sepolia]: getCommonNetworkConfig(eEthereumNetwork.sepolia, 11155111),
+    [eEthereumNetwork.goerli]: getCommonNetworkConfig(
+      eEthereumNetwork.goerli,
+      5
+    ),
+    [eEthereumNetwork.sepolia]: getCommonNetworkConfig(
+      eEthereumNetwork.sepolia,
+      11155111
+    ),
     [eArbitrumNetwork.görliNitro]: getCommonNetworkConfig(
       eArbitrumNetwork.görliNitro,
       421613
@@ -176,7 +190,7 @@ export default {
       "lend-periphery/contracts/treasury/Collector.sol",
       "lend-periphery/contracts/treasury/CollectorController.sol",
       "lend-periphery/contracts/treasury/HopeLendEcosystemReserveV2.sol",
-      "lend-periphery/contracts/treasury/HopeLendEcosystemReserveController.sol"
+      "lend-periphery/contracts/treasury/HopeLendEcosystemReserveController.sol",
     ],
   },
   deterministicDeployment: DETERMINISTIC_DEPLOYMENT
@@ -184,7 +198,7 @@ export default {
     : undefined,
   verify: {
     etherscan: {
-      apiKey: ETHERSCAN_KEY
-    }
-  }
+      apiKey: ETHERSCAN_KEY,
+    },
+  },
 };

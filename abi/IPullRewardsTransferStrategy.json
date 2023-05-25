@@ -1,0 +1,8 @@
+[
+  "event EmergencyWithdrawal(address indexed,address indexed,address indexed,uint256)",
+  "function emergencyWithdrawal(address,address,uint256)",
+  "function getIncentivesController() view returns (address)",
+  "function getRewardsAdmin() view returns (address)",
+  "function getRewardsVault() view returns (address)",
+  "function performTransfer(address,address,uint256) returns (bool)"
+]

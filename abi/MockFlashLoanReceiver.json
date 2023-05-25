@@ -1,0 +1,13 @@
+[
+  "constructor(address)",
+  "event ExecutedWithFail(address[],uint256[],uint256[])",
+  "event ExecutedWithSuccess(address[],uint256[],uint256[])",
+  "function ADDRESSES_PROVIDER() view returns (address)",
+  "function POOL() view returns (address)",
+  "function executeOperation(address[],uint256[],uint256[],address,bytes) returns (bool)",
+  "function getAmountToApprove() view returns (uint256)",
+  "function setAmountToApprove(uint256)",
+  "function setFailExecutionTransfer(bool)",
+  "function setSimulateEOA(bool)",
+  "function simulateEOA() view returns (bool)"
+]

@@ -1,0 +1,6 @@
+[
+  "event HTokenUpgraded(address indexed,address indexed,address indexed)",
+  "event ReserveInitialized(address indexed,address indexed,address,address,address)",
+  "event StableDebtTokenUpgraded(address indexed,address indexed,address indexed)",
+  "event VariableDebtTokenUpgraded(address indexed,address indexed,address indexed)"
+]

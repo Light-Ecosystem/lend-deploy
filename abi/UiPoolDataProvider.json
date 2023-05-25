@@ -1,0 +1,11 @@
+[
+  "constructor(address,address)",
+  "function ETH_CURRENCY_UNIT() view returns (uint256)",
+  "function MKR_ADDRESS() view returns (address)",
+  "function bytes32ToString(bytes32) pure returns (string)",
+  "function getReservesData(address) view returns (tuple(address,string,string,uint256,uint256,uint256,uint256,uint256,bool,bool,bool,bool,bool,uint128,uint128,uint128,uint128,uint128,uint40,address,address,address,address,uint256,uint256,uint256,uint256,uint256,uint256,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,bool,bool,uint128,uint128,uint128,uint256,uint256,uint8,uint256,uint256,uint16,uint16,uint16,address,string,bool)[], tuple(uint256,int256,int256,uint8))",
+  "function getReservesList(address) view returns (address[])",
+  "function getUserReservesData(address,address) view returns (tuple(address,uint256,bool,uint256,uint256,uint256,uint256)[], uint8)",
+  "function marketReferenceCurrencyPriceInUsdProxyAggregator() view returns (address)",
+  "function networkBaseTokenPriceInUsdProxyAggregator() view returns (address)"
+]

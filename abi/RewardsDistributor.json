@@ -1,0 +1,18 @@
+[
+  "event Accrued(address indexed,address indexed,address indexed,uint256,uint256,uint256)",
+  "event AssetConfigUpdated(address indexed,address indexed,uint256,uint256,uint256,uint256,uint256)",
+  "function EMISSION_MANAGER() view returns (address)",
+  "function getAllUserRewards(address[],address) view returns (address[], uint256[])",
+  "function getAssetDecimals(address) view returns (uint8)",
+  "function getAssetIndex(address,address) view returns (uint256, uint256)",
+  "function getDistributionEnd(address,address) view returns (uint256)",
+  "function getEmissionManager() view returns (address)",
+  "function getRewardsByAsset(address) view returns (address[])",
+  "function getRewardsData(address,address) view returns (uint256, uint256, uint256, uint256)",
+  "function getRewardsList() view returns (address[])",
+  "function getUserAccruedRewards(address,address) view returns (uint256)",
+  "function getUserAssetIndex(address,address,address) view returns (uint256)",
+  "function getUserRewards(address[],address,address) view returns (uint256)",
+  "function setDistributionEnd(address,address,uint32)",
+  "function setEmissionPerSecond(address,address[],uint88[])"
+]

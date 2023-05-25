@@ -1,0 +1,14 @@
+[
+  "constructor(address)",
+  "event AddressesProviderRegistered(address indexed,uint256 indexed)",
+  "event AddressesProviderUnregistered(address indexed,uint256 indexed)",
+  "event OwnershipTransferred(address indexed,address indexed)",
+  "function getAddressesProviderAddressById(uint256) view returns (address)",
+  "function getAddressesProviderIdByAddress(address) view returns (uint256)",
+  "function getAddressesProvidersList() view returns (address[])",
+  "function owner() view returns (address)",
+  "function registerAddressesProvider(address,uint256)",
+  "function renounceOwnership()",
+  "function transferOwnership(address)",
+  "function unregisterAddressesProvider(address)"
+]

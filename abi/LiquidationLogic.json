@@ -1,0 +1,7 @@
+[
+  "event LiquidationCall(address indexed,address indexed,address indexed,uint256,uint256,address,bool)",
+  "event ReserveUsedAsCollateralDisabled(address indexed,address indexed)",
+  "event ReserveUsedAsCollateralEnabled(address indexed,address indexed)",
+  "function CLOSE_FACTOR_HF_THRESHOLD() view returns (uint256)",
+  "function MAX_LIQUIDATION_CLOSE_FACTOR() view returns (uint256)"
+]

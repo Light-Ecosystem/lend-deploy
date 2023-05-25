@@ -1,0 +1,19 @@
+[
+  "event AssetSourceUpdated(address indexed,address indexed)",
+  "event BaseCurrencySet(address indexed,uint256)",
+  "event FailoverActivated(address indexed)",
+  "event FailoverDeactivated(address indexed)",
+  "event FallbackOracleUpdated(address indexed)",
+  "function ADDRESSES_PROVIDER() view returns (address)",
+  "function BASE_CURRENCY() view returns (address)",
+  "function BASE_CURRENCY_UNIT() view returns (uint256)",
+  "function activateFailover(address)",
+  "function deactivateFailover(address)",
+  "function getAssetPrice(address) view returns (uint256)",
+  "function getAssetsPrices(address[]) view returns (uint256[])",
+  "function getFailoverStatusOfAsset(address) view returns (bool)",
+  "function getFallbackOracle() view returns (address)",
+  "function getSourceOfAsset(address) view returns (address)",
+  "function setAssetSources(address[],address[])",
+  "function setFallbackOracle(address)"
+]

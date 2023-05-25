@@ -1,0 +1,8 @@
+[
+  "event AssetPriceUpdated(address,uint256,uint256)",
+  "event EthPriceUpdated(uint256,uint256)",
+  "function getAssetPrice(address) view returns (uint256)",
+  "function getEthUsdPrice() view returns (uint256)",
+  "function setAssetPrice(address,uint256)",
+  "function setEthUsdPrice(uint256)"
+]

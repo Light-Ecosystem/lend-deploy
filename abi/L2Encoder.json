@@ -1,0 +1,15 @@
+[
+  "constructor(address)",
+  "function POOL() view returns (address)",
+  "function encodeBorrowParams(address,uint256,uint256,uint16) view returns (bytes32)",
+  "function encodeLiquidationCall(address,address,address,uint256,bool) view returns (bytes32, bytes32)",
+  "function encodeRebalanceStableBorrowRate(address,address) view returns (bytes32)",
+  "function encodeRepayParams(address,uint256,uint256) view returns (bytes32)",
+  "function encodeRepayWithHTokensParams(address,uint256,uint256) view returns (bytes32)",
+  "function encodeRepayWithPermitParams(address,uint256,uint256,uint256,uint8,bytes32,bytes32) view returns (bytes32, bytes32, bytes32)",
+  "function encodeSetUserUseReserveAsCollateral(address,bool) view returns (bytes32)",
+  "function encodeSupplyParams(address,uint256,uint16) view returns (bytes32)",
+  "function encodeSupplyWithPermitParams(address,uint256,uint16,uint256,uint8,bytes32,bytes32) view returns (bytes32, bytes32, bytes32)",
+  "function encodeSwapBorrowRateMode(address,uint256) view returns (bytes32)",
+  "function encodeWithdrawParams(address,uint256) view returns (bytes32)"
+]

@@ -1,0 +1,18 @@
+[
+  "constructor(address)",
+  "event EmissionAdminUpdated(address indexed,address indexed,address indexed)",
+  "event OwnershipTransferred(address indexed,address indexed)",
+  "function configureAssets(tuple(uint88,uint256,uint32,address,address,address,address)[])",
+  "function getEmissionAdmin(address) view returns (address)",
+  "function getRewardsController() view returns (address)",
+  "function owner() view returns (address)",
+  "function renounceOwnership()",
+  "function setClaimer(address,address)",
+  "function setDistributionEnd(address,address,uint32)",
+  "function setEmissionAdmin(address,address)",
+  "function setEmissionPerSecond(address,address[],uint88[])",
+  "function setRewardOracle(address,address)",
+  "function setRewardsController(address)",
+  "function setTransferStrategy(address,address)",
+  "function transferOwnership(address)"
+]

@@ -1,0 +1,9 @@
+[
+  "event AddressesProviderRegistered(address indexed,uint256 indexed)",
+  "event AddressesProviderUnregistered(address indexed,uint256 indexed)",
+  "function getAddressesProviderAddressById(uint256) view returns (address)",
+  "function getAddressesProviderIdByAddress(address) view returns (uint256)",
+  "function getAddressesProvidersList() view returns (address[])",
+  "function registerAddressesProvider(address,uint256)",
+  "function unregisterAddressesProvider(address)"
+]

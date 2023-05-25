@@ -1,0 +1,4 @@
+[
+  "function DEBT_CEILING_DECIMALS() view returns (uint256)",
+  "function MAX_RESERVES_COUNT() view returns (uint16)"
+]

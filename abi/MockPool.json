@@ -1,0 +1,5 @@
+[
+  "function addReserveToReservesList(address)",
+  "function getReservesList() view returns (address[])",
+  "function initialize(address)"
+]

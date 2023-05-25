@@ -1,0 +1,5 @@
+[
+  "function ADDRESSES_PROVIDER() view returns (address)",
+  "function POOL() view returns (address)",
+  "function executeOperation(address[],uint256[],uint256[],address,bytes) returns (bool)"
+]

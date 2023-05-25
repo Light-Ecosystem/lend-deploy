@@ -1,0 +1,3 @@
+[
+  "event UserEModeSet(address indexed,uint8)"
+]

@@ -1,0 +1,16 @@
+[
+  "event Burn(address indexed,uint256,uint256,uint256,uint256,uint256)",
+  "event Initialized(address indexed,address indexed,address,uint8,string,string,bytes)",
+  "event Mint(address indexed,address indexed,uint256,uint256,uint256,uint256,uint256,uint256)",
+  "function UNDERLYING_ASSET_ADDRESS() view returns (address)",
+  "function burn(address,uint256) returns (uint256, uint256)",
+  "function getAverageStableRate() view returns (uint256)",
+  "function getSupplyData() view returns (uint256, uint256, uint256, uint40)",
+  "function getTotalSupplyAndAvgRate() view returns (uint256, uint256)",
+  "function getTotalSupplyLastUpdated() view returns (uint40)",
+  "function getUserLastUpdated(address) view returns (uint40)",
+  "function getUserStableRate(address) view returns (uint256)",
+  "function initialize(address,address,address,uint8,string,string,bytes)",
+  "function mint(address,address,uint256,uint256) returns (bool, uint256, uint256)",
+  "function principalBalanceOf(address) view returns (uint256)"
+]

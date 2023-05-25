@@ -1,0 +1,8 @@
+[
+  "constructor(int256)",
+  "event AnswerUpdated(int256 indexed,uint256 indexed,uint256)",
+  "function decimals() pure returns (uint8)",
+  "function getTokenType() pure returns (uint256)",
+  "function latestAnswer() view returns (int256)",
+  "function setLatestAnswer(int256)"
+]

@@ -1,0 +1,6 @@
+[
+  "event BorrowAllowanceDelegated(address indexed,address indexed,address indexed,uint256)",
+  "function approveDelegation(address,uint256)",
+  "function borrowAllowance(address,address) view returns (uint256)",
+  "function delegationWithSig(address,address,uint256,uint256,uint8,bytes32,bytes32)"
+]
