@@ -77,6 +77,11 @@
             "type": "bool"
           },
           {
+            "internalType": "bool",
+            "name": "flashLoanEnabled",
+            "type": "bool"
+          },
+          {
             "internalType": "uint128",
             "name": "liquidityIndex",
             "type": "uint128"
