@@ -50,13 +50,26 @@ import {
   INCENTIVES_PULL_REWARDS_STRATEGY_ID,
   INCENTIVES_PROXY_ID,
   L2_ENCODER,
+  LT_ID,
+  GAUGE_CONTROLLER_ID,
+  VOTING_ESCROW_ID,
+  MINTER_ID,
+  LENDING_GAUGE_IMPL_ID,
+  GAUGE_FACTORY_ID,
 } from "./deploy-ids";
+import LTArtifact from "../extendedArtifacts/LT.json";
+import StakingHOPEArtifact from "../extendedArtifacts/StakingHOPE.json";
+import VotingEscrowArtifact from "../extendedArtifacts/VotingEscrow.json";
+import GaugeControllerArtifact from "../extendedArtifacts/GaugeController.json";
+import MinterArtifact from "../extendedArtifacts/Minter.json";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { RewardsController } from "../typechain";
 import { Libraries } from "hardhat-deploy/dist/types";
-import { getContract } from "./utilities/tx";
+import { getContract, getContractByABI } from "./utilities/tx";
 import { EMISSION_MANAGER_ID } from ".";
 import { EmissionManager } from "../typechain";
+import { Address } from "hardhat-deploy/types";
+import { Contract } from "ethers";
 
 // Prevent error HH9 when importing this file inside tasks or helpers at Hardhat config load
 declare var hre: HardhatRuntimeEnvironment;
@@ -270,8 +283,7 @@ export const getWrappedTokenGateway = async (
 
 export const getUiPoolDataProvider = async (
   address?: string
-): Promise<UiPoolDataProvider> =>
-  getContract("UiPoolDataProvider", address);
+): Promise<UiPoolDataProvider> => getContract("UiPoolDataProvider", address);
 
 export const getUiIncentiveDataProvider = async (
   address?: string
@@ -313,4 +325,54 @@ export const getEmissionManager = async (address?: tEthereumAddress) =>
   getContract<EmissionManager>(
     "EmissionManager",
     address || (await hre.deployments.get(EMISSION_MANAGER_ID)).address
+  );
+
+export const getLT = async (address?: tEthereumAddress): Promise<Contract> =>
+  getContractByABI(
+    "LT",
+    LTArtifact.abi,
+    address || (await hre.deployments.get(LT_ID)).address
+  );
+
+export const getGaugeController = async (
+  address?: tEthereumAddress
+): Promise<Contract> =>
+  getContractByABI(
+    "GaugeController",
+    GaugeControllerArtifact.abi,
+    address || (await hre.deployments.get(GAUGE_CONTROLLER_ID)).address
+  );
+
+export const getVotingEscrow = async (
+  address?: tEthereumAddress
+): Promise<Contract> =>
+  getContractByABI(
+    "VotingEscrow",
+    VotingEscrowArtifact.abi,
+    address || (await hre.deployments.get(VOTING_ESCROW_ID)).address
+  );
+
+export const getMinter = async (
+  address?: tEthereumAddress
+): Promise<Contract> =>
+  getContractByABI(
+    "Minter",
+    MinterArtifact.abi,
+    address || (await hre.deployments.get(MINTER_ID)).address
+  );
+
+export const getLendingGauge = async (
+  address?: tEthereumAddress
+): Promise<HopeOracle> =>
+  getContract(
+    "LendingGauge",
+    address || (await hre.deployments.get(LENDING_GAUGE_IMPL_ID)).address
+  );
+
+export const getGaugeFactory = async (
+  address?: tEthereumAddress
+): Promise<HopeOracle> =>
+  getContract(
+    "GaugeFactory",
+    address || (await hre.deployments.get(GAUGE_FACTORY_ID)).address
   );

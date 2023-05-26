@@ -125,6 +125,17 @@ export const getContract = async <ContractType extends Contract>(
   ) as any as ContractType;
 };
 
+export const getContractByABI = async <ContractType extends Contract>(
+  id: string,
+  abi: any[],
+  address?: tEthereumAddress
+): Promise<ContractType> => {
+  return hre.ethers.getContractAt(
+    abi,
+    address || (await (await hre.deployments.get(id.toString())).address)
+  ) as any as ContractType;
+};
+
 interface AccountItem {
   name: string;
   account: string;

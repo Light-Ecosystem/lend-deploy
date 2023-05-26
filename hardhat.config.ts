@@ -22,6 +22,7 @@ import "@nomicfoundation/hardhat-toolbox";
 import "hardhat-deploy";
 import "hardhat-contract-sizer";
 import "hardhat-dependency-compiler";
+import "@nomiclabs/hardhat-ethers";
 
 const SKIP_LOAD = process.env.SKIP_LOAD === "true";
 const TASK_FOLDERS = ["misc", "market-registry"];
@@ -108,8 +109,14 @@ export default {
       420
     ),
     [eOptimismNetwork.main]: getCommonNetworkConfig(eOptimismNetwork.main, 10),
-    [eEthereumNetwork.goerli]: getCommonNetworkConfig(eEthereumNetwork.goerli, 5),
-    [eEthereumNetwork.sepolia]: getCommonNetworkConfig(eEthereumNetwork.sepolia, 11155111),
+    [eEthereumNetwork.goerli]: getCommonNetworkConfig(
+      eEthereumNetwork.goerli,
+      5
+    ),
+    [eEthereumNetwork.sepolia]: getCommonNetworkConfig(
+      eEthereumNetwork.sepolia,
+      11155111
+    ),
     [eArbitrumNetwork.görliNitro]: getCommonNetworkConfig(
       eArbitrumNetwork.görliNitro,
       421613
@@ -149,6 +156,8 @@ export default {
       "lend-core/contracts/misc/HopeLendProtocolDataProvider.sol",
       "lend-core/contracts/misc/L2Encoder.sol",
       "lend-core/contracts/protocol/configuration/ACLManager.sol",
+      "lend-core/contracts/protocol/gauge/LendingGauge.sol",
+      "lend-core/contracts/protocol/gauge/GaugeFactory.sol",
       "lend-core/contracts/dependencies/weth/WETH9.sol",
       "lend-core/contracts/mocks/helpers/MockIncentivesController.sol",
       "lend-core/contracts/mocks/helpers/MockReserveConfiguration.sol",
@@ -176,7 +185,7 @@ export default {
       "lend-periphery/contracts/treasury/Collector.sol",
       "lend-periphery/contracts/treasury/CollectorController.sol",
       "lend-periphery/contracts/treasury/HopeLendEcosystemReserveV2.sol",
-      "lend-periphery/contracts/treasury/HopeLendEcosystemReserveController.sol"
+      "lend-periphery/contracts/treasury/HopeLendEcosystemReserveController.sol",
     ],
   },
   deterministicDeployment: DETERMINISTIC_DEPLOYMENT
@@ -184,7 +193,10 @@ export default {
     : undefined,
   verify: {
     etherscan: {
-      apiKey: ETHERSCAN_KEY
-    }
-  }
+      apiKey: ETHERSCAN_KEY,
+    },
+  },
+  etherscan: {
+    apiKey: ETHERSCAN_KEY,
+  },
 };

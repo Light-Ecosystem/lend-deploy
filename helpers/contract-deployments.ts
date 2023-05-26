@@ -57,9 +57,7 @@ declare var hre: HardhatRuntimeEnvironment;
 
 export const deployUiIncentiveDataProvider =
   async (): Promise<UiIncentiveDataProvider> =>
-    await deployContract<UiIncentiveDataProvider>(
-      "UiIncentiveDataProvider"
-    );
+    await deployContract<UiIncentiveDataProvider>("UiIncentiveDataProvider");
 
 export const deployUiPoolDataProvider = async (
   chainlinkAggregatorProxy: string,
@@ -385,10 +383,7 @@ export const deployMockReentrantInitializableImple = async () =>
 
 export const deployWrappedTokenGateway = async (
   wrappedToken: tEthereumAddress
-) =>
-  deployContract<WrappedTokenGateway>("WrappedTokenGateway", [
-    wrappedToken,
-  ]);
+) => deployContract<WrappedTokenGateway>("WrappedTokenGateway", [wrappedToken]);
 
 export const deployInitializableAdminUpgradeabilityProxy = async (
   slug: string
