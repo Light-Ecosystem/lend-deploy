@@ -22,6 +22,7 @@ import "@nomicfoundation/hardhat-toolbox";
 import "hardhat-deploy";
 import "hardhat-contract-sizer";
 import "hardhat-dependency-compiler";
+import "hardhat-abi-exporter";
 import "@nomiclabs/hardhat-ethers";
 
 const SKIP_LOAD = process.env.SKIP_LOAD === "true";
@@ -33,6 +34,14 @@ if (!SKIP_LOAD) {
 }
 
 export default {
+  abiExporter: {
+    path: "./abi", // path to ABI export directory (relative to Hardhat root)
+    runOnCompile: true, // whether to automatically export ABIs during compilation
+    clear: true, // whether to delete old ABI files in path on compilation
+    flat: true, // whether to flatten output directory (may cause name collisions)
+    pretty: false, // whether to use interface-style formatting of output for better readability
+    except: ["@openzeppelin/contracts/token/ERC20/IERC20.sol"],
+  },
   contractSizer: {
     alphaSort: true,
     runOnCompile: false,
@@ -195,8 +204,5 @@ export default {
     etherscan: {
       apiKey: ETHERSCAN_KEY,
     },
-  },
-  etherscan: {
-    apiKey: ETHERSCAN_KEY,
   },
 };
