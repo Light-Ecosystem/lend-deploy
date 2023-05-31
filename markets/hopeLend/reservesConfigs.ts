@@ -48,7 +48,7 @@ export const strategyHOPE: IReserveParams = {
   liquidationThreshold: "6500",
   liquidationBonus: "11000",
   liquidationProtocolFee: "1000",
-  borrowingEnabled: false,
+  borrowingEnabled: true,
   stableBorrowRateEnabled: false,
   flashLoanEnabled: true,
   reserveDecimals: "18",

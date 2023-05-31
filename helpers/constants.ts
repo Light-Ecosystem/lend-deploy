@@ -155,7 +155,7 @@ export const DEFAULT_NAMED_ACCOUNTS = {
   },
   incentivesRewardsVault: {
     default: 0,
-  },
+  }
 };
 
 export const GOVERNANCE_BRIDGE_EXECUTOR: { [key: string]: string } = {

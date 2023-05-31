@@ -46,3 +46,8 @@ export const MINTER_ID = "Minter";
 export const PERMIT2_ID = "Permit2";
 export const BURNER_MANAGER_ID = "BurnerManager";
 export const UNDERLYING_BURNER_ID = "UnderlyingBurner";
+
+export const MOCK_BURNER_MANAGER_ID = "MockBurnerManager";
+export const MOCK_UNDERLYING_BURNER_ID = "MockUnderlyingBurner";
+export const MOCK_HOPE_SWARP_BURNER_ID = "MockHopeSwapBurner";
+export const LENDING_FEE_TO_VAULT_ID = "LendingFeeToVault";

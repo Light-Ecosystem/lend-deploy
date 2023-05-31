@@ -1,0 +1,15 @@
+[
+  {
+    "inputs": [],
+    "name": "lendingGauge",
+    "outputs": [
+      {
+        "internalType": "contract ILendingGauge",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

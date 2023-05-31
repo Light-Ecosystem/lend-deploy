@@ -34,6 +34,7 @@ import {
   UiPoolDataProvider,
   WalletBalanceProvider,
   UiIncentiveDataProvider,
+  LendingFeeToVault
 } from "../typechain";
 import { tEthereumAddress } from "./types";
 import {
@@ -56,6 +57,7 @@ import {
   MINTER_ID,
   LENDING_GAUGE_IMPL_ID,
   GAUGE_FACTORY_ID,
+  LENDING_FEE_TO_VAULT_ID
 } from "./deploy-ids";
 import LTArtifact from "../extendedArtifacts/LT.json";
 import StakingHOPEArtifact from "../extendedArtifacts/StakingHOPE.json";
@@ -368,11 +370,19 @@ export const getLendingGauge = async (
     "LendingGauge",
     address || (await hre.deployments.get(LENDING_GAUGE_IMPL_ID)).address
   );
-
+  
 export const getGaugeFactory = async (
   address?: tEthereumAddress
 ): Promise<HopeOracle> =>
   getContract(
     "GaugeFactory",
     address || (await hre.deployments.get(GAUGE_FACTORY_ID)).address
+  );
+
+export const getLendingFeeToVault = async (
+  address?: tEthereumAddress
+): Promise<LendingFeeToVault> =>
+  getContract(
+    "LendingFeeToVault",
+    address || (await hre.deployments.get(LENDING_FEE_TO_VAULT_ID)).address
   );
