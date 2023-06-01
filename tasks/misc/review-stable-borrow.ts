@@ -1,36 +1,29 @@
-import { eNetwork } from "../../helpers/types";
-import { loadPoolConfig } from "../../helpers/market-config-helpers";
-import { getPoolConfiguratorProxy } from "../../helpers/contract-getters";
-import { task } from "hardhat/config";
-import { waitForTx } from "../../helpers/utilities/tx";
-import { getHopeLendProtocolDataProvider } from "../../helpers/contract-getters";
-import { MARKET_NAME } from "../../helpers/env";
-import { FORK } from "../../helpers/hardhat-config-helpers";
-import chalk from "chalk";
-import { exit } from "process";
+import { eNetwork } from '../../helpers/types';
+import { loadPoolConfig } from '../../helpers/market-config-helpers';
+import { getPoolConfiguratorProxy } from '../../helpers/contract-getters';
+import { task } from 'hardhat/config';
+import { waitForTx } from '../../helpers/utilities/tx';
+import { getHopeLendProtocolDataProvider } from '../../helpers/contract-getters';
+import { MARKET_NAME } from '../../helpers/env';
+import { FORK } from '../../helpers/hardhat-config-helpers';
+import chalk from 'chalk';
+import { exit } from 'process';
 
 // This task will review the InterestRate strategy of each reserve from a Market passed by environment variable MARKET_NAME.
 // If the fix flag is present it will change the current strategy of the reserve to the desired strategy from market configuration.
 task(`review-stable-borrow`, ``)
   // Flag to fix the reserve deploying a new InterestRateStrategy contract with the strategy from market configuration:
   // --fix
-  .addFlag("fix")
-  .addFlag("vvv")
+  .addFlag('fix')
+  .addFlag('vvv')
   // Optional parameter to check only the desired tokens by symbol and separated by comma
   // --checkOnly DAI,USDC,ETH
-  .addOptionalParam("checkOnly")
+  .addOptionalParam('checkOnly')
   .setAction(
-    async (
-      {
-        fix,
-        vvv,
-        checkOnly,
-      }: { fix: boolean; vvv: boolean; checkOnly: string },
-      hre
-    ) => {
+    async ({ fix, vvv, checkOnly }: { fix: boolean; vvv: boolean; checkOnly: string }, hre) => {
       const network = FORK ? FORK : (hre.network.name as eNetwork);
       const { deployer } = await hre.getNamedAccounts();
-      const checkOnlyReserves: string[] = checkOnly ? checkOnly.split(",") : [];
+      const checkOnlyReserves: string[] = checkOnly ? checkOnly.split(',') : [];
       const dataProvider = await getHopeLendProtocolDataProvider();
       const poolConfigurator = await getPoolConfiguratorProxy();
 
@@ -38,15 +31,13 @@ task(`review-stable-borrow`, ``)
       const reserves = await dataProvider.getAllReservesTokens();
 
       const reservesToCheck = checkOnlyReserves.length
-        ? reserves.filter(([reserveSymbol]) =>
-            checkOnlyReserves.includes(reserveSymbol)
-          )
+        ? reserves.filter(([reserveSymbol]) => checkOnlyReserves.includes(reserveSymbol))
         : reserves;
 
       const reserveAssets = await dataProvider.getAllReservesTokens();
       const normalizedSymbols = Object.keys(poolConfig.ReservesConfig);
       if (!reserveAssets) {
-        console.error("- Exiting due missing ReserveAssets");
+        console.error('- Exiting due missing ReserveAssets');
         exit(2);
       }
 
@@ -57,21 +48,13 @@ task(`review-stable-borrow`, ``)
           symbol.toUpperCase().includes(s.toUpperCase())
         );
         if (!normalizedSymbol) {
-          console.error(
-            `- Missing address ${tokenAddress} at ReserveAssets configuration.`
-          );
+          console.error(`- Missing address ${tokenAddress} at ReserveAssets configuration.`);
           exit(3);
         }
 
-        console.log(
-          "- Checking reserve",
-          symbol,
-          `, normalized symbol`,
-          normalizedSymbol
-        );
+        console.log('- Checking reserve', symbol, `, normalized symbol`, normalizedSymbol);
         const expectedStableRateEnabled =
-          poolConfig.ReservesConfig[normalizedSymbol.toUpperCase()]
-            .stableBorrowRateEnabled;
+          poolConfig.ReservesConfig[normalizedSymbol.toUpperCase()].stableBorrowRateEnabled;
         const onChainStableRateEnabled = (
           await dataProvider.getReserveConfigurationData(tokenAddress)
         ).stableBorrowRateEnabled;
@@ -79,21 +62,14 @@ task(`review-stable-borrow`, ``)
         const delta = expectedStableRateEnabled !== onChainStableRateEnabled;
         if (delta) {
           if (vvv) {
-            console.log(
-              "- Found differences of Borrow Stable Rate Enabled for ",
-              normalizedSymbol
-            );
-            console.log("  - Expected:", expectedStableRateEnabled);
-            console.log("  - Current :", onChainStableRateEnabled);
+            console.log('- Found differences of Borrow Stable Rate Enabled for ', normalizedSymbol);
+            console.log('  - Expected:', expectedStableRateEnabled);
+            console.log('  - Current :', onChainStableRateEnabled);
           }
           if (!fix) {
             continue;
           }
-          vvv &&
-            console.log(
-              "[FIX] Updating the Borrow Stable Rate Enabled for",
-              normalizedSymbol
-            );
+          vvv && console.log('[FIX] Updating the Borrow Stable Rate Enabled for', normalizedSymbol);
           await waitForTx(
             await poolConfigurator.setReserveStableRateBorrowing(
               tokenAddress,
@@ -105,9 +81,9 @@ task(`review-stable-borrow`, ``)
           ).stableBorrowRateEnabled;
           vvv &&
             console.log(
-              "[FIX] Set ",
+              '[FIX] Set ',
               normalizedSymbol,
-              "Stable Rate Borrowing to",
+              'Stable Rate Borrowing to',
               newOnChainStableRateEnabled
             );
         } else {

@@ -1,6 +1,6 @@
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { DeployFunction } from "hardhat-deploy/types";
-import { time } from "@nomicfoundation/hardhat-network-helpers";
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { DeployFunction } from 'hardhat-deploy/types';
+import { time } from '@nomicfoundation/hardhat-network-helpers';
 import {
   POOL_PROXY_ID,
   TESTNET_TOKEN_PREFIX,
@@ -9,12 +9,12 @@ import {
   MINTER_ID,
   GAUGE_CONTROLLER_ID,
   GAUGE_FACTORY_ID,
-} from "./../../helpers/deploy-ids";
-import { GaugeFactory, Pool, Pool__factory } from "../../typechain";
-import { BigNumberish } from "ethers";
-import { parseUnits } from "ethers/lib/utils";
-import { ethers } from "hardhat";
-import { eEthereumNetwork, eNetwork } from "../../helpers";
+} from '../../helpers/deploy-ids';
+import { GaugeFactory, Pool, Pool__factory } from '../../typechain';
+import { BigNumberish } from 'ethers';
+import { parseUnits } from 'ethers/lib/utils';
+import { ethers } from 'hardhat';
+import { eEthereumNetwork, eNetwork } from '../../helpers';
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments, getNamedAccounts } = hre;
@@ -23,10 +23,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const network = (process.env.FORK || hre.network.name) as eNetwork;
 
-  const SYMBOL = "DAI";
+  const SYMBOL = 'DAI';
 
   const LendingGaugeImpl = await deploy(LENDING_GAUGE_IMPL_ID, {
-    contract: "LendingGauge",
+    contract: 'LendingGauge',
     from: deployer,
     args: [],
     log: true,
@@ -58,7 +58,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   );
 
   const poolInstance = (await hre.ethers.getContractAt(
-    "Pool",
+    'Pool',
     (
       await deployments.get(POOL_PROXY_ID)
     ).address
@@ -70,34 +70,34 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   );
 
   const inputParams: {
-    startPercentage: BigNumberish;
-    endPercentage: BigNumberish;
+    start: BigNumberish;
+    end: BigNumberish;
     k: BigNumberish;
     b: BigNumberish;
   }[] = [
     {
-      startPercentage: parseUnits("0", 0),
-      endPercentage: parseUnits("0.35", 27),
-      k: parseUnits("2", 27),
-      b: parseUnits("0", 0),
+      start: parseUnits('0', 0),
+      end: parseUnits('0.35', 27),
+      k: parseUnits('2', 27),
+      b: parseUnits('0', 0),
     },
     {
-      startPercentage: parseUnits("0.35", 27),
-      endPercentage: parseUnits("0.65", 27),
-      k: parseUnits("0", 0),
-      b: parseUnits("0.7", 27),
+      start: parseUnits('0.35', 27),
+      end: parseUnits('0.65', 27),
+      k: parseUnits('0', 0),
+      b: parseUnits('0.7', 27),
     },
     {
-      startPercentage: parseUnits("0.65", 27),
-      endPercentage: parseUnits("0.8", 27),
-      k: parseUnits("-4.66666666666666", 27),
-      b: parseUnits("3.733333333333333", 27),
+      start: parseUnits('0.65', 27),
+      end: parseUnits('0.8', 27),
+      k: parseUnits('-4.66666666666666', 27),
+      b: parseUnits('3.733333333333333', 27),
     },
     {
-      startPercentage: parseUnits("0.8", 27),
-      endPercentage: parseUnits("1", 27),
-      k: parseUnits("0", 0),
-      b: parseUnits("0", 0),
+      start: parseUnits('0.8', 27),
+      end: parseUnits('1', 27),
+      k: parseUnits('0', 0),
+      b: parseUnits('0', 0),
     },
   ];
 
@@ -114,25 +114,20 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const gaugeControllerInstance = await hre.ethers.getContractAt(abi, address);
 
-  const name = "Lending Type";
-  const weight = hre.ethers.utils.parseEther("1");
+  const name = 'Lending Type';
+  const weight = hre.ethers.utils.parseEther('1');
   const typeId = await gaugeControllerInstance.nGaugeTypes();
-  if (typeId == 1) {
+  if (typeId == 2) {
     await gaugeControllerInstance.addType(name, weight);
-
     if (network == eEthereumNetwork.hardhat) {
-      const gaugeWeight = hre.ethers.utils.parseEther("1");
-      await gaugeControllerInstance.addGauge(
-        daiLendingGaugeAddress,
-        typeId,
-        gaugeWeight
-      );
+      const gaugeWeight = hre.ethers.utils.parseEther('1');
+      await gaugeControllerInstance.addGauge(daiLendingGaugeAddress, typeId, gaugeWeight);
       await time.increase(86400 * 7);
     } else {
-      await gaugeControllerInstance.addGauge(daiLendingGaugeAddress, typeId, 0);
+      await gaugeControllerInstance.addGauge(deployer, typeId, 0);
     }
   }
 };
 
 export default func;
-func.tags = ["lending-gauge"];
+func.tags = ['lending-gauge'];

@@ -53,12 +53,6 @@
       },
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "incentivesController",
-        "type": "address"
-      },
-      {
-        "indexed": false,
         "internalType": "uint8",
         "name": "debtTokenDecimals",
         "type": "uint8"
@@ -217,11 +211,6 @@
       {
         "internalType": "address",
         "name": "underlyingAsset",
-        "type": "address"
-      },
-      {
-        "internalType": "contract IHopeLendIncentivesController",
-        "name": "incentivesController",
         "type": "address"
       },
       {

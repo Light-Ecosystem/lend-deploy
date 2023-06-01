@@ -694,11 +694,6 @@
             "type": "address"
           },
           {
-            "internalType": "address",
-            "name": "incentivesController",
-            "type": "address"
-          },
-          {
             "internalType": "string",
             "name": "hTokenName",
             "type": "string"
@@ -1137,11 +1132,6 @@
             "type": "address"
           },
           {
-            "internalType": "address",
-            "name": "incentivesController",
-            "type": "address"
-          },
-          {
             "internalType": "string",
             "name": "name",
             "type": "string"
@@ -1182,11 +1172,6 @@
             "type": "address"
           },
           {
-            "internalType": "address",
-            "name": "incentivesController",
-            "type": "address"
-          },
-          {
             "internalType": "string",
             "name": "name",
             "type": "string"
@@ -1224,11 +1209,6 @@
           {
             "internalType": "address",
             "name": "asset",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "incentivesController",
             "type": "address"
           },
           {

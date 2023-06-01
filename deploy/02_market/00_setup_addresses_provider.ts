@@ -1,35 +1,27 @@
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { DeployFunction } from "hardhat-deploy/types";
-import { CORE_VERSION, ZERO_ADDRESS } from "../../helpers/constants";
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { DeployFunction } from 'hardhat-deploy/types';
+import { CORE_VERSION, ZERO_ADDRESS } from '../../helpers/constants';
 import {
   checkRequiredEnvironment,
   ConfigNames,
   getReserveAddresses,
   loadPoolConfig,
-} from "../../helpers/market-config-helpers";
-import {
-  POOL_ADDRESSES_PROVIDER_ID,
-  POOL_DATA_PROVIDER,
-} from "../../helpers/deploy-ids";
-import { addMarketToRegistry } from "../../helpers/init-helpers";
-import { eNetwork } from "../../helpers/types";
-import { getAddress } from "ethers/lib/utils";
-import { waitForTx } from "../../helpers/utilities/tx";
-import { PoolAddressesProvider } from "../../typechain";
-import {
-  containsSameMembers,
-  isEqualAddress,
-} from "../../helpers/utilities/utils";
-import { COMMON_DEPLOY_PARAMS, MARKET_NAME } from "../../helpers/env";
+} from '../../helpers/market-config-helpers';
+import { POOL_ADDRESSES_PROVIDER_ID, POOL_DATA_PROVIDER } from '../../helpers/deploy-ids';
+import { addMarketToRegistry } from '../../helpers/init-helpers';
+import { eNetwork } from '../../helpers/types';
+import { getAddress } from 'ethers/lib/utils';
+import { waitForTx } from '../../helpers/utilities/tx';
+import { PoolAddressesProvider } from '../../typechain';
+import { containsSameMembers, isEqualAddress } from '../../helpers/utilities/utils';
+import { COMMON_DEPLOY_PARAMS, MARKET_NAME } from '../../helpers/env';
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { getNamedAccounts, deployments } = hre;
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
   const poolConfig = await loadPoolConfig(MARKET_NAME as ConfigNames);
-  const network = (
-    process.env.FORK ? process.env.FORK : hre.network.name
-  ) as eNetwork;
+  const network = (process.env.FORK ? process.env.FORK : hre.network.name) as eNetwork;
 
   // 0. Check beforehand that all reserves have non-zero addresses
   const reserves = await getReserveAddresses(poolConfig, network);
@@ -42,16 +34,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   if (!containsSameMembers(reserveConfigSymbols, reserveSymbols)) {
     console.log(reserveConfigSymbols);
     console.log(reserveSymbols);
-    throw "[Deployment][Error] Mismatch between Config.ReservesConfig and Config.ReserveAssets token symbols";
+    throw '[Deployment][Error] Mismatch between Config.ReservesConfig and Config.ReserveAssets token symbols';
   }
   if (reserveSymbols.length === 0) {
-    throw "[Deployment][Error] Missing ReserveAssets configuration";
+    throw '[Deployment][Error] Missing ReserveAssets configuration';
   }
   for (let y = 0; y < reserveSymbols.length; y++) {
-    if (
-      !reserves[reserveSymbols[y]] ||
-      getAddress(reserves[reserveSymbols[y]]) === ZERO_ADDRESS
-    ) {
+    if (!reserves[reserveSymbols[y]] || getAddress(reserves[reserveSymbols[y]]) === ZERO_ADDRESS) {
       throw `[Deployment][Error] Missing token ${reserveSymbols[y]} ReserveAssets configuration`;
     }
   }
@@ -61,8 +50,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   // in multiple networks via CREATE2. Later in this script it will update the corresponding Market ID.
   const addressesProviderArtifact = await deploy(POOL_ADDRESSES_PROVIDER_ID, {
     from: deployer,
-    contract: "PoolAddressesProvider",
-    args: ["0", deployer],
+    contract: 'PoolAddressesProvider',
+    args: ['0', deployer],
     ...COMMON_DEPLOY_PARAMS,
   });
 
@@ -72,34 +61,24 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   )) as PoolAddressesProvider;
 
   // 2. Set the MarketId
-  await waitForTx(
-    await addressesProviderInstance.setMarketId(poolConfig.MarketId)
-  );
+  await waitForTx(await addressesProviderInstance.setMarketId(poolConfig.MarketId));
 
   // 3. Add AddressesProvider to Registry
-  await addMarketToRegistry(
-    poolConfig.ProviderId,
-    addressesProviderArtifact.address
-  );
+  await addMarketToRegistry(poolConfig.ProviderId, addressesProviderArtifact.address);
 
   // 4. Deploy HopeLendProtocolDataProvider getters contract
   const protocolDataProvider = await deploy(POOL_DATA_PROVIDER, {
     from: deployer,
-    contract: "HopeLendProtocolDataProvider",
+    contract: 'HopeLendProtocolDataProvider',
     args: [addressesProviderArtifact.address],
     ...COMMON_DEPLOY_PARAMS,
   });
-  const currentProtocolDataProvider =
-    await addressesProviderInstance.getPoolDataProvider();
+  const currentProtocolDataProvider = await addressesProviderInstance.getPoolDataProvider();
 
   // Set the ProtocolDataProvider if is not already set at addresses provider
-  if (
-    !isEqualAddress(protocolDataProvider.address, currentProtocolDataProvider)
-  ) {
+  if (!isEqualAddress(protocolDataProvider.address, currentProtocolDataProvider)) {
     await waitForTx(
-      await addressesProviderInstance.setPoolDataProvider(
-        protocolDataProvider.address
-      )
+      await addressesProviderInstance.setPoolDataProvider(protocolDataProvider.address)
     );
   }
 
@@ -109,9 +88,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 // This script can only be run successfully once per market, core version, and network
 func.id = `PoolAddressesProvider:${MARKET_NAME}:lend-core@${CORE_VERSION}`;
 
-func.tags = ["market", "provider"];
+func.tags = ['market', 'provider'];
 
-func.dependencies = ["before-deploy", "core", "periphery-pre", "token-setup"];
+func.dependencies = ['before-deploy', 'core', 'periphery-pre', 'token-setup'];
 
 func.skip = async () => checkRequiredEnvironment();
 

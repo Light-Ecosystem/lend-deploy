@@ -4,12 +4,11 @@ import {
   iMultiPoolsAssets,
   IReserveParams,
   tEthereumAddress,
-} from "./types";
-import { BigNumberish } from "ethers";
+} from './types';
+import { BigNumberish } from 'ethers';
 import {
   ACL_MANAGER_ID,
-  ATOKEN_IMPL_ID,
-  DELEGATION_AWARE_ATOKEN_IMPL_ID,
+  HTOKEN_IMPL_ID,
   L2_POOL_IMPL_ID,
   POOL_ADDRESSES_PROVIDER_ID,
   POOL_CONFIGURATOR_IMPL_ID,
@@ -19,9 +18,9 @@ import {
   RESERVES_SETUP_HELPER_ID,
   STABLE_DEBT_TOKEN_IMPL_ID,
   VARIABLE_DEBT_TOKEN_IMPL_ID,
-} from "./deploy-ids";
-import { chunk, isValidAddress } from "./utilities/utils";
-import { waitForTx } from "./utilities/tx";
+} from './deploy-ids';
+import { chunk, isValidAddress } from './utilities/utils';
+import { waitForTx } from './utilities/tx';
 import {
   HopeLendProtocolDataProvider,
   ACLManager,
@@ -29,15 +28,11 @@ import {
   PoolAddressesProvider,
   PoolAddressesProviderRegistry,
   PoolConfigurator,
-} from "../typechain";
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { MARKET_NAME } from "./env";
-import {
-  ConfigNames,
-  isL2PoolSupported,
-  loadPoolConfig,
-} from "./market-config-helpers";
-import { ZERO_ADDRESS } from "./constants";
+} from '../typechain';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { MARKET_NAME } from './env';
+import { ConfigNames, isL2PoolSupported, loadPoolConfig } from './market-config-helpers';
+import { ZERO_ADDRESS } from './constants';
 
 declare var hre: HardhatRuntimeEnvironment;
 
@@ -49,15 +44,10 @@ export const initReservesByHelper = async (
   variableDebtTokenNamePrefix: string,
   symbolPrefix: string,
   admin: tEthereumAddress,
-  treasuryAddress: tEthereumAddress,
-  incentivesController: tEthereumAddress
+  treasuryAddress: tEthereumAddress
 ) => {
-  const poolConfig = (await loadPoolConfig(
-    MARKET_NAME as ConfigNames
-  )) as IHopeLendConfiguration;
-  const addressProviderArtifact = await hre.deployments.get(
-    POOL_ADDRESSES_PROVIDER_ID
-  );
+  const poolConfig = (await loadPoolConfig(MARKET_NAME as ConfigNames)) as IHopeLendConfiguration;
+  const addressProviderArtifact = await hre.deployments.get(POOL_ADDRESSES_PROVIDER_ID);
   const addressProvider = (await hre.ethers.getContractAt(
     addressProviderArtifact.abi,
     addressProviderArtifact.address
@@ -87,7 +77,6 @@ export const initReservesByHelper = async (
     interestRateStrategyAddress: string;
     underlyingAsset: string;
     treasury: string;
-    incentivesController: string;
     underlyingAssetName: string;
     hTokenName: string;
     hTokenSymbol: string;
@@ -114,42 +103,25 @@ export const initReservesByHelper = async (
   let strategyAddresses: Record<string, tEthereumAddress> = {};
   let strategyAddressPerAsset: Record<string, string> = {};
   let hTokenType: Record<string, string> = {};
-  let delegationAwareHTokenImplementationAddress = "";
-  let hTokenImplementationAddress = "";
-  let stableDebtTokenImplementationAddress = "";
-  let variableDebtTokenImplementationAddress = "";
+  let hTokenImplementationAddress = '';
+  let stableDebtTokenImplementationAddress = '';
+  let variableDebtTokenImplementationAddress = '';
 
-  stableDebtTokenImplementationAddress = (
-    await hre.deployments.get(STABLE_DEBT_TOKEN_IMPL_ID)
-  ).address;
+  stableDebtTokenImplementationAddress = (await hre.deployments.get(STABLE_DEBT_TOKEN_IMPL_ID))
+    .address;
   variableDebtTokenImplementationAddress = await (
     await hre.deployments.get(VARIABLE_DEBT_TOKEN_IMPL_ID)
   ).address;
 
-  hTokenImplementationAddress = (await hre.deployments.get(ATOKEN_IMPL_ID))
-    .address;
-
-  const delegatedAwareReserves = Object.entries(reservesParams).filter(
-    ([_, { hTokenImpl }]) => hTokenImpl === eContractid.DelegationAwareHToken
-  ) as [string, IReserveParams][];
-
-  if (delegatedAwareReserves.length > 0) {
-    delegationAwareHTokenImplementationAddress = (
-      await hre.deployments.get(DELEGATION_AWARE_ATOKEN_IMPL_ID)
-    ).address;
-  }
+  hTokenImplementationAddress = (await hre.deployments.get(HTOKEN_IMPL_ID)).address;
 
   const reserves = Object.entries(reservesParams).filter(
-    ([_, { hTokenImpl }]) =>
-      hTokenImpl === eContractid.DelegationAwareHToken ||
-      hTokenImpl === eContractid.HToken
+    ([_, { hTokenImpl }]) => hTokenImpl === eContractid.HToken
   ) as [string, IReserveParams][];
 
   for (let [symbol, params] of reserves) {
     if (!tokenAddresses[symbol]) {
-      console.log(
-        `- Skipping init of ${symbol} due token address is not set at markets config`
-      );
+      console.log(`- Skipping init of ${symbol} due token address is not set at markets config`);
       continue;
     }
     const poolReserve = await pool.getReserveData(tokenAddresses[symbol]);
@@ -187,22 +159,16 @@ export const initReservesByHelper = async (
         await hre.deployments.deploy(`ReserveStrategy-${strategy.name}`, {
           from: admin,
           args: rateStrategies[strategy.name],
-          contract: "DefaultReserveInterestRateStrategy",
+          contract: 'DefaultReserveInterestRateStrategy',
           log: true,
         })
       ).address;
     }
     strategyAddressPerAsset[symbol] = strategyAddresses[strategy.name];
-    console.log(
-      "Strategy address for asset %s: %s",
-      symbol,
-      strategyAddressPerAsset[symbol]
-    );
+    console.log('Strategy address for asset %s: %s', symbol, strategyAddressPerAsset[symbol]);
 
     if (hTokenImpl === eContractid.HToken) {
-      hTokenType[symbol] = "generic";
-    } else if (hTokenImpl === eContractid.DelegationAwareHToken) {
-      hTokenType[symbol] = "delegation aware";
+      hTokenType[symbol] = 'generic';
     }
 
     reserveInitDecimals.push(reserveDecimals);
@@ -211,30 +177,22 @@ export const initReservesByHelper = async (
   }
 
   for (let i = 0; i < reserveSymbols.length; i++) {
-    let hTokenToUse: string;
-    if (hTokenType[reserveSymbols[i]] === "generic") {
-      hTokenToUse = hTokenImplementationAddress;
-    } else {
-      hTokenToUse = delegationAwareHTokenImplementationAddress;
-    }
-
     initInputParams.push({
-      hTokenImpl: hTokenToUse,
+      hTokenImpl: hTokenImplementationAddress,
       stableDebtTokenImpl: stableDebtTokenImplementationAddress,
       variableDebtTokenImpl: variableDebtTokenImplementationAddress,
       underlyingAssetDecimals: reserveInitDecimals[i],
       interestRateStrategyAddress: strategyAddressPerAsset[reserveSymbols[i]],
       underlyingAsset: reserveTokens[i],
       treasury: treasuryAddress,
-      incentivesController,
       underlyingAssetName: reserveSymbols[i],
       hTokenName: `HopeLend ${hTokenNamePrefix} ${reserveSymbols[i]}`,
-      hTokenSymbol: `a${symbolPrefix}${reserveSymbols[i]}`,
+      hTokenSymbol: `h${symbolPrefix}${reserveSymbols[i]}`,
       variableDebtTokenName: `HopeLend ${variableDebtTokenNamePrefix} Variable Debt ${reserveSymbols[i]}`,
       variableDebtTokenSymbol: `variableDebt${symbolPrefix}${reserveSymbols[i]}`,
       stableDebtTokenName: `HopeLend ${stableDebtTokenNamePrefix} Stable Debt ${reserveSymbols[i]}`,
       stableDebtTokenSymbol: `stableDebt${symbolPrefix}${reserveSymbols[i]}`,
-      params: "0x10",
+      params: '0x10',
     });
   }
 
@@ -243,28 +201,18 @@ export const initReservesByHelper = async (
   const chunkedInitInputParams = chunk(initInputParams, initChunks);
 
   const proxyArtifact = await hre.deployments.get(POOL_CONFIGURATOR_PROXY_ID);
-  const configuratorArtifact = await hre.deployments.get(
-    POOL_CONFIGURATOR_IMPL_ID
-  );
+  const configuratorArtifact = await hre.deployments.get(POOL_CONFIGURATOR_IMPL_ID);
   const configurator = (await hre.ethers.getContractAt(
     configuratorArtifact.abi,
     proxyArtifact.address
   )) as PoolConfigurator;
 
-  console.log(
-    `- Reserves initialization in ${chunkedInitInputParams.length} txs`
-  );
-  for (
-    let chunkIndex = 0;
-    chunkIndex < chunkedInitInputParams.length;
-    chunkIndex++
-  ) {
-    const tx = await waitForTx(
-      await configurator.initReserves(chunkedInitInputParams[chunkIndex])
-    );
+  console.log(`- Reserves initialization in ${chunkedInitInputParams.length} txs`);
+  for (let chunkIndex = 0; chunkIndex < chunkedInitInputParams.length; chunkIndex++) {
+    const tx = await waitForTx(await configurator.initReserves(chunkedInitInputParams[chunkIndex]));
 
     console.log(
-      `  - Reserve ready for: ${chunkedSymbols[chunkIndex].join(", ")}`,
+      `  - Reserve ready for: ${chunkedSymbols[chunkIndex].join(', ')}`,
       `\n    - Tx hash: ${tx.transactionHash}`
     );
   }
@@ -278,19 +226,17 @@ export const getPairsTokenAggregator = (
 ): [string[], string[]] => {
   const { ETH, USD, ...assetsAddressesWithoutEth } = allAssetsAddresses;
 
-  const pairs = Object.entries(assetsAddressesWithoutEth).map(
-    ([tokenSymbol, tokenAddress]) => {
-      const aggregatorAddressIndex = Object.keys(
-        aggregatorsAddresses
-      ).findIndex((value) => value === tokenSymbol);
-      const [, aggregatorAddress] = (
-        Object.entries(aggregatorsAddresses) as [string, tEthereumAddress][]
-      )[aggregatorAddressIndex];
-      if (!aggregatorAddress) throw `Missing aggregator for ${tokenSymbol}`;
-      if (!tokenAddress) throw `Missing token address for ${tokenSymbol}`;
-      return [tokenAddress, aggregatorAddress];
-    }
-  ) as [string, string][];
+  const pairs = Object.entries(assetsAddressesWithoutEth).map(([tokenSymbol, tokenAddress]) => {
+    const aggregatorAddressIndex = Object.keys(aggregatorsAddresses).findIndex(
+      (value) => value === tokenSymbol
+    );
+    const [, aggregatorAddress] = (
+      Object.entries(aggregatorsAddresses) as [string, tEthereumAddress][]
+    )[aggregatorAddressIndex];
+    if (!aggregatorAddress) throw `Missing aggregator for ${tokenSymbol}`;
+    if (!tokenAddress) throw `Missing token address for ${tokenSymbol}`;
+    return [tokenAddress, aggregatorAddress];
+  }) as [string, string][];
 
   const mappedPairs = pairs.map(([asset]) => asset);
   const mappedAggregators = pairs.map(([, source]) => source);
@@ -302,9 +248,7 @@ export const configureReservesByHelper = async (
   reservesParams: iMultiPoolsAssets<IReserveParams>,
   tokenAddresses: { [symbol: string]: tEthereumAddress }
 ) => {
-  const addressProviderArtifact = await hre.deployments.get(
-    POOL_ADDRESSES_PROVIDER_ID
-  );
+  const addressProviderArtifact = await hre.deployments.get(POOL_ADDRESSES_PROVIDER_ID);
   const addressProvider = (await hre.ethers.getContractAt(
     addressProviderArtifact.abi,
     addressProviderArtifact.address
@@ -316,9 +260,7 @@ export const configureReservesByHelper = async (
     await addressProvider.getACLManager()
   )) as ACLManager;
 
-  const reservesSetupArtifact = await hre.deployments.get(
-    RESERVES_SETUP_HELPER_ID
-  );
+  const reservesSetupArtifact = await hre.deployments.get(RESERVES_SETUP_HELPER_ID);
   const reservesSetupHelper = await hre.ethers.getContractAt(
     reservesSetupArtifact.abi,
     reservesSetupArtifact.address
@@ -368,21 +310,19 @@ export const configureReservesByHelper = async (
       );
       continue;
     }
-    if (baseLTVAsCollateral === "-1") continue;
+    if (baseLTVAsCollateral === '-1') continue;
 
     const assetAddressIndex = Object.keys(tokenAddresses).findIndex(
       (value) => value === assetSymbol
     );
-    const [, tokenAddress] = (
-      Object.entries(tokenAddresses) as [string, string][]
-    )[assetAddressIndex];
+    const [, tokenAddress] = (Object.entries(tokenAddresses) as [string, string][])[
+      assetAddressIndex
+    ];
     const { usageAsCollateralEnabled: alreadyEnabled } =
       await protocolDataProvider.getReserveConfigurationData(tokenAddress);
 
     if (alreadyEnabled) {
-      console.log(
-        `- Reserve ${assetSymbol} is already enabled as collateral, skipping`
-      );
+      console.log(`- Reserve ${assetSymbol} is already enabled as collateral, skipping`);
       continue;
     }
     // Push data
@@ -405,14 +345,8 @@ export const configureReservesByHelper = async (
   }
   if (tokens.length) {
     // Set hTokenAndRatesDeployer as temporal admin
-    const aclAdmin = await hre.ethers.getSigner(
-      await addressProvider.getACLAdmin()
-    );
-    await waitForTx(
-      await aclManager
-        .connect(aclAdmin)
-        .addRiskAdmin(reservesSetupHelper.address)
-    );
+    const aclAdmin = await hre.ethers.getSigner(await addressProvider.getACLAdmin());
+    await waitForTx(await aclManager.connect(aclAdmin).addRiskAdmin(reservesSetupHelper.address));
 
     // Deploy init per chunks
     const enableChunks = 20;
@@ -421,11 +355,7 @@ export const configureReservesByHelper = async (
     const poolConfiguratorAddress = await addressProvider.getPoolConfigurator();
 
     console.log(`- Configure reserves in ${chunkedInputParams.length} txs`);
-    for (
-      let chunkIndex = 0;
-      chunkIndex < chunkedInputParams.length;
-      chunkIndex++
-    ) {
+    for (let chunkIndex = 0; chunkIndex < chunkedInputParams.length; chunkIndex++) {
       const tx = await waitForTx(
         await reservesSetupHelper.configureReserves(
           poolConfiguratorAddress,
@@ -433,15 +363,13 @@ export const configureReservesByHelper = async (
         )
       );
       console.log(
-        `  - Init for: ${chunkedSymbols[chunkIndex].join(", ")}`,
+        `  - Init for: ${chunkedSymbols[chunkIndex].join(', ')}`,
         `\n    - Tx hash: ${tx.transactionHash}`
       );
     }
     // Remove ReservesSetupHelper from risk admins
     await waitForTx(
-      await aclManager
-        .connect(aclAdmin)
-        .removeRiskAdmin(reservesSetupHelper.address)
+      await aclManager.connect(aclAdmin).removeRiskAdmin(reservesSetupHelper.address)
     );
   }
 };
@@ -450,9 +378,7 @@ export const addMarketToRegistry = async (
   providerId: number,
   addressesProvider: tEthereumAddress
 ) => {
-  const providerRegistry = await hre.deployments.get(
-    "PoolAddressesProviderRegistry"
-  );
+  const providerRegistry = await hre.deployments.get('PoolAddressesProviderRegistry');
   const providerRegistryInstance = (await hre.ethers.getContractAt(
     providerRegistry.abi,
     providerRegistry.address

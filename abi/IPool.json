@@ -914,6 +914,32 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getFeeToVault",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "feeToVault",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getFeeToVaultPercent",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "feeToVaultPercent",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint16",
@@ -1482,6 +1508,19 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "feeToVault",
+        "type": "address"
+      }
+    ],
+    "name": "setFeeToVault",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "asset",
         "type": "address"
       },
@@ -1630,6 +1669,19 @@
       }
     ],
     "name": "updateBridgeProtocolFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "feeToVaultPercent",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateFeeToVaultPercent",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

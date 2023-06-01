@@ -1,18 +1,20 @@
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { DeployFunction } from "hardhat-deploy/types";
-import LTArtifact from "../../extendedArtifacts/LT.json";
-import HOPEArtifact from "../../extendedArtifacts/HOPE.json";
-import StakingHOPEArtifact from "../../extendedArtifacts/StakingHOPE.json";
-import VotingEscrowArtifact from "../../extendedArtifacts/VotingEscrow.json";
-import Permit2Artifact from "../../extendedArtifacts/Permit2.json";
-import GaugeControllerArtifact from "../../extendedArtifacts/GaugeController.json";
-import MinterArtifact from "../../extendedArtifacts/Minter.json";
-import BurnerManagerArtifact from "../../extendedArtifacts/BurnerManager.json";
-import UnderlyingBurnerArtifact from "../../extendedArtifacts/UnderlyingBurner.json";
-import MockGaugeArtifact from "../../extendedArtifacts/MockGauge.json";
-import { time } from "@nomicfoundation/hardhat-network-helpers";
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { DeployFunction } from 'hardhat-deploy/types';
+import RestrictedListArtifact from '../../extendedArtifacts/RestrictedList.json';
+import LTArtifact from '../../extendedArtifacts/LT.json';
+import HOPEArtifact from '../../extendedArtifacts/HOPE.json';
+import StakingHOPEArtifact from '../../extendedArtifacts/StakingHOPE.json';
+import VotingEscrowArtifact from '../../extendedArtifacts/VotingEscrow.json';
+import Permit2Artifact from '../../extendedArtifacts/Permit2.json';
+import GaugeControllerArtifact from '../../extendedArtifacts/GaugeController.json';
+import MinterArtifact from '../../extendedArtifacts/Minter.json';
+import BurnerManagerArtifact from '../../extendedArtifacts/BurnerManager.json';
+import UnderlyingBurnerArtifact from '../../extendedArtifacts/UnderlyingBurner.json';
+import MockGaugeArtifact from '../../extendedArtifacts/MockGauge.json';
+import { time } from '@nomicfoundation/hardhat-network-helpers';
 import {
   BURNER_MANAGER_ID,
+  ConfigNames,
   GAUGE_CONTROLLER_ID,
   HOPE_ID,
   LT_ID,
@@ -22,19 +24,23 @@ import {
   UNDERLYING_BURNER_ID,
   VOTING_ESCROW_ID,
   ZERO_ADDRESS,
+  eEthereumNetwork,
   eNetwork,
   getParamPerNetwork,
   getProxyAdminBySlot,
   getProxyImplementationBySlot,
+  isTestnetMarket,
   loadPoolConfig,
-} from "../../helpers";
-import { COMMON_DEPLOY_PARAMS, MARKET_NAME } from "../../helpers/env";
-import { getAddress } from "ethers/lib/utils";
+} from '../../helpers';
+import { COMMON_DEPLOY_PARAMS, MARKET_NAME } from '../../helpers/env';
+import { getAddress } from 'ethers/lib/utils';
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments, getNamedAccounts } = hre;
   const { deploy, save } = deployments;
   const { deployer } = await getNamedAccounts();
+
+  const poolConfig = await loadPoolConfig(MARKET_NAME as ConfigNames);
 
   const {
     LTAddress,
@@ -47,7 +53,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     BurnerManagerAddress,
     UnderlyingBurnerAddress,
   } = await loadPoolConfig(MARKET_NAME);
-
   const network = (process.env.FORK || hre.network.name) as eNetwork;
   const ltAddress = getParamPerNetwork(LTAddress, network);
   if (ltAddress && getAddress(ltAddress) !== ZERO_ADDRESS) {
@@ -98,15 +103,24 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     from: deployer,
     proxy: {
       owner: deployer,
-      proxyContract: "OpenZeppelinTransparentProxy",
+      proxyContract: 'OpenZeppelinTransparentProxy',
       execute: {
         init: {
-          methodName: "initialize",
-          args: ["LT Token", "LT"],
+          methodName: 'initialize',
+          args: ['LT Token', 'LT'],
         },
       },
     },
     skipIfAlreadyDeployed: true,
+    ...COMMON_DEPLOY_PARAMS,
+  });
+
+  const RestrictedList = await deploy('RestrictedList', {
+    contract: {
+      abi: RestrictedListArtifact.abi,
+      bytecode: RestrictedListArtifact.bytecode,
+    },
+    from: deployer,
     ...COMMON_DEPLOY_PARAMS,
   });
 
@@ -154,9 +168,48 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     ...COMMON_DEPLOY_PARAMS,
   });
 
+  if (isTestnetMarket(poolConfig)) {
+    await deploy(HOPE_ID, {
+      from: deployer,
+      contract: 'MintableERC20',
+      args: ['HOPE', 'HOPE', 18],
+      ...COMMON_DEPLOY_PARAMS,
+    });
+  } else {
+    await deploy(HOPE_ID, {
+      contract: {
+        abi: HOPEArtifact.abi,
+        bytecode: HOPEArtifact.bytecode,
+      },
+      from: deployer,
+      proxy: {
+        owner: deployer,
+        proxyContract: 'OpenZeppelinTransparentProxy',
+        execute: {
+          init: {
+            methodName: 'initialize',
+            args: [RestrictedList.address],
+          },
+        },
+      },
+      skipIfAlreadyDeployed: true,
+      ...COMMON_DEPLOY_PARAMS,
+    });
+  }
+
+  const StakingHope = await deploy(STAKING_HOPE_ID, {
+    contract: {
+      abi: StakingHOPEArtifact.abi,
+      bytecode: StakingHOPEArtifact.bytecode,
+    },
+    from: deployer,
+    args: [(await deployments.get(HOPE_ID)).address, Minter.address, Permit2.address],
+    ...COMMON_DEPLOY_PARAMS,
+  });
+
   await ltInstance.setMinter(Minter.address);
 
-  const MockGauge1 = await deploy("MockGauge1", {
+  const MockGauge1 = await deploy('MockGauge1', {
     contract: {
       abi: MockGaugeArtifact.abi,
       bytecode: MockGaugeArtifact.bytecode,
@@ -165,7 +218,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     ...COMMON_DEPLOY_PARAMS,
   });
 
-  const MockGauge2 = await deploy("MockGauge2", {
+  const MockGauge2 = await deploy('MockGauge2', {
     contract: {
       abi: MockGaugeArtifact.abi,
       bytecode: MockGaugeArtifact.bytecode,
@@ -178,23 +231,20 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     GaugeController.abi,
     GaugeController.address
   );
-  const name = "HOPE Staking Type";
-  const weight = hre.ethers.utils.parseEther("1");
-  const typeId = await gaugeControllerInstance.nGaugeTypes();
-  await gaugeControllerInstance.addType(name, weight);
-  const gaugeWeight = hre.ethers.utils.parseEther("1");
-  const gaugeWeight1 = hre.ethers.utils.parseEther("2");
-  await gaugeControllerInstance.addGauge(
-    MockGauge1.address,
-    typeId,
-    gaugeWeight
-  );
-  await gaugeControllerInstance.addGauge(
-    MockGauge2.address,
-    typeId,
-    gaugeWeight1
-  );
+  const stakingTypeName = 'HOPE Staking Type';
+  const stakingTypeWeight = hre.ethers.utils.parseEther('1');
+  const stakingTypeId = await gaugeControllerInstance.nGaugeTypes();
+  await gaugeControllerInstance.addType(stakingTypeName, stakingTypeWeight);
+  const swapTypeName = 'HOPE Swap Type';
+  const swapTypeWeight = hre.ethers.utils.parseEther('1');
+  const swapTypeId = await gaugeControllerInstance.nGaugeTypes();
+  await gaugeControllerInstance.addType(swapTypeName, swapTypeWeight);
+
+  const gaugeWeight = hre.ethers.utils.parseEther('1');
+  const gaugeWeight1 = hre.ethers.utils.parseEther('2');
+  await gaugeControllerInstance.addGauge(MockGauge1.address, stakingTypeId, gaugeWeight);
+  await gaugeControllerInstance.addGauge(MockGauge2.address, swapTypeId, gaugeWeight1);
 };
 
 export default func;
-func.tags = ["light-dao"];
+func.tags = ['light-dao', 'init-testnet'];

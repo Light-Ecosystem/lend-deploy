@@ -118,6 +118,19 @@
   },
   {
     "inputs": [],
+    "name": "CALLER_MUST_BE_LENDING_GAUGE",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "CALLER_MUST_BE_POOL",
     "outputs": [
       {
@@ -144,19 +157,6 @@
   },
   {
     "inputs": [],
-    "name": "CALLER_NOT_ATOKEN",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "CALLER_NOT_BRIDGE",
     "outputs": [
       {
@@ -171,6 +171,19 @@
   {
     "inputs": [],
     "name": "CALLER_NOT_EMERGENCY_ADMIN",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "CALLER_NOT_HTOKEN",
     "outputs": [
       {
         "internalType": "string",
@@ -599,6 +612,19 @@
   },
   {
     "inputs": [],
+    "name": "INVALID_FEE_TO_VAULT_PERCENT",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "INVALID_FLASHLOAN_EXECUTOR_RETURN",
     "outputs": [
       {
@@ -716,6 +742,19 @@
   },
   {
     "inputs": [],
+    "name": "INVALID_PHASES_LENGTH",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "INVALID_RESERVE_FACTOR",
     "outputs": [
       {
@@ -794,7 +833,33 @@
   },
   {
     "inputs": [],
+    "name": "LENDING_GAUGE_PERCENTAGE_NOT_MATCH",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "LTV_VALIDATION_FAILED",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "MUST_BE_NON_NEGATIVE",
     "outputs": [
       {
         "internalType": "string",
@@ -899,6 +964,32 @@
   {
     "inputs": [],
     "name": "OPERATION_NOT_SUPPORTED",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "PARAMETER_ADDRESS_NOT_ZERO",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "PHASES_NOT_DEFINED",
     "outputs": [
       {
         "internalType": "string",

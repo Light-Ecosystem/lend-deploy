@@ -115,12 +115,6 @@
       },
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "incentivesController",
-        "type": "address"
-      },
-      {
-        "indexed": false,
         "internalType": "uint8",
         "name": "hTokenDecimals",
         "type": "uint8"
@@ -427,11 +421,6 @@
         "type": "address"
       },
       {
-        "internalType": "contract IHopeLendIncentivesController",
-        "name": "incentivesController",
-        "type": "address"
-      },
-      {
         "internalType": "uint8",
         "name": "hTokenDecimals",
         "type": "uint8"
@@ -730,6 +719,30 @@
     ],
     "name": "transferUnderlyingTo",
     "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "stHope",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      }
+    ],
+    "name": "withdrawLTRewards",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   }
