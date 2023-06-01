@@ -143,7 +143,7 @@ export const strategyHOPE: IReserveParams = {
   flashLoanEnabled: true,
   reserveDecimals: '18',
   hTokenImpl: eContractid.HToken,
-  reserveFactor: '0',
+  reserveFactor: '1000',
   supplyCap: '0',
   borrowCap: '0',
   debtCeiling: '0',
