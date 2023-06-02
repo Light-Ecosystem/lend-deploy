@@ -1,8 +1,14 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { DeployFunction } from 'hardhat-deploy/types';
-import { COMMON_DEPLOY_PARAMS } from '../../helpers/env';
+import { COMMON_DEPLOY_PARAMS, MARKET_NAME } from '../../helpers/env';
 import { chainlinkAggregatorProxy, chainlinkEthUsdAggregatorProxy } from '../../helpers/constants';
-import { eNetwork } from '../../helpers';
+import {
+  ConfigNames,
+  TESTNET_PRICE_AGGR_PREFIX,
+  eNetwork,
+  isProductionMarket,
+  loadPoolConfig,
+} from '../../helpers';
 
 const func: DeployFunction = async function ({
   getNamedAccounts,
@@ -13,6 +19,18 @@ const func: DeployFunction = async function ({
   const { deployer } = await getNamedAccounts();
 
   const network = (process.env.FORK ? process.env.FORK : hre.network.name) as eNetwork;
+  const poolConfig = await loadPoolConfig(MARKET_NAME as ConfigNames);
+
+  if (!isProductionMarket(poolConfig)) {
+    const AGRREGATOR_ID = `WETH${TESTNET_PRICE_AGGR_PREFIX}`;
+    const aggregatorAddress = (await deployments.get(AGRREGATOR_ID)).address;
+    await deploy('UiPoolDataProvider', {
+      from: deployer,
+      args: [aggregatorAddress, aggregatorAddress],
+      ...COMMON_DEPLOY_PARAMS,
+    });
+    return;
+  }
 
   if (!chainlinkAggregatorProxy[network]) {
     console.log(

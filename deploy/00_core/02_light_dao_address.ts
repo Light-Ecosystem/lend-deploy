@@ -52,7 +52,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     Permit2Address,
     BurnerManagerAddress,
     UnderlyingBurnerAddress,
-  } = await loadPoolConfig(MARKET_NAME);
+  } = poolConfig;
   const network = (process.env.FORK || hre.network.name) as eNetwork;
   const ltAddress = getParamPerNetwork(LTAddress, network);
   if (ltAddress && getAddress(ltAddress) !== ZERO_ADDRESS) {

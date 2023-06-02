@@ -21,7 +21,7 @@ import PolygonMarket from '../markets/polygon';
 import OptimisticConfig from '../markets/optimistic';
 import ArbitrumConfig from '../markets/arbitrum';
 import { isValidAddress } from './utilities/utils';
-import { HopeLendProtocolDataProvider } from '../typechain';
+import { GaugeFactory, HopeLendProtocolDataProvider } from '../typechain';
 import {
   HTOKEN_PREFIX,
   HOPE_ID,
@@ -31,6 +31,8 @@ import {
   TREASURY_PROXY_ID,
   VARIABLE_DEBT_PREFIX,
   STAKING_HOPE_ID,
+  GAUGE_CONTROLLER_ID,
+  GAUGE_FACTORY_ID,
 } from './deploy-ids';
 import { ZERO_ADDRESS } from './constants';
 import { getTestnetReserveAddressFromSymbol, POOL_DATA_PROVIDER } from '.';
@@ -119,6 +121,17 @@ export const checkRequiredEnvironment = () => {
     return true;
   }
   return false;
+};
+
+export const checkDaiGaugeExists = async (symbol: string) => {
+  const gaugeControllerArtifact = await hre.deployments.get(GAUGE_CONTROLLER_ID);
+  const gaugeFactory = (await hre.ethers.getContractAt(
+    gaugeControllerArtifact.abi,
+    gaugeControllerArtifact.address
+  )) as GaugeFactory;
+  const daiAddress = (await hre.deployments.get(`${symbol}${TESTNET_TOKEN_PREFIX}`)).address;
+  const daiLendingGaugeAddress = await gaugeFactory.lendingGauge(daiAddress);
+  return daiLendingGaugeAddress != ZERO_ADDRESS;
 };
 
 export const savePoolTokens = async (

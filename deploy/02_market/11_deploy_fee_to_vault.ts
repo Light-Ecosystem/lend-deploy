@@ -1,9 +1,12 @@
 import { getPool } from '../../helpers/contract-getters';
-import { ConfigNames, loadPoolConfig } from '../../helpers/market-config-helpers';
+import {
+  ConfigNames,
+  getParamPerNetwork,
+  loadPoolConfig,
+} from '../../helpers/market-config-helpers';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { DeployFunction } from 'hardhat-deploy/types';
 import { COMMON_DEPLOY_PARAMS } from '../../helpers/env';
-import { isProductionMarket } from '../../helpers/market-config-helpers';
 import {
   BURNER_MANAGER_ID,
   UNDERLYING_BURNER_ID,
@@ -18,6 +21,8 @@ import { getHopeLendProtocolDataProvider } from '../../helpers/contract-getters'
 import BurnerManagerArtifact from '../../extendedArtifacts/BurnerManager.json';
 import UnderlyingBurnerArtifact from '../../extendedArtifacts/UnderlyingBurner.json';
 import HopeSwapBurnerArtifact from '../../extendedArtifacts/HopeSwapBurner.json';
+import { ZERO_ADDRESS, eNetwork } from '../../helpers';
+import { getAddress } from 'ethers/lib/utils';
 
 const func: DeployFunction = async function ({
   getNamedAccounts,
@@ -28,12 +33,14 @@ const func: DeployFunction = async function ({
   const { deployer, burnerOperatorRole } = await getNamedAccounts();
   const poolConfig = await loadPoolConfig(MARKET_NAME as ConfigNames);
 
-  if (isProductionMarket(poolConfig)) {
-    const burnerManager = (await deployments.get(BURNER_MANAGER_ID)).address;
-    const underlyingBurner = (await deployments.get(UNDERLYING_BURNER_ID)).address;
+  const { BurnerManagerAddress, UnderlyingBurnerAddress } = poolConfig;
+  const network = (process.env.FORK || hre.network.name) as eNetwork;
+  const burnerManagerAddress = getParamPerNetwork(BurnerManagerAddress, network);
+
+  if (burnerManagerAddress && getAddress(burnerManagerAddress) !== ZERO_ADDRESS) {
     const lendingFeeToVaultArtifact = await deploy('LendingFeeToVault', {
       from: deployer,
-      args: [burnerManager, underlyingBurner],
+      args: [burnerManagerAddress, getParamPerNetwork(UnderlyingBurnerAddress, network)],
       ...COMMON_DEPLOY_PARAMS,
     });
 
