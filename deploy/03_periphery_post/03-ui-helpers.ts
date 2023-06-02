@@ -22,8 +22,8 @@ const func: DeployFunction = async function ({
   const poolConfig = await loadPoolConfig(MARKET_NAME as ConfigNames);
 
   if (!isProductionMarket(poolConfig)) {
-    const AGRREGATOR_ID = `WETH${TESTNET_PRICE_AGGR_PREFIX}`;
-    const aggregatorAddress = (await deployments.get(AGRREGATOR_ID)).address;
+    const AGGREGATOR_ID = `WETH${TESTNET_PRICE_AGGR_PREFIX}`;
+    const aggregatorAddress = (await deployments.get(AGGREGATOR_ID)).address;
     await deploy('UiPoolDataProvider', {
       from: deployer,
       args: [aggregatorAddress, aggregatorAddress],
