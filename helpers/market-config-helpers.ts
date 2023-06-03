@@ -124,10 +124,13 @@ export const checkRequiredEnvironment = () => {
 };
 
 export const checkDaiGaugeExists = async (symbol: string) => {
-  const gaugeControllerArtifact = await hre.deployments.get(GAUGE_CONTROLLER_ID);
+  const gaugeFactoryArtifact = await hre.deployments.getOrNull(GAUGE_FACTORY_ID);
+  if (gaugeFactoryArtifact == null) {
+    return false;
+  }
   const gaugeFactory = (await hre.ethers.getContractAt(
-    gaugeControllerArtifact.abi,
-    gaugeControllerArtifact.address
+    gaugeFactoryArtifact.abi,
+    gaugeFactoryArtifact.address
   )) as GaugeFactory;
   const daiAddress = (await hre.deployments.get(`${symbol}${TESTNET_TOKEN_PREFIX}`)).address;
   const daiLendingGaugeAddress = await gaugeFactory.lendingGauge(daiAddress);
