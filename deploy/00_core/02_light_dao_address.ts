@@ -167,7 +167,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [LT.address, GaugeController.address],
     ...COMMON_DEPLOY_PARAMS,
   });
-
+  
   if (isTestnetMarket(poolConfig)) {
     await deploy(HOPE_ID, {
       from: deployer,

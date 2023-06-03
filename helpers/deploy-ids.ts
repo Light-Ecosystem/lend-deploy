@@ -45,3 +45,6 @@ export const MOCK_BURNER_MANAGER_ID = 'MockBurnerManager';
 export const MOCK_UNDERLYING_BURNER_ID = 'MockUnderlyingBurner';
 export const MOCK_HOPE_SWARP_BURNER_ID = 'MockHopeSwapBurner';
 export const LENDING_FEE_TO_VAULT_ID = 'LendingFeeToVault';
+
+export const ADMIN_ID = 'Admin';
+export const MOCK_HOPE_ID = 'MockHOPE';

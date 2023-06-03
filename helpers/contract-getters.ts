@@ -32,7 +32,7 @@ import {
   WrappedTokenGateway,
   UiPoolDataProvider,
   WalletBalanceProvider,
-  LendingFeeToVault,
+  LendingFeeToVault
 } from '../typechain';
 import { tEthereumAddress } from './types';
 import {
@@ -53,6 +53,7 @@ import {
   LENDING_GAUGE_IMPL_ID,
   GAUGE_FACTORY_ID,
   LENDING_FEE_TO_VAULT_ID,
+  STAKING_HOPE_ID,
 } from './deploy-ids';
 import LTArtifact from '../extendedArtifacts/LT.json';
 import StakingHOPEArtifact from '../extendedArtifacts/StakingHOPE.json';
@@ -62,7 +63,6 @@ import MinterArtifact from '../extendedArtifacts/Minter.json';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { Libraries } from 'hardhat-deploy/dist/types';
 import { getContract, getContractByABI } from './utilities/tx';
-import { Address } from 'hardhat-deploy/types';
 import { Contract } from 'ethers';
 
 // Prevent error HH9 when importing this file inside tasks or helpers at Hardhat config load
@@ -267,11 +267,18 @@ export const getLendingGauge = async (address?: tEthereumAddress): Promise<HopeO
 
 export const getGaugeFactory = async (address?: tEthereumAddress): Promise<HopeOracle> =>
   getContract('GaugeFactory', address || (await hre.deployments.get(GAUGE_FACTORY_ID)).address);
-
+  
 export const getLendingFeeToVault = async (
   address?: tEthereumAddress
 ): Promise<LendingFeeToVault> =>
   getContract(
     'LendingFeeToVault',
     address || (await hre.deployments.get(LENDING_FEE_TO_VAULT_ID)).address
+  );
+
+export const getStakingHope = async (address?: tEthereumAddress): Promise<Contract> =>
+  getContractByABI(
+    'StakingHope',
+    StakingHOPEArtifact.abi,
+    address || (await hre.deployments.get(STAKING_HOPE_ID)).address
   );

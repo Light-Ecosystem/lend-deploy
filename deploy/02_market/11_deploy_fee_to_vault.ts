@@ -11,7 +11,7 @@ import {
   MOCK_UNDERLYING_BURNER_ID,
   MOCK_HOPE_SWARP_BURNER_ID,
 } from '../../helpers/deploy-ids';
-import { getContract, waitForTx } from '../../helpers/utilities/tx';
+import { waitForTx } from '../../helpers/utilities/tx';
 import { MARKET_NAME } from '../../helpers/env';
 import { getHopeLendProtocolDataProvider } from '../../helpers/contract-getters';
 
@@ -25,7 +25,7 @@ const func: DeployFunction = async function ({
   ...hre
 }: HardhatRuntimeEnvironment) {
   const { deploy } = deployments;
-  const { deployer, burnerOperatorRole } = await getNamedAccounts();
+  const { deployer } = await getNamedAccounts();
   const poolConfig = await loadPoolConfig(MARKET_NAME as ConfigNames);
 
   if (isProductionMarket(poolConfig)) {
@@ -37,11 +37,20 @@ const func: DeployFunction = async function ({
       ...COMMON_DEPLOY_PARAMS,
     });
 
+    const lendingFeeToVaultInstance = (await hre.ethers.getContractAt(
+      lendingFeeToVaultArtifact.abi,
+      lendingFeeToVaultArtifact.address
+    )) as any;
+
     // Set feeToVault
     const pool = await getPool();
     await waitForTx(await pool.setFeeToVault(lendingFeeToVaultArtifact.address));
+
+    //keccak256("Operator_Role")
+    const hashOfRole = "0xa33daac198390630db2998ca75f43ac7962e047fbef856c9c97ccc60c64bfe17";
+    await waitForTx(await lendingFeeToVaultInstance.grantRole(hashOfRole, deployer));
+
   } else {
-    console.log('hardhat local network......................');
     // deploy mockBurnerManager
     const mockBurnerManagerArtifact = await deploy(MOCK_BURNER_MANAGER_ID, {
       contract: {
@@ -51,8 +60,6 @@ const func: DeployFunction = async function ({
       from: deployer,
       ...COMMON_DEPLOY_PARAMS,
     });
-
-    console.log('BurnerManager', mockBurnerManagerArtifact.address);
 
     const mockBurnerManagerInstance = (await hre.ethers.getContractAt(
       mockBurnerManagerArtifact.abi,
@@ -69,8 +76,6 @@ const func: DeployFunction = async function ({
       ...COMMON_DEPLOY_PARAMS,
     });
 
-    console.log('UnderlyingBurner', mockUnderlyingBurnerArtifact.address);
-
     // deploy lendingFeeToVault
     const lendingFeeToVaultArtifact = await deploy('LendingFeeToVault', {
       from: deployer,
@@ -78,11 +83,9 @@ const func: DeployFunction = async function ({
       ...COMMON_DEPLOY_PARAMS,
     });
 
-    console.log('lendingFeeToVault', lendingFeeToVaultArtifact.address);
-
     const hopeLendProtocolDataProviderInstance = await getHopeLendProtocolDataProvider();
-    const allTokens = await hopeLendProtocolDataProviderInstance.getAllHTokens();
-    const hopeAddress = allTokens.find((hToken) => hToken.symbol.includes('HOPE'))?.tokenAddress;
+    const reservesTokens = await hopeLendProtocolDataProviderInstance.getAllReservesTokens();
+    const hopeAddress = reservesTokens.find((token) => token.symbol === 'HOPE')?.tokenAddress;
 
     //deploy MockHopeSwapBurner
     const mockHopeSwapBurnerArtifact = await deploy(MOCK_HOPE_SWARP_BURNER_ID, {
@@ -95,22 +98,9 @@ const func: DeployFunction = async function ({
       ...COMMON_DEPLOY_PARAMS,
     });
 
-    console.log('HopeSwapBurner', mockHopeSwapBurnerArtifact.address);
-
     await waitForTx(
       await mockBurnerManagerInstance.setBurner(hopeAddress, mockHopeSwapBurnerArtifact.address)
     );
-
-    // Set feeToVault
-    const pool = await getPool();
-    // await waitForTx(
-    //   await pool.setFeeToVault(
-    //     lendingFeeToVaultArtifact.address
-    //   )
-    // );
-
-    const burner = await mockBurnerManagerInstance.burners(hopeAddress);
-    console.log('---------------------', burner);
   }
 };
 

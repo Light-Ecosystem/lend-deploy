@@ -22,6 +22,7 @@ import {
   VariableDebtToken,
   WETH9,
   WrappedTokenGateway,
+  LendingFeeToVault
 } from "../../typechain";
 import {
   ORACLE_ID,
@@ -29,6 +30,7 @@ import {
   POOL_CONFIGURATOR_PROXY_ID,
   POOL_DATA_PROVIDER,
   POOL_PROXY_ID,
+  LENDING_FEE_TO_VAULT_ID
 } from "../../helpers/deploy-ids";
 import {
   getHToken,
@@ -36,7 +38,7 @@ import {
   getERC20Faucet,
   getStableDebtToken,
   getVariableDebtToken,
-  getWETH,
+  getWETH
 } from "../../helpers/contract-getters";
 
 import { ethers, deployments } from "hardhat";
@@ -70,6 +72,7 @@ export interface TestEnv {
   registry: PoolAddressesProviderRegistry;
   wrappedTokenGateway: WrappedTokenGateway;
   faucet: ERC20Faucet;
+  lendingFeeToVault: LendingFeeToVault;
 }
 
 let HardhatSnapshotId: string = "0x1";
@@ -100,6 +103,7 @@ const testEnv: TestEnv = {
   registry: {} as PoolAddressesProviderRegistry,
   wrappedTokenGateway: {} as WrappedTokenGateway,
   faucet: {} as ERC20Faucet,
+  lendingFeeToVault: {} as LendingFeeToVault
 } as TestEnv;
 
 export async function initializeMakeSuite() {
@@ -219,6 +223,12 @@ export async function initializeMakeSuite() {
   testEnv.usdc = await getERC20(usdcAddress);
   testEnv.hope = await getERC20(hopeAddress);
   testEnv.weth = await getWETH(wethAddress);
+
+  const lendingFeeToVaultArtifact = await deployments.get(LENDING_FEE_TO_VAULT_ID);
+  testEnv.lendingFeeToVault = (await ethers.getContractAt(
+    LENDING_FEE_TO_VAULT_ID,
+    lendingFeeToVaultArtifact.address
+  )) as LendingFeeToVault;
 
   if (isTestnetMarket(poolConfig)) {
     testEnv.faucet = await getERC20Faucet();
