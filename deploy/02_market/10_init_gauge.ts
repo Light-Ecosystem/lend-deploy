@@ -119,7 +119,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const name = 'Lending Type';
   const weight = hre.ethers.utils.parseEther('1');
   const typeId = await gaugeControllerInstance.nGaugeTypes();
-  await waitForTx(await gaugeControllerInstance.addGauge(daiLendingGaugeAddress, typeId, 0));
   // TODO(Dev & Beta TypeID not equal)
   if (typeId == 2 || typeId == 3) {
     await waitForTx(await gaugeControllerInstance.addType(name, weight));
