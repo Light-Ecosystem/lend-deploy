@@ -165,4 +165,7 @@ export default {
       apiKey: ETHERSCAN_KEY,
     },
   },
+  etherscan: {
+    apiKey: ETHERSCAN_KEY,
+  },
 };

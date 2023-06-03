@@ -97,7 +97,6 @@ export const chainlinkAggregatorProxy: Record<string, string> = {
   görli: '0x60E4B131f0F219c72b0346675283E73888e4AB24',
   [eArbitrumNetwork.görliNitro]: '0xC09e69E79106861dF5d289dA88349f10e2dc6b5C',
   hardhat: '0x8f86403A4DE0BB5791fa46B8e795C547942fE4Cf',
-  [eEthereumNetwork.sepolia]: '0xBE1739Cc5Ed90D2F2c33199C552b4f26b8EA12c5',
 };
 
 export const chainlinkEthUsdAggregatorProxy: Record<string, string> = {
@@ -121,7 +120,6 @@ export const chainlinkEthUsdAggregatorProxy: Record<string, string> = {
   görli: '0x60E4B131f0F219c72b0346675283E73888e4AB24',
   [eArbitrumNetwork.görliNitro]: '0xC09e69E79106861dF5d289dA88349f10e2dc6b5C',
   hardhat: '0x8f86403A4DE0BB5791fa46B8e795C547942fE4Cf',
-  [eEthereumNetwork.sepolia]: '0xBE1739Cc5Ed90D2F2c33199C552b4f26b8EA12c5',
 };
 
 export const EMPTY_STORAGE_SLOT =

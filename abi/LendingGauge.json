@@ -8,44 +8,35 @@
     "anonymous": false,
     "inputs": [
       {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "start",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "end",
+            "type": "uint256"
+          },
+          {
+            "internalType": "int256",
+            "name": "k",
+            "type": "int256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "b",
+            "type": "uint256"
+          }
+        ],
         "indexed": false,
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "allocation",
-        "type": "uint256"
+        "internalType": "struct DataTypes.Phase[]",
+        "name": "_phases",
+        "type": "tuple[]"
       }
     ],
-    "name": "UpdateAllocation",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "oldPercentage",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "newPercentage",
-        "type": "uint256"
-      }
-    ],
-    "name": "UpdateStableDebtPercentage",
+    "name": "AddPhases",
     "type": "event"
   },
   {

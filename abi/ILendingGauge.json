@@ -1,5 +1,40 @@
 [
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "start",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "end",
+            "type": "uint256"
+          },
+          {
+            "internalType": "int256",
+            "name": "k",
+            "type": "int256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "b",
+            "type": "uint256"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct DataTypes.Phase[]",
+        "name": "_phases",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "AddPhases",
+    "type": "event"
+  },
+  {
     "inputs": [],
     "name": "controller",
     "outputs": [

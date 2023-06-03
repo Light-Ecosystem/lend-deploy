@@ -1,5 +1,5 @@
 {
-  "address": "0x4e9b40646c9099aCFEdC0e440DD47fc1331E38E8",
+  "address": "0xDDff510afe1F4077a9bc4e3d54F385813c4A2801",
   "abi": [
     {
       "anonymous": false,
@@ -109,25 +109,25 @@
       "type": "function"
     }
   ],
-  "transactionHash": "0x35a4350f551c7987ad59b4ea2fe584c12b7d88b9aa0b6f48306107111f66056b",
+  "transactionHash": "0x577a7ea661e3b3bb7e0b7898302552ef81ffcd25ff10c2a9072a2c1b73d140cb",
   "receipt": {
     "to": null,
-    "from": "0x3141f8D6BE4e4d9137577798C1e127Db81D196d7",
-    "contractAddress": "0x4e9b40646c9099aCFEdC0e440DD47fc1331E38E8",
-    "transactionIndex": 32,
+    "from": "0xcbeD65Db7E177D4875dDF5B67E13326A43a7B03f",
+    "contractAddress": "0xDDff510afe1F4077a9bc4e3d54F385813c4A2801",
+    "transactionIndex": 20,
     "gasUsed": "174477",
     "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-    "blockHash": "0x39058f9d2ed6f8f22d729efdea6ec9d6faf8df6397a1507aa173aae5cd72826a",
-    "transactionHash": "0x35a4350f551c7987ad59b4ea2fe584c12b7d88b9aa0b6f48306107111f66056b",
+    "blockHash": "0x645a9646ce46caba5e35a8543f61d0a1cbde0350a98144f059755b408c53fa9f",
+    "transactionHash": "0x577a7ea661e3b3bb7e0b7898302552ef81ffcd25ff10c2a9072a2c1b73d140cb",
     "logs": [],
-    "blockNumber": 3515464,
-    "cumulativeGasUsed": "22114972",
+    "blockNumber": 3607290,
+    "cumulativeGasUsed": "3147238",
     "status": 1,
     "byzantium": true
   },
   "args": [],
   "numDeployments": 1,
-  "solcInputHash": "639e216459d5c68e72bf73f33e875321",
+  "solcInputHash": "cbbf83321d7e0905d0f69c04af64508d",
   "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"asset\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"AssetPriceUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"EthPriceUpdated\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"asset\",\"type\":\"address\"}],\"name\":\"getAssetPrice\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getEthUsdPrice\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"asset\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"}],\"name\":\"setAssetPrice\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"}],\"name\":\"setEthUsdPrice\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"getAssetPrice(address)\":{\"params\":{\"asset\":\"The address of the asset\"},\"returns\":{\"_0\":\"The price of the asset\"}},\"setAssetPrice(address,uint256)\":{\"params\":{\"asset\":\"The address of the asset\",\"price\":\"The price of the asset\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"getAssetPrice(address)\":{\"notice\":\"Returns the asset price in the base currency\"},\"setAssetPrice(address,uint256)\":{\"notice\":\"Set the price of the asset\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"lend-core/contracts/mocks/oracle/PriceOracle.sol\":\"PriceOracle\"},\"evmVersion\":\"berlin\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":100000},\"remappings\":[]},\"sources\":{\"lend-core/contracts/interfaces/IPriceOracle.sol\":{\"content\":\"// SPDX-License-Identifier: LGPL-3.0\\npragma solidity 0.8.17;\\n\\n/**\\n * @title IPriceOracle\\n * @author HopeLend\\n * @notice Defines the basic interface for a Price oracle.\\n */\\ninterface IPriceOracle {\\n  /**\\n   * @notice Returns the asset price in the base currency\\n   * @param asset The address of the asset\\n   * @return The price of the asset\\n   */\\n  function getAssetPrice(address asset) external view returns (uint256);\\n\\n  /**\\n   * @notice Set the price of the asset\\n   * @param asset The address of the asset\\n   * @param price The price of the asset\\n   */\\n  function setAssetPrice(address asset, uint256 price) external;\\n}\\n\",\"keccak256\":\"0x6760edc833c0f49f23cddd78fb521a9a72596fec26ee76af616f9ca1253b68ec\",\"license\":\"LGPL-3.0\"},\"lend-core/contracts/mocks/oracle/PriceOracle.sol\":{\"content\":\"// SPDX-License-Identifier: LGPL-3.0\\npragma solidity 0.8.17;\\n\\nimport {IPriceOracle} from '../../interfaces/IPriceOracle.sol';\\n\\ncontract PriceOracle is IPriceOracle {\\n  // Map of asset prices (asset => price)\\n  mapping(address => uint256) internal prices;\\n\\n  uint256 internal ethPriceUsd;\\n\\n  event AssetPriceUpdated(address asset, uint256 price, uint256 timestamp);\\n  event EthPriceUpdated(uint256 price, uint256 timestamp);\\n\\n  function getAssetPrice(address asset) external view override returns (uint256) {\\n    return prices[asset];\\n  }\\n\\n  function setAssetPrice(address asset, uint256 price) external override {\\n    prices[asset] = price;\\n    emit AssetPriceUpdated(asset, price, block.timestamp);\\n  }\\n\\n  function getEthUsdPrice() external view returns (uint256) {\\n    return ethPriceUsd;\\n  }\\n\\n  function setEthUsdPrice(uint256 price) external {\\n    ethPriceUsd = price;\\n    emit EthPriceUpdated(price, block.timestamp);\\n  }\\n}\\n\",\"keccak256\":\"0x73a40d6cf8dc8c81ad7f3c2cd2327545fb46f1fd510e07229bd1cb5b57ed6e18\",\"license\":\"LGPL-3.0\"}},\"version\":1}",
   "bytecode": "0x608060405234801561001057600080fd5b50610231806100206000396000f3fe608060405234801561001057600080fd5b506004361061004c5760003560e01c806351323f7214610051578063a0a8045e14610066578063b3596f071461007c578063b951883a146100b2575b600080fd5b61006461005f366004610196565b6100c5565b005b6001545b60405190815260200160405180910390f35b61006a61008a3660046101c0565b73ffffffffffffffffffffffffffffffffffffffff1660009081526020819052604090205490565b6100646100c03660046101e2565b61012d565b73ffffffffffffffffffffffffffffffffffffffff821660008181526020818152604091829020849055815192835282018390524282820152517fce6e0b57367bae95ca7198e1172f653ea64a645c16ab586b4cefa9237bfc2d929181900360600190a15050565b6001819055604080518281524260208201527fb4f35977939fa8b5ffe552d517a8ff5223046b1fdd3ee0068ae38d1e2b8d0016910160405180910390a150565b803573ffffffffffffffffffffffffffffffffffffffff8116811461019157600080fd5b919050565b600080604083850312156101a957600080fd5b6101b28361016d565b946020939093013593505050565b6000602082840312156101d257600080fd5b6101db8261016d565b9392505050565b6000602082840312156101f457600080fd5b503591905056fea2646970667358221220fb8d073858ad081eadf86bb6cf16075b2018a96eb16015cf04e8dcb5c199c8a164736f6c63430008110033",
   "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061004c5760003560e01c806351323f7214610051578063a0a8045e14610066578063b3596f071461007c578063b951883a146100b2575b600080fd5b61006461005f366004610196565b6100c5565b005b6001545b60405190815260200160405180910390f35b61006a61008a3660046101c0565b73ffffffffffffffffffffffffffffffffffffffff1660009081526020819052604090205490565b6100646100c03660046101e2565b61012d565b73ffffffffffffffffffffffffffffffffffffffff821660008181526020818152604091829020849055815192835282018390524282820152517fce6e0b57367bae95ca7198e1172f653ea64a645c16ab586b4cefa9237bfc2d929181900360600190a15050565b6001819055604080518281524260208201527fb4f35977939fa8b5ffe552d517a8ff5223046b1fdd3ee0068ae38d1e2b8d0016910160405180910390a150565b803573ffffffffffffffffffffffffffffffffffffffff8116811461019157600080fd5b919050565b600080604083850312156101a957600080fd5b6101b28361016d565b946020939093013593505050565b6000602082840312156101d257600080fd5b6101db8261016d565b9392505050565b6000602082840312156101f457600080fd5b503591905056fea2646970667358221220fb8d073858ad081eadf86bb6cf16075b2018a96eb16015cf04e8dcb5c199c8a164736f6c63430008110033",
@@ -166,7 +166,7 @@
   "storageLayout": {
     "storage": [
       {
-        "astId": 17194,
+        "astId": 10991,
         "contract": "lend-core/contracts/mocks/oracle/PriceOracle.sol:PriceOracle",
         "label": "prices",
         "offset": 0,
@@ -174,7 +174,7 @@
         "type": "t_mapping(t_address,t_uint256)"
       },
       {
-        "astId": 17196,
+        "astId": 10993,
         "contract": "lend-core/contracts/mocks/oracle/PriceOracle.sol:PriceOracle",
         "label": "ethPriceUsd",
         "offset": 0,
