@@ -53,9 +53,7 @@ const func: DeployFunction = async function ({
     const pool = await getPool();
     await waitForTx(await pool.setFeeToVault(lendingFeeToVaultArtifact.address));
 
-    //keccak256("Operator_Role")
-    const hashOfRole = "0xa33daac198390630db2998ca75f43ac7962e047fbef856c9c97ccc60c64bfe17";
-    await waitForTx(await lendingFeeToVaultInstance.grantRole(hashOfRole, deployer));
+    await waitForTx(await lendingFeeToVaultInstance.addOperator(deployer));
 
   } else {
     // deploy mockBurnerManager
