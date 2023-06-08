@@ -381,6 +381,10 @@ export interface IReserveParams extends IReserveBorrowParams, IReserveCollateral
   strategy: IInterestRateStrategyParams;
 }
 
+export interface IStrategy {
+  [key: string]: IInterestRateStrategyParams;
+}
+
 export interface IInterestRateStrategyParams {
   name: string;
   optimalUsageRatio: string;
@@ -519,6 +523,7 @@ export interface IBaseConfiguration {
     total: number;
     protocol: number;
   };
+  RateStrategies: IStrategy;
   HOPEAddress: iParamsPerNetwork<tEthereumAddress>;
   StakingHOPEAddress: iParamsPerNetwork<tEthereumAddress>;
   GaugeControllerAddress: iParamsPerNetwork<tEthereumAddress>;

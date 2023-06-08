@@ -11,6 +11,7 @@ import {
   ICommonConfiguration,
   SubTokenOutput,
   AssetType,
+  eEthereumNetwork,
 } from './types';
 import HopeLendMarket from '../markets/hopeLend';
 import HopeLendTestMarket from '../markets/test';
@@ -36,6 +37,7 @@ import {
 } from './deploy-ids';
 import { ZERO_ADDRESS } from './constants';
 import { getTestnetReserveAddressFromSymbol, POOL_DATA_PROVIDER } from '.';
+import { MARKET_NAME } from './env';
 
 declare var hre: HardhatRuntimeEnvironment;
 
@@ -273,13 +275,17 @@ export const getTreasuryAddress = async (
 };
 
 export const isProductionMarket = (poolConfig: ICommonConfiguration): boolean => {
-  const network = (process.env.FORK ? process.env.FORK : hre.network.name) as eNetwork;
-
+  let network = (process.env.FORK ? process.env.FORK : hre.network.name) as eNetwork;
   return hre.config.networks[network]?.live && !poolConfig.TestnetMarket;
 };
 
 export const isTestnetMarket = (poolConfig: ICommonConfiguration): boolean =>
   !isProductionMarket(poolConfig);
+
+export const isUnitTestEnv = (): boolean => {
+  let network = (process.env.FORK ? process.env.FORK : hre.network.name) as eNetwork;
+  return network === eEthereumNetwork.hardhat || MARKET_NAME === ConfigNames.Test;
+};
 
 export const getReserveAddress = async (poolConfig: ICommonConfiguration, symbol: string) => {
   const network = (process.env.FORK ? process.env.FORK : hre.network.name) as eNetwork;

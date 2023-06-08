@@ -5,7 +5,6 @@ import {
   checkRequiredEnvironment,
   ConfigNames,
   isProductionMarket,
-  isTestnetMarket,
   loadPoolConfig,
 } from '../../../helpers/market-config-helpers';
 import { eNetwork } from '../../../helpers/types';
@@ -24,8 +23,6 @@ const func: DeployFunction = async function ({
   const poolConfig = await loadPoolConfig(MARKET_NAME as ConfigNames);
   const network = (process.env.FORK ? process.env.FORK : hre.network.name) as eNetwork;
 
-  console.log('Live network:', !!hre.config.networks[network].live);
-
   if (isProductionMarket(poolConfig)) {
     console.log('[Deployment] Skipping testnet token setup at production market');
     // Early exit if is not a testnet market
@@ -38,36 +35,45 @@ const func: DeployFunction = async function ({
   const reserveSymbols = Object.keys(reservesConfig);
 
   if (reserveSymbols.length === 0) {
-    throw '[Deployment][Error] Missing ReserveAssets configuration';
+    console.warn('Market Config does not contain ReservesConfig. Skipping testnet token setup.');
+    return;
   }
 
-  // 0. Deployment of ERC20 mintable tokens for testing purposes
-  await Bluebird.each(reserveSymbols, async (symbol) => {
-    if (!reservesConfig[symbol]) {
-      throw `[Deployment] Missing token "${symbol}" at ReservesConfig`;
-    }
-    // WETH9 native mock token already deployed at deploy/01_periphery/02_native_token_gateway.ts
-    if (
-      symbol !== poolConfig.WrappedNativeTokenSymbol &&
-      symbol !== 'StakingHOPE' &&
-      symbol !== 'HOPE'
-    ) {
-      await deploy(`${symbol}${TESTNET_TOKEN_PREFIX}`, {
-        from: deployer,
-        contract: 'MintableERC20',
-        args: [symbol, symbol, reservesConfig[symbol].reserveDecimals],
-        ...COMMON_DEPLOY_PARAMS,
-      });
-    }
-  });
-
-  // 1. Deployment of Faucet helperx contract
+  // 0. Deployment of Faucet helperx contract
   console.log('- Deployment of Faucet contract');
-  await deploy(FAUCET_ID, {
+  const faucet = await deploy(FAUCET_ID, {
     from: deployer,
     contract: 'ERC20Faucet',
     args: [],
     ...COMMON_DEPLOY_PARAMS,
+  });
+
+  // 1. Deployment of ERC20 mintable tokens for testing purposes
+  await Bluebird.each(reserveSymbols, async (symbol) => {
+    if (!reservesConfig[symbol]) {
+      throw `[Deployment] Missing token "${symbol}" at ReservesConfig`;
+    }
+    if (symbol == poolConfig.WrappedNativeTokenSymbol) {
+      await deploy(`${poolConfig.WrappedNativeTokenSymbol}${TESTNET_TOKEN_PREFIX}`, {
+        from: deployer,
+        contract: 'WETH9Mocked',
+        args: [
+          poolConfig.WrappedNativeTokenSymbol,
+          poolConfig.WrappedNativeTokenSymbol,
+          faucet.address,
+        ],
+        ...COMMON_DEPLOY_PARAMS,
+      });
+    } else {
+      if (symbol !== 'StakingHOPE' && symbol !== 'HOPE') {
+        await deploy(`${symbol}${TESTNET_TOKEN_PREFIX}`, {
+          from: deployer,
+          contract: 'MintableERC20',
+          args: [symbol, symbol, reservesConfig[symbol].reserveDecimals, faucet.address],
+          ...COMMON_DEPLOY_PARAMS,
+        });
+      }
+    }
   });
 
   console.log(

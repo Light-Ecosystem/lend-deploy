@@ -7,6 +7,11 @@ import {
   TransferStrategy,
   AssetType,
 } from '../../helpers/types';
+import {
+  rateStrategyStableOne,
+  rateStrategyStableTwo,
+  rateStrategyVolatileOne,
+} from './rateStrategies';
 // ----------------
 // PROTOCOL GLOBAL PARAMS
 // ----------------
@@ -80,6 +85,11 @@ export const CommonsConfig: ICommonConfiguration = {
   FlashLoanPremiums: {
     total: 0.0009e4,
     protocol: 0,
+  },
+  RateStrategies: {
+    rateStrategyVolatileOne,
+    rateStrategyStableOne,
+    rateStrategyStableTwo,
   },
   HOPEAddress: {
     [eEthereumNetwork.sepolia]: '0xf49Eb6f1E7a5C48E14dB30cBfDB264430FA6cBcc',

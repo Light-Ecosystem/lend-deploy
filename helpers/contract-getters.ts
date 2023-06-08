@@ -32,7 +32,7 @@ import {
   WrappedTokenGateway,
   UiPoolDataProvider,
   WalletBalanceProvider,
-  LendingFeeToVault
+  LendingFeeToVault,
 } from '../typechain';
 import { tEthereumAddress } from './types';
 import {
@@ -54,6 +54,8 @@ import {
   GAUGE_FACTORY_ID,
   LENDING_FEE_TO_VAULT_ID,
   STAKING_HOPE_ID,
+  POOL_CONFIGURATOR_IMPL_ID,
+  POOL_IMPL_ID,
 } from './deploy-ids';
 import LTArtifact from '../extendedArtifacts/LT.json';
 import StakingHOPEArtifact from '../extendedArtifacts/StakingHOPE.json';
@@ -64,6 +66,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { Libraries } from 'hardhat-deploy/dist/types';
 import { getContract, getContractByABI } from './utilities/tx';
 import { Contract } from 'ethers';
+import { getFirstSigner } from './utilities/signer';
 
 // Prevent error HH9 when importing this file inside tasks or helpers at Hardhat config load
 declare var hre: HardhatRuntimeEnvironment;
@@ -105,6 +108,14 @@ export const getPoolConfiguratorProxy = async (
     address || (await hre.deployments.get(POOL_CONFIGURATOR_PROXY_ID)).address
   );
 
+export const getPoolConfiguratorImpl = async (
+  address?: tEthereumAddress
+): Promise<PoolConfigurator> =>
+  getContract(
+    'PoolConfigurator',
+    address || (await hre.deployments.get(POOL_CONFIGURATOR_IMPL_ID)).address
+  );
+
 export const getSupplyLogic = async (address?: tEthereumAddress): Promise<SupplyLogic> =>
   getContract('SupplyLogic', address);
 
@@ -125,6 +136,9 @@ export const getFlashLoanLogic = async (address?: tEthereumAddress): Promise<Fla
 
 export const getPool = async (address?: tEthereumAddress): Promise<Pool> =>
   getContract('Pool', address || (await hre.deployments.get(POOL_PROXY_ID)).address);
+
+export const getPoolImpl = async (address?: tEthereumAddress): Promise<Pool> =>
+  getContract('Pool', address || (await hre.deployments.get(POOL_IMPL_ID)).address);
 
 export const getPriceOracle = async (address?: tEthereumAddress): Promise<HopeOracle> =>
   getContract('PriceOracle', address);
@@ -235,6 +249,17 @@ export const getWalletBalanceProvider = async (address?: string): Promise<Wallet
 export const getL2Encoder = async (address?: tEthereumAddress) =>
   getContract('L2Encoder', address || (await hre.deployments.get(L2_ENCODER)).address);
 
+export const getOwnableContract = async (address: string) => {
+  const ownableInterface = new hre.ethers.utils.Interface([
+    'function owner() public view returns (address)',
+    'function pendingOwner() public view returns (address)',
+    'function transferOwnership(address newOwner) public',
+    'function renounceOwnership() public',
+  ]);
+
+  return new hre.ethers.Contract(address, ownableInterface, await getFirstSigner());
+};
+
 export const getLT = async (address?: tEthereumAddress): Promise<Contract> =>
   getContractByABI('LT', LTArtifact.abi, address || (await hre.deployments.get(LT_ID)).address);
 
@@ -267,7 +292,7 @@ export const getLendingGauge = async (address?: tEthereumAddress): Promise<HopeO
 
 export const getGaugeFactory = async (address?: tEthereumAddress): Promise<HopeOracle> =>
   getContract('GaugeFactory', address || (await hre.deployments.get(GAUGE_FACTORY_ID)).address);
-  
+
 export const getLendingFeeToVault = async (
   address?: tEthereumAddress
 ): Promise<LendingFeeToVault> =>
