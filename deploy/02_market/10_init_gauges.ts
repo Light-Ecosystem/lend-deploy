@@ -28,7 +28,7 @@ import { MARKET_NAME } from '../../helpers/env';
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments, getNamedAccounts } = hre;
   const { deploy } = deployments;
-  const { deployer } = await getNamedAccounts();
+  const { deployer, operator } = await getNamedAccounts();
   const poolConfig = await loadPoolConfig(MARKET_NAME as ConfigNames);
   const network = (process.env.FORK ? process.env.FORK : hre.network.name) as eNetwork;
 
@@ -54,7 +54,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     GaugeFactory.address
   )) as GaugeFactory;
   // 3. Setup deployer as operator for create LendingGauge
-  await waitForTx(await gaugeFactoryInstance.addOperator(deployer));
+  await waitForTx(await gaugeFactoryInstance.addOperator(operator));
 
   if (isProductionMarket(poolConfig)) {
     console.log('[Deployment] Skipping testnet token setup at production market');

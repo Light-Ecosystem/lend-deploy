@@ -33,6 +33,7 @@ import {
   UiPoolDataProvider,
   WalletBalanceProvider,
   LendingFeeToVault,
+  GaugeFactory,
 } from '../typechain';
 import { tEthereumAddress } from './types';
 import {
@@ -290,7 +291,7 @@ export const getLendingGauge = async (address?: tEthereumAddress): Promise<HopeO
     address || (await hre.deployments.get(LENDING_GAUGE_IMPL_ID)).address
   );
 
-export const getGaugeFactory = async (address?: tEthereumAddress): Promise<HopeOracle> =>
+export const getGaugeFactory = async (address?: tEthereumAddress): Promise<GaugeFactory> =>
   getContract('GaugeFactory', address || (await hre.deployments.get(GAUGE_FACTORY_ID)).address);
 
 export const getLendingFeeToVault = async (

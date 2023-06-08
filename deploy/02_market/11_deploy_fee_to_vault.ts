@@ -28,7 +28,7 @@ const func: DeployFunction = async function ({
   ...hre
 }: HardhatRuntimeEnvironment) {
   const { deploy } = deployments;
-  const { deployer } = await getNamedAccounts();
+  const { deployer, operator } = await getNamedAccounts();
   const poolConfig = await loadPoolConfig(MARKET_NAME as ConfigNames);
 
   const { BurnerManagerAddress, UnderlyingBurnerAddress } = poolConfig;
@@ -51,7 +51,7 @@ const func: DeployFunction = async function ({
     const pool = await getPool();
     await waitForTx(await pool.setFeeToVault(lendingFeeToVaultArtifact.address));
 
-    await waitForTx(await lendingFeeToVaultInstance.addOperator(deployer));
+    await waitForTx(await lendingFeeToVaultInstance.addOperator(operator));
   } else {
     // deploy mockBurnerManager
     const mockBurnerManagerArtifact = await deploy(MOCK_BURNER_MANAGER_ID, {

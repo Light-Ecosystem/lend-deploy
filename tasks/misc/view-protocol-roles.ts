@@ -12,6 +12,7 @@ import {
 } from '../../typechain';
 import {
   getACLManager,
+  getGaugeFactory,
   getLendingFeeToVault,
   getPoolAddressesProvider,
   getPoolAddressesProviderRegistry,
@@ -26,7 +27,7 @@ import { getFirstSigner } from '../../helpers';
 task(`view-protocol-roles`, `View current admin of each role and contract`).setAction(
   async (_, hre) => {
     // Deployer admins
-    const { poolAdmin, aclAdmin, emergencyAdmin, deployer, treasuryProxyAdmin } =
+    const { poolAdmin, aclAdmin, emergencyAdmin, deployer, treasuryProxyAdmin, operator } =
       await hre.getNamedAccounts();
 
     const deployerSigner = await hre.ethers.getSigner(deployer);
@@ -76,6 +77,7 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
 
     const poolAddressesProviderRegistry = await getPoolAddressesProviderRegistry();
     const lendingFeeToVault = await getLendingFeeToVault();
+    const gaugeFactory = await getGaugeFactory();
     const aclManager = (await getACLManager(await poolAddressesProvider.getACLManager())).connect(
       aclSigner
     );
@@ -178,6 +180,16 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
         role: 'LendingFeeToVault owner',
         address: await lendingFeeToVault.owner(),
         assert: (await lendingFeeToVault.owner()) === desiredMultisig,
+      },
+      {
+        role: 'LendingFeeToVault operator',
+        address: (await lendingFeeToVault.isOperator(operator)) ? operator : ZERO_ADDRESS,
+        assert: await lendingFeeToVault.isOperator(operator),
+      },
+      {
+        role: 'GaugeFactory operator',
+        address: (await gaugeFactory.isOperator(operator)) ? operator : ZERO_ADDRESS,
+        assert: await gaugeFactory.isOperator(operator),
       },
     ];
 

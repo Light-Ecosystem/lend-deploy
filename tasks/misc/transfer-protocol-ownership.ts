@@ -2,6 +2,7 @@ import { FORK } from './../../helpers/hardhat-config-helpers';
 import { POOL_ADDRESSES_PROVIDER_ID } from './../../helpers/deploy-ids';
 import {
   getACLManager,
+  getGaugeFactory,
   getLendingFeeToVault,
   getPoolAddressesProvider,
   getPoolAddressesProviderRegistry,
@@ -10,19 +11,17 @@ import {
 import { task } from 'hardhat/config';
 import { getAddressFromJson, waitForTx } from '../../helpers/utilities/tx';
 import { exit } from 'process';
-import { GOVERNANCE_BRIDGE_EXECUTOR, MULTISIG_ADDRESS } from '../../helpers/constants';
+import {
+  GOVERNANCE_BRIDGE_EXECUTOR,
+  MULTISIG_ADDRESS,
+  ZERO_ADDRESS,
+} from '../../helpers/constants';
 
 task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from deployer`).setAction(
   async (_, hre) => {
     // Deployer admins
-    const {
-      poolAdmin,
-      aclAdmin,
-      deployer,
-      emergencyAdmin,
-      treasuryProxyAdmin,
-      addressesProviderRegistryOwner,
-    } = await hre.getNamedAccounts();
+    const { poolAdmin, aclAdmin, deployer, emergencyAdmin, treasuryProxyAdmin, operator } =
+      await hre.getNamedAccounts();
 
     const networkId = FORK ? FORK : hre.network.name;
     // Desired Admin at Polygon must be the bridge crosschain executor, not the multisig
@@ -40,8 +39,11 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
     console.log('--- CURRENT DEPLOYER ADDRESSES ---');
     console.table({
       poolAdmin,
+      aclAdmin,
+      deployer,
+      emergencyAdmin,
       treasuryProxyAdmin,
-      addressesProviderRegistryOwner,
+      operator,
     });
     console.log('--- DESIRED MULTISIG ADMIN ---');
     console.log(desiredMultisig);
@@ -50,6 +52,7 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
     const poolAddressesProvider = await getPoolAddressesProvider();
     const poolAddressesProviderRegistry = await getPoolAddressesProviderRegistry();
     const lendingFeeToVault = await getLendingFeeToVault();
+    const gaugeFactory = await getGaugeFactory();
     const wrappedGateway = await getWrappedTokenGateway();
 
     const aclManager = (await getACLManager(await poolAddressesProvider.getACLManager())).connect(
@@ -143,8 +146,24 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
       await waitForTx(await aclManager.revokeRole(hre.ethers.constants.HashZero, deployer));
       console.log('- Revoked DEFAULT_ADMIN_ROLE to deployer ');
     }
-
     /** End of DEFAULT_ADMIN_ROLE transfer ownership */
+
+    /** Start of grant operator to GaugeFactory */
+    const isDeployerOperatorAtGaugeFactory = await gaugeFactory.isOperator(operator);
+    if (isDeployerOperatorAtGaugeFactory) {
+      await waitForTx(await gaugeFactory.addOperator(operator));
+      console.log('- Grant GaugeFactory operator');
+    }
+    /** End of grant operator to GaugeFactory */
+
+    /** Start of grant operator to GaugeFactory */
+    const isDeployerOperatorAtLendingFeeToVault = await lendingFeeToVault.isOperator(operator);
+    if (isDeployerOperatorAtLendingFeeToVault) {
+      await waitForTx(await lendingFeeToVault.addOperator(operator));
+      console.log('- Grant LendingFeeToVault operator');
+    }
+    /** End of grant operator to GaugeFactory */
+
     /** Output of results*/
     const result = [
       {
@@ -169,6 +188,16 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
         address: await lendingFeeToVault.owner(),
         pendingOwnerAddress: await lendingFeeToVault.pendingOwner(),
         assert: (await lendingFeeToVault.pendingOwner()) === desiredMultisig,
+      },
+      {
+        role: 'LendingFeeToVault operator',
+        address: (await lendingFeeToVault.isOperator(operator)) ? operator : ZERO_ADDRESS,
+        assert: await lendingFeeToVault.isOperator(operator),
+      },
+      {
+        role: 'GaugeFactory operator',
+        address: (await gaugeFactory.isOperator(operator)) ? operator : ZERO_ADDRESS,
+        assert: await gaugeFactory.isOperator(operator),
       },
       {
         role: 'WrappedTokenGateway owner',

@@ -138,11 +138,12 @@ export const DEFAULT_NAMED_ACCOUNTS = {
   poolAdmin: {
     default: 0,
   },
-  addressesProviderRegistryOwner: {
-    default: 0,
-  },
   treasuryProxyAdmin: {
     default: 1,
+  },
+  operator: {
+    default: 0,
+    hardhat: '0xcF50cdB498BaA6e2Da5907d103d82A89a69b3e82',
   },
 };
 
