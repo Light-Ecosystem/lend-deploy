@@ -143,7 +143,7 @@ export const DEFAULT_NAMED_ACCOUNTS = {
   },
   operator: {
     default: 0,
-    hardhat: '0xcF50cdB498BaA6e2Da5907d103d82A89a69b3e82',
+    main: '0xcF50cdB498BaA6e2Da5907d103d82A89a69b3e82',
   },
 };
 
