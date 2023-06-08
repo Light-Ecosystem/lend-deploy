@@ -5,9 +5,14 @@ import {
   TREASURY_CONTROLLER_ID,
   POOL_ADDRESSES_PROVIDER_ID,
 } from '../../helpers/deploy-ids';
-import { InitializableAdminUpgradeabilityProxy } from '../../typechain';
+import {
+  InitializableAdminUpgradeabilityProxy,
+  WrappedTokenGateway,
+  WrappedTokenGateway__factory,
+} from '../../typechain';
 import {
   getACLManager,
+  getLendingFeeToVault,
   getPoolAddressesProvider,
   getPoolAddressesProviderRegistry,
   getWrappedTokenGateway,
@@ -16,6 +21,7 @@ import { task } from 'hardhat/config';
 import { getAddressFromJson, getProxyAdminBySlot } from '../../helpers/utilities/tx';
 import { exit } from 'process';
 import { GOVERNANCE_BRIDGE_EXECUTOR, MULTISIG_ADDRESS } from '../../helpers/constants';
+import { getFirstSigner } from '../../helpers';
 
 task(`view-protocol-roles`, `View current admin of each role and contract`).setAction(
   async (_, hre) => {
@@ -47,9 +53,7 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
       );
       exit(403);
     }
-    const poolAddressesProvider = await getPoolAddressesProvider(
-      await getAddressFromJson(networkId, POOL_ADDRESSES_PROVIDER_ID)
-    );
+    const poolAddressesProvider = await getPoolAddressesProvider();
 
     console.log('--- Current deployer addresses ---');
     console.table({
@@ -70,25 +74,35 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
       console.log(`  - Market owner loaded from pool prov:`, currentOwner);
     }
 
-    const poolAddressesProviderRegistry = await getPoolAddressesProviderRegistry(
-      await getAddressFromJson(networkId, 'PoolAddressesProviderRegistry')
-    );
+    const poolAddressesProviderRegistry = await getPoolAddressesProviderRegistry();
+    const lendingFeeToVault = await getLendingFeeToVault();
     const aclManager = (await getACLManager(await poolAddressesProvider.getACLManager())).connect(
       aclSigner
     );
     const treasuryProxy = await hre.ethers.getContractAt(
       'InitializableAdminUpgradeabilityProxy',
-      await getAddressFromJson(networkId, TREASURY_PROXY_ID),
+      (
+        await hre.deployments.get(TREASURY_PROXY_ID)
+      ).address,
       deployerSigner
     );
     const treasuryController = await hre.ethers.getContractAt(
       'HopeLendEcosystemReserveController',
-      await getAddressFromJson(networkId, TREASURY_CONTROLLER_ID),
+      (
+        await hre.deployments.get(TREASURY_CONTROLLER_ID)
+      ).address,
       deployerSigner
     );
-    const wrappedTokenGateway = await getWrappedTokenGateway(
-      await getAddressFromJson(networkId, 'WrappedTokenGateway')
-    );
+    let wrappedTokenGateway: WrappedTokenGateway;
+    try {
+      wrappedTokenGateway = await getWrappedTokenGateway();
+    } catch (err) {
+      // load legacy contract of WrappedTokenGateway
+      wrappedTokenGateway = WrappedTokenGateway__factory.connect(
+        await getAddressFromJson(networkId, 'WrappedTokenGateway'),
+        await getFirstSigner()
+      );
+    }
 
     /** Output of results*/
     const result = [
@@ -159,6 +173,11 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
         role: 'Treasury Controller owner',
         address: await treasuryController.owner(),
         assert: (await treasuryController.owner()) === desiredMultisig,
+      },
+      {
+        role: 'LendingFeeToVault owner',
+        address: await lendingFeeToVault.owner(),
+        assert: (await lendingFeeToVault.owner()) === desiredMultisig,
       },
     ];
 

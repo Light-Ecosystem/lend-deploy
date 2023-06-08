@@ -1,4 +1,4 @@
-import { FALLBACK_ORACLE_ID, ORACLE_ID } from '../../helpers/deploy-ids';
+import { FALLBACK_ORACLE_ID, ORACLE_ID, TESTNET_TOKEN_PREFIX } from '../../helpers/deploy-ids';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { DeployFunction } from 'hardhat-deploy/types';
 import { MOCK_CHAINLINK_AGGREGATORS_PRICES, CORE_VERSION } from '../../helpers/constants';
@@ -11,9 +11,10 @@ import {
   ConfigNames,
   getReserveAddresses,
   isProductionMarket,
+  isUnitTestEnv,
   loadPoolConfig,
 } from '../../helpers/market-config-helpers';
-import { eNetwork } from '../../helpers/types';
+import { eEthereumNetwork, eNetwork } from '../../helpers/types';
 import Bluebird from 'bluebird';
 import { MARKET_NAME } from '../../helpers/env';
 
@@ -41,28 +42,28 @@ const func: DeployFunction = async function ({
     console.log(`[Deployment] Added PriceOracle ${configPriceOracle} to PoolAddressesProvider`);
   }
 
-  // 2. Set fallback oracle
-  const hopeOracle = (await getContract(
-    'HopeOracle',
-    await addressesProviderInstance.getPriceOracle()
-  )) as HopeOracle;
-
-  const configFallbackOracle = (await deployments.get(FALLBACK_ORACLE_ID)).address;
-  const stateFallbackOracle = await hopeOracle.getFallbackOracle();
-
-  if (getAddress(configFallbackOracle) === getAddress(stateFallbackOracle)) {
-    console.log('[hope-oracle] Fallback oracle already set. Skipping tx.');
-  } else {
-    await waitForTx(await hopeOracle.setFallbackOracle(configFallbackOracle));
-    console.log(`[Deployment] Added Fallback oracle ${configPriceOracle} to HopeOracle`);
-  }
-
-  // 3. If testnet, setup fallback token prices
+  // If testnet, setup fallback token prices
   if (isProductionMarket(poolConfig)) {
     console.log('[Deployment] Skipping testnet token prices setup');
     // Early exit if is not a testnet market
     return true;
   } else {
+    // 2. Set fallback oracle
+    const hopeOracle = (await getContract(
+      'HopeOracle',
+      await addressesProviderInstance.getPriceOracle()
+    )) as HopeOracle;
+
+    const configFallbackOracle = (await deployments.get(FALLBACK_ORACLE_ID)).address;
+    const stateFallbackOracle = await hopeOracle.getFallbackOracle();
+
+    if (getAddress(configFallbackOracle) === getAddress(stateFallbackOracle)) {
+      console.log('[hope-oracle] Fallback oracle already set. Skipping tx.');
+    } else {
+      await waitForTx(await hopeOracle.setFallbackOracle(configFallbackOracle));
+      console.log(`[Deployment] Added Fallback oracle ${configPriceOracle} to HopeOracle`);
+    }
+
     console.log('[Deployment] Setting up fallback oracle default prices for testnet environment');
 
     const reserves = await getReserveAddresses(poolConfig, network);
@@ -75,10 +76,7 @@ const func: DeployFunction = async function ({
 
     // Iterate each token symbol and deploy a mock aggregator
     await Bluebird.each(symbols, async (symbol) => {
-      const price =
-        symbol === 'StkHope'
-          ? MOCK_CHAINLINK_AGGREGATORS_PRICES['HOPE']
-          : MOCK_CHAINLINK_AGGREGATORS_PRICES[symbol];
+      const price = MOCK_CHAINLINK_AGGREGATORS_PRICES[symbol];
 
       if (!price) {
         throw `[ERROR] Missing mock price for asset ${symbol} at MOCK_CHAINLINK_AGGREGATORS_PRICES constant located at src/constants.ts`;

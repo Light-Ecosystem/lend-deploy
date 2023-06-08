@@ -9,6 +9,11 @@ import {
 } from '../../helpers/types';
 import { ZERO_ADDRESS } from '../../helpers/constants';
 import { ICommonConfiguration, eEthereumNetwork, eArbitrumNetwork } from '../../helpers/types';
+import {
+  rateStrategyStableOne,
+  rateStrategyStableTwo,
+  rateStrategyVolatileOne,
+} from './rateStrategies';
 // ----------------
 // PROTOCOL GLOBAL PARAMS
 // ----------------
@@ -80,6 +85,11 @@ export const CommonsConfig: ICommonConfiguration = {
   FlashLoanPremiums: {
     total: 0.0009e4,
     protocol: 0.5e4,
+  },
+  RateStrategies: {
+    rateStrategyVolatileOne,
+    rateStrategyStableOne,
+    rateStrategyStableTwo,
   },
   HOPEAddress: {
     [eEthereumNetwork.sepolia]: '0x784388A036cb9c8c680002F43354E856f816F844',

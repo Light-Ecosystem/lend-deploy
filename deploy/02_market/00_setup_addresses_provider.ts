@@ -37,7 +37,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     throw '[Deployment][Error] Mismatch between Config.ReservesConfig and Config.ReserveAssets token symbols';
   }
   if (reserveSymbols.length === 0) {
-    throw '[Deployment][Error] Missing ReserveAssets configuration';
+    console.warn(
+      '[Warning] Market Config does not contain ReservesConfig. Skipping check of Reserves and ReservesConfig.'
+    );
+    return;
   }
   for (let y = 0; y < reserveSymbols.length; y++) {
     if (!reserves[reserveSymbols[y]] || getAddress(reserves[reserveSymbols[y]]) === ZERO_ADDRESS) {

@@ -27,9 +27,7 @@ import {
   eEthereumNetwork,
   eNetwork,
   getParamPerNetwork,
-  getProxyAdminBySlot,
-  getProxyImplementationBySlot,
-  isTestnetMarket,
+  isUnitTestEnv,
   loadPoolConfig,
 } from '../../helpers';
 import { COMMON_DEPLOY_PARAMS, MARKET_NAME } from '../../helpers/env';
@@ -167,12 +165,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [LT.address, GaugeController.address],
     ...COMMON_DEPLOY_PARAMS,
   });
-  
-  if (isTestnetMarket(poolConfig)) {
+
+  if (isUnitTestEnv()) {
+    // Only unit test need minable erc20 HOPE
     await deploy(HOPE_ID, {
       from: deployer,
       contract: 'MintableERC20',
-      args: ['HOPE', 'HOPE', 18],
+      args: ['HOPE', 'HOPE', 18, deployer],
       ...COMMON_DEPLOY_PARAMS,
     });
   } else {
@@ -209,16 +208,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   await ltInstance.setMinter(Minter.address);
 
-  const MockGauge1 = await deploy('MockGauge1', {
-    contract: {
-      abi: MockGaugeArtifact.abi,
-      bytecode: MockGaugeArtifact.bytecode,
-    },
-    from: deployer,
-    ...COMMON_DEPLOY_PARAMS,
-  });
-
-  const MockGauge2 = await deploy('MockGauge2', {
+  const MockSwapGauge = await deploy('MockSwapGauge', {
     contract: {
       abi: MockGaugeArtifact.abi,
       bytecode: MockGaugeArtifact.bytecode,
@@ -240,10 +230,16 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const swapTypeId = await gaugeControllerInstance.nGaugeTypes();
   await gaugeControllerInstance.addType(swapTypeName, swapTypeWeight);
 
-  const gaugeWeight = hre.ethers.utils.parseEther('1');
-  const gaugeWeight1 = hre.ethers.utils.parseEther('2');
-  await gaugeControllerInstance.addGauge(MockGauge1.address, stakingTypeId, gaugeWeight);
-  await gaugeControllerInstance.addGauge(MockGauge2.address, swapTypeId, gaugeWeight1);
+  const gaugeWeightStaking = hre.ethers.utils.parseEther('1');
+  const gaugeWeightSwap = hre.ethers.utils.parseEther('2');
+  await gaugeControllerInstance.addGauge(
+    (
+      await deployments.get(STAKING_HOPE_ID)
+    ).address,
+    stakingTypeId,
+    gaugeWeightStaking
+  );
+  await gaugeControllerInstance.addGauge(MockSwapGauge.address, swapTypeId, gaugeWeightSwap);
 };
 
 export default func;

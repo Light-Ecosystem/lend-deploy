@@ -8,8 +8,6 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { DeployFunction } from 'hardhat-deploy/types';
 import { COMMON_DEPLOY_PARAMS } from '../../helpers/env';
 import {
-  BURNER_MANAGER_ID,
-  UNDERLYING_BURNER_ID,
   MOCK_BURNER_MANAGER_ID,
   MOCK_UNDERLYING_BURNER_ID,
   MOCK_HOPE_SWARP_BURNER_ID,
@@ -54,7 +52,6 @@ const func: DeployFunction = async function ({
     await waitForTx(await pool.setFeeToVault(lendingFeeToVaultArtifact.address));
 
     await waitForTx(await lendingFeeToVaultInstance.addOperator(deployer));
-
   } else {
     // deploy mockBurnerManager
     const mockBurnerManagerArtifact = await deploy(MOCK_BURNER_MANAGER_ID, {

@@ -12,7 +12,12 @@ import {
 } from '../../helpers/market-config-helpers';
 import { eNetwork, IHopeLendConfiguration, ITokenAddress } from '../../helpers/types';
 import { configureReservesByHelper, initReservesByHelper } from '../../helpers/init-helpers';
-import { HOPE_ID, POOL_DATA_PROVIDER, STAKING_HOPE_ID } from '../../helpers/deploy-ids';
+import {
+  HOPE_ID,
+  POOL_ADDRESSES_PROVIDER_ID,
+  POOL_DATA_PROVIDER,
+  STAKING_HOPE_ID,
+} from '../../helpers/deploy-ids';
 import { MARKET_NAME } from '../../helpers/env';
 import { getAddress } from 'ethers/lib/utils';
 
@@ -26,16 +31,47 @@ const func: DeployFunction = async function ({
 
   const poolConfig = (await loadPoolConfig(MARKET_NAME as ConfigNames)) as IHopeLendConfiguration;
 
+  const addressProviderArtifact = await deployments.get(POOL_ADDRESSES_PROVIDER_ID);
+
   const {
     HTokenNamePrefix,
     StableDebtTokenNamePrefix,
     VariableDebtTokenNamePrefix,
     SymbolPrefix,
     ReservesConfig,
+    RateStrategies,
   } = poolConfig;
+
+  // Deploy Rate Strategies
+  for (const strategy in RateStrategies) {
+    const strategyData = RateStrategies[strategy];
+    const args = [
+      addressProviderArtifact.address,
+      strategyData.optimalUsageRatio,
+      strategyData.baseVariableBorrowRate,
+      strategyData.variableRateSlope1,
+      strategyData.variableRateSlope2,
+      strategyData.stableRateSlope1,
+      strategyData.stableRateSlope2,
+      strategyData.baseStableRateOffset,
+      strategyData.stableRateExcessOffset,
+      strategyData.optimalStableToTotalDebtRatio,
+    ];
+    await deployments.deploy(`ReserveStrategy-${strategyData.name}`, {
+      from: deployer,
+      args: args,
+      contract: 'DefaultReserveInterestRateStrategy',
+      log: true,
+    });
+  }
 
   const reservesAddresses = await getReserveAddresses(poolConfig, network);
   const treasuryAddress = await getTreasuryAddress(poolConfig, network);
+
+  if (Object.keys(reservesAddresses).length == 0) {
+    console.warn('[WARNING] Skipping initialization. Empty asset list.');
+    return;
+  }
 
   // Deploy Reserves HTokens
   await initReservesByHelper(

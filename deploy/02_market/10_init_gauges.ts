@@ -1,6 +1,5 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { DeployFunction } from 'hardhat-deploy/types';
-import { time } from '@nomicfoundation/hardhat-network-helpers';
 import {
   POOL_PROXY_ID,
   TESTNET_TOKEN_PREFIX,
@@ -10,18 +9,29 @@ import {
   GAUGE_CONTROLLER_ID,
   GAUGE_FACTORY_ID,
 } from '../../helpers/deploy-ids';
-import { GaugeFactory, Pool, Pool__factory } from '../../typechain';
+import { GaugeFactory, Pool } from '../../typechain';
 import { BigNumberish } from 'ethers';
 import { parseUnits } from 'ethers/lib/utils';
-import { ethers } from 'hardhat';
-import { checkDaiGaugeExists, eEthereumNetwork, eNetwork, waitForTx } from '../../helpers';
+import {
+  ConfigNames,
+  advanceTimeAndBlock,
+  checkDaiGaugeExists,
+  eEthereumNetwork,
+  eNetwork,
+  isProductionMarket,
+  isUnitTestEnv,
+  loadPoolConfig,
+  waitForTx,
+} from '../../helpers';
+import { MARKET_NAME } from '../../helpers/env';
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments, getNamedAccounts } = hre;
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
-  const network = (process.env.FORK || hre.network.name) as eNetwork;
-  const SYMBOL = 'DAI';
+  const poolConfig = await loadPoolConfig(MARKET_NAME as ConfigNames);
+  const network = (process.env.FORK ? process.env.FORK : hre.network.name) as eNetwork;
+
   // 1. Deploy LendingGauge Impl as template
   const LendingGaugeImpl = await deploy(LENDING_GAUGE_IMPL_ID, {
     contract: 'LendingGauge',
@@ -39,13 +49,24 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       (await deployments.get(VOTING_ESCROW_ID)).address,
     ],
   });
-  const gaugeFactoryInstance = (await ethers.getContractAt(
+  const gaugeFactoryInstance = (await hre.ethers.getContractAt(
     GaugeFactory.abi,
     GaugeFactory.address
   )) as GaugeFactory;
   // 3. Setup deployer as operator for create LendingGauge
   await waitForTx(await gaugeFactoryInstance.addOperator(deployer));
+
+  if (isProductionMarket(poolConfig)) {
+    console.log('[Deployment] Skipping testnet token setup at production market');
+    // Early exit if is not a testnet market
+    return;
+  }
+  console.log(
+    `- Setting up testnet lending gauge for "${MARKET_NAME}" market at "${network}" network`
+  );
+
   // 4. Create DAI LendingGauge
+  const SYMBOL = 'DAI';
   await waitForTx(
     await gaugeFactoryInstance.createLendingGauge(
       (
@@ -122,17 +143,19 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   // TODO(Dev & Beta TypeID not equal)
   if (typeId == 2 || typeId == 3) {
     await waitForTx(await gaugeControllerInstance.addType(name, weight));
-    if (network == eEthereumNetwork.hardhat) {
+    if (isUnitTestEnv()) {
       const gaugeWeight = hre.ethers.utils.parseEther('1');
       await gaugeControllerInstance.addGauge(daiLendingGaugeAddress, typeId, gaugeWeight);
-      await time.increase(86400 * 7);
+      await advanceTimeAndBlock(86400 * 7);
     } else {
       // 13. Add DAI LenidngGauge to GaugeController
       await waitForTx(await gaugeControllerInstance.addGauge(daiLendingGaugeAddress, typeId, 0));
     }
   }
+  return true;
 };
 
 export default func;
 func.skip = async () => checkDaiGaugeExists('DAI');
 func.tags = ['lending-gauge'];
+func.id = 'LendingGauge';
