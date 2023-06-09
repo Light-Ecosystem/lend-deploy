@@ -4,21 +4,23 @@ import { COMMON_DEPLOY_PARAMS } from '../../../helpers/env';
 import {
   checkRequiredEnvironment,
   ConfigNames,
+  getRequiredParamPerNetwork,
   isProductionMarket,
   loadPoolConfig,
 } from '../../../helpers/market-config-helpers';
-import { eNetwork } from '../../../helpers/types';
+import { eNetwork, ITokenAddress } from '../../../helpers/types';
 import { FAUCET_ID, TESTNET_TOKEN_PREFIX } from '../../../helpers/deploy-ids';
 import Bluebird from 'bluebird';
-import { deployInitializableAdminUpgradeabilityProxy } from '../../../helpers/contract-deployments';
 import { MARKET_NAME } from '../../../helpers/env';
+import MintableERC20ABI from '../../../abi/MintableERC20.json';
+import WETH9MockedABI from '../../../abi/WETH9Mocked.json';
 
 const func: DeployFunction = async function ({
   getNamedAccounts,
   deployments,
   ...hre
 }: HardhatRuntimeEnvironment) {
-  const { deploy } = deployments;
+  const { deploy, save } = deployments;
   const { deployer } = await getNamedAccounts();
   const poolConfig = await loadPoolConfig(MARKET_NAME as ConfigNames);
   const network = (process.env.FORK ? process.env.FORK : hre.network.name) as eNetwork;
@@ -47,6 +49,30 @@ const func: DeployFunction = async function ({
     args: [],
     ...COMMON_DEPLOY_PARAMS,
   });
+
+  if (poolConfig.ReserveAssets) {
+    try {
+      const reserveAddress = getRequiredParamPerNetwork<ITokenAddress>(
+        poolConfig,
+        'ReserveAssets',
+        network
+      );
+      if (reserveAddress) {
+        Object.entries(reserveAddress).map(([tokenSymbol, tokenAddress]) => {
+          save(`${tokenSymbol}${TESTNET_TOKEN_PREFIX}`, {
+            address: tokenAddress,
+            abi:
+              tokenSymbol == poolConfig.WrappedNativeTokenSymbol
+                ? WETH9MockedABI
+                : MintableERC20ABI,
+          });
+        });
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   // 1. Deployment of ERC20 mintable tokens for testing purposes
   await Bluebird.each(reserveSymbols, async (symbol) => {

@@ -34,6 +34,7 @@ import {
   WalletBalanceProvider,
   LendingFeeToVault,
   GaugeFactory,
+  LendingGauge,
 } from '../typechain';
 import { tEthereumAddress } from './types';
 import {
@@ -285,7 +286,7 @@ export const getMinter = async (address?: tEthereumAddress): Promise<Contract> =
     address || (await hre.deployments.get(MINTER_ID)).address
   );
 
-export const getLendingGauge = async (address?: tEthereumAddress): Promise<HopeOracle> =>
+export const getLendingGauge = async (address?: tEthereumAddress): Promise<LendingGauge> =>
   getContract(
     'LendingGauge',
     address || (await hre.deployments.get(LENDING_GAUGE_IMPL_ID)).address

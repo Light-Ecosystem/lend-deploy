@@ -42,28 +42,28 @@ const func: DeployFunction = async function ({
     console.log(`[Deployment] Added PriceOracle ${configPriceOracle} to PoolAddressesProvider`);
   }
 
-  // If testnet, setup fallback token prices
+  // 2. Set fallback oracle
+  const hopeOracle = (await getContract(
+    'HopeOracle',
+    await addressesProviderInstance.getPriceOracle()
+  )) as HopeOracle;
+
+  const configFallbackOracle = (await deployments.get(FALLBACK_ORACLE_ID)).address;
+  const stateFallbackOracle = await hopeOracle.getFallbackOracle();
+
+  if (getAddress(configFallbackOracle) === getAddress(stateFallbackOracle)) {
+    console.log('[hope-oracle] Fallback oracle already set. Skipping tx.');
+  } else {
+    await waitForTx(await hopeOracle.setFallbackOracle(configFallbackOracle));
+    console.log(`[Deployment] Added Fallback oracle ${configPriceOracle} to HopeOracle`);
+  }
+
+  // 3. If testnet, setup fallback token prices
   if (isProductionMarket(poolConfig)) {
     console.log('[Deployment] Skipping testnet token prices setup');
     // Early exit if is not a testnet market
     return true;
   } else {
-    // 2. Set fallback oracle
-    const hopeOracle = (await getContract(
-      'HopeOracle',
-      await addressesProviderInstance.getPriceOracle()
-    )) as HopeOracle;
-
-    const configFallbackOracle = (await deployments.get(FALLBACK_ORACLE_ID)).address;
-    const stateFallbackOracle = await hopeOracle.getFallbackOracle();
-
-    if (getAddress(configFallbackOracle) === getAddress(stateFallbackOracle)) {
-      console.log('[hope-oracle] Fallback oracle already set. Skipping tx.');
-    } else {
-      await waitForTx(await hopeOracle.setFallbackOracle(configFallbackOracle));
-      console.log(`[Deployment] Added Fallback oracle ${configPriceOracle} to HopeOracle`);
-    }
-
     console.log('[Deployment] Setting up fallback oracle default prices for testnet environment');
 
     const reserves = await getReserveAddresses(poolConfig, network);

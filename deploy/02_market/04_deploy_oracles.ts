@@ -60,15 +60,13 @@ const func: DeployFunction = async function ({
     ...COMMON_DEPLOY_PARAMS,
   });
 
-  if (!isProductionMarket(poolConfig)) {
-    // Deploy FallbackOracle
-    await deploy(FALLBACK_ORACLE_ID, {
-      contract: 'PriceOracle',
-      from: deployer,
-      args: [],
-      ...COMMON_DEPLOY_PARAMS,
-    });
-  }
+  // Deploy FallbackOracle
+  await deploy(FALLBACK_ORACLE_ID, {
+    contract: 'PriceOracle',
+    from: deployer,
+    args: [],
+    ...COMMON_DEPLOY_PARAMS,
+  });
 
   return true;
 };
