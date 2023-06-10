@@ -148,7 +148,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       await gaugeControllerInstance.addGauge(daiLendingGaugeAddress, typeId, gaugeWeight);
       await advanceTimeAndBlock(86400 * 7);
     } else {
-      // 13. Add DAI LenidngGauge to GaugeController
+      // 13 Add DAI LenidngGauge to GaugeController
       await waitForTx(await gaugeControllerInstance.addGauge(daiLendingGaugeAddress, typeId, 0));
     }
   }

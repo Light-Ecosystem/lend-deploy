@@ -104,7 +104,9 @@ const func: DeployFunction = async function ({
       await mockBurnerManagerInstance.setBurner(hopeAddress, mockHopeSwapBurnerArtifact.address)
     );
   }
+  return true;
 };
 
 export default func;
 func.tags = ['lending-fee-to-vault'];
+func.id = 'LendingFeeToVault';
