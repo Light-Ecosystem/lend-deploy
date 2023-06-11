@@ -1,11 +1,12 @@
 import { ZERO_ADDRESS } from "./../../helpers/constants";
-import { getPoolConfiguratorProxy } from "./../../helpers/contract-getters";
+import { getPoolConfiguratorProxy, getPool } from "./../../helpers/contract-getters";
 import { L2_POOL_IMPL_ID } from "./../../helpers/deploy-ids";
 import {
   ConfigNames,
   isL2PoolSupported,
   loadPoolConfig,
 } from "./../../helpers/market-config-helpers";
+import { eNetwork, getParamPerNetwork } from '../../helpers';
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 import { COMMON_DEPLOY_PARAMS } from "../../helpers/env";
@@ -22,6 +23,7 @@ import {
 import { PoolAddressesProvider } from "../../typechain";
 import { getContract, waitForTx } from "../../helpers/utilities/tx";
 import { MARKET_NAME } from "../../helpers/env";
+import { getAddress } from 'ethers/lib/utils';
 
 const func: DeployFunction = async function ({
   getNamedAccounts,
@@ -31,6 +33,10 @@ const func: DeployFunction = async function ({
   const { save, deploy } = deployments;
   const { deployer } = await getNamedAccounts();
   const poolConfig = await loadPoolConfig(MARKET_NAME as ConfigNames);
+  const { FeeToVault } = poolConfig;
+
+  const network = (process.env.FORK || hre.network.name) as eNetwork;
+  const feeToVaultAddress = getParamPerNetwork(FeeToVault, network);
 
   const proxyArtifact = await deployments.getExtendedArtifact(
     "InitializableImmutableAdminUpgradeabilityProxy"
@@ -126,6 +132,16 @@ const func: DeployFunction = async function ({
     )
   );
 
+  // set FeeToVault
+  if (feeToVaultAddress && getAddress(feeToVaultAddress) !== ZERO_ADDRESS) {
+    const poolInstance = await getPool();
+    await waitForTx(
+      await poolInstance.setFeeToVault(
+        feeToVaultAddress
+      )
+    );
+  }
+  
   return true;
 };
 

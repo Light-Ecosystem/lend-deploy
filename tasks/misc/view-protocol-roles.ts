@@ -13,7 +13,6 @@ import {
 import {
   getACLManager,
   getGaugeFactory,
-  getLendingFeeToVault,
   getPoolAddressesProvider,
   getPoolAddressesProviderRegistry,
   getWrappedTokenGateway,
@@ -76,7 +75,6 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
     }
 
     const poolAddressesProviderRegistry = await getPoolAddressesProviderRegistry();
-    const lendingFeeToVault = await getLendingFeeToVault();
     const gaugeFactory = await getGaugeFactory();
     const aclManager = (await getACLManager(await poolAddressesProvider.getACLManager())).connect(
       aclSigner
@@ -175,16 +173,6 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
         role: 'Treasury Controller owner',
         address: await treasuryController.owner(),
         assert: (await treasuryController.owner()) === desiredMultisig,
-      },
-      {
-        role: 'LendingFeeToVault owner',
-        address: await lendingFeeToVault.owner(),
-        assert: (await lendingFeeToVault.owner()) === desiredMultisig,
-      },
-      {
-        role: 'LendingFeeToVault operator',
-        address: (await lendingFeeToVault.isOperator(operator)) ? operator : ZERO_ADDRESS,
-        assert: await lendingFeeToVault.isOperator(operator),
       },
       {
         role: 'GaugeFactory operator',

@@ -3,7 +3,6 @@ import { POOL_ADDRESSES_PROVIDER_ID } from './../../helpers/deploy-ids';
 import {
   getACLManager,
   getGaugeFactory,
-  getLendingFeeToVault,
   getPoolAddressesProvider,
   getPoolAddressesProviderRegistry,
   getWrappedTokenGateway,
@@ -51,7 +50,6 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
 
     const poolAddressesProvider = await getPoolAddressesProvider();
     const poolAddressesProviderRegistry = await getPoolAddressesProviderRegistry();
-    const lendingFeeToVault = await getLendingFeeToVault();
     const gaugeFactory = await getGaugeFactory();
     const wrappedGateway = await getWrappedTokenGateway();
 
@@ -118,14 +116,6 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
     }
     /** End of Pool Addresses Provider transfer ownership */
 
-    /** Start of Lending Fee To Vault transfer ownership */
-    const isDeployerLendingFeeToVaultOwner = (await lendingFeeToVault.owner()) === deployer;
-    if (isDeployerLendingFeeToVaultOwner) {
-      await waitForTx(await lendingFeeToVault.transferOwnership(desiredMultisig));
-      console.log('- Transfering of Lending Fee To Vault');
-    }
-    /** End of Lending Fee To Vault transfer ownership */
-
     /** Start of WrappedTokenGateway transfer ownership */
     const isDeployerGatewayOwner = (await wrappedGateway.owner()) === deployer;
     if (isDeployerGatewayOwner) {
@@ -156,14 +146,6 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
     }
     /** End of grant operator to GaugeFactory */
 
-    /** Start of grant operator to GaugeFactory */
-    const isDeployerOperatorAtLendingFeeToVault = await lendingFeeToVault.isOperator(operator);
-    if (isDeployerOperatorAtLendingFeeToVault) {
-      await waitForTx(await lendingFeeToVault.addOperator(operator));
-      console.log('- Grant LendingFeeToVault operator');
-    }
-    /** End of grant operator to GaugeFactory */
-
     /** Output of results*/
     const result = [
       {
@@ -182,17 +164,6 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
         address: await poolAddressesProviderRegistry.owner(),
         pendingOwnerAddress: await poolAddressesProviderRegistry.pendingOwner(),
         assert: (await poolAddressesProviderRegistry.pendingOwner()) === desiredMultisig,
-      },
-      {
-        role: 'LendingFeeToVault owner',
-        address: await lendingFeeToVault.owner(),
-        pendingOwnerAddress: await lendingFeeToVault.pendingOwner(),
-        assert: (await lendingFeeToVault.pendingOwner()) === desiredMultisig,
-      },
-      {
-        role: 'LendingFeeToVault operator',
-        address: (await lendingFeeToVault.isOperator(operator)) ? operator : ZERO_ADDRESS,
-        assert: await lendingFeeToVault.isOperator(operator),
       },
       {
         role: 'GaugeFactory operator',

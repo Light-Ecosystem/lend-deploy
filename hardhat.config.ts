@@ -125,7 +125,6 @@ export default {
       'lend-core/contracts/protocol/pool/L2Pool.sol',
       'lend-core/contracts/protocol/pool/PoolConfigurator.sol',
       'lend-core/contracts/protocol/pool/DefaultReserveInterestRateStrategy.sol',
-      'lend-core/contracts/protocol/pool/LendingFeeToVault.sol',
       'lend-core/contracts/protocol/libraries/hopelend-upgradeability/InitializableImmutableAdminUpgradeabilityProxy.sol',
       'lend-core/contracts/dependencies/openzeppelin/upgradeability/InitializableAdminUpgradeabilityProxy.sol',
       'lend-core/contracts/deployments/ReservesSetupHelper.sol',

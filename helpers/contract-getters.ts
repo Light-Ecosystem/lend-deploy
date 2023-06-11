@@ -32,7 +32,6 @@ import {
   WrappedTokenGateway,
   UiPoolDataProvider,
   WalletBalanceProvider,
-  LendingFeeToVault,
   GaugeFactory,
   LendingGauge,
 } from '../typechain';
@@ -54,7 +53,6 @@ import {
   MINTER_ID,
   LENDING_GAUGE_IMPL_ID,
   GAUGE_FACTORY_ID,
-  LENDING_FEE_TO_VAULT_ID,
   STAKING_HOPE_ID,
   POOL_CONFIGURATOR_IMPL_ID,
   POOL_IMPL_ID,
@@ -294,14 +292,6 @@ export const getLendingGauge = async (address?: tEthereumAddress): Promise<Lendi
 
 export const getGaugeFactory = async (address?: tEthereumAddress): Promise<GaugeFactory> =>
   getContract('GaugeFactory', address || (await hre.deployments.get(GAUGE_FACTORY_ID)).address);
-
-export const getLendingFeeToVault = async (
-  address?: tEthereumAddress
-): Promise<LendingFeeToVault> =>
-  getContract(
-    'LendingFeeToVault',
-    address || (await hre.deployments.get(LENDING_FEE_TO_VAULT_ID)).address
-  );
 
 export const getStakingHope = async (address?: tEthereumAddress): Promise<Contract> =>
   getContractByABI(
