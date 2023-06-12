@@ -136,4 +136,9 @@ export const CommonsConfig: ICommonConfiguration = {
     [eEthereumNetwork.goerli]: '',
     [eEthereumNetwork.main]: '',
   },
+  FeeToVault: {
+    [eEthereumNetwork.sepolia]: '',
+    [eEthereumNetwork.goerli]: '',
+    [eEthereumNetwork.main]: '',
+  },
 };

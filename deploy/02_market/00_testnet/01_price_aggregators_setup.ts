@@ -4,23 +4,24 @@ import { COMMON_DEPLOY_PARAMS } from '../../../helpers/env';
 import {
   checkRequiredEnvironment,
   ConfigNames,
+  getRequiredParamPerNetwork,
   getReserveAddresses,
   isProductionMarket,
   loadPoolConfig,
 } from '../../../helpers/market-config-helpers';
-import { eEthereumNetwork, eNetwork } from '../../../helpers/types';
+import { eNetwork, ITokenAddress } from '../../../helpers/types';
 import { TESTNET_PRICE_AGGR_PREFIX } from '../../../helpers/deploy-ids';
 import { MOCK_CHAINLINK_AGGREGATORS_PRICES, CORE_VERSION } from '../../../helpers/constants';
 import Bluebird from 'bluebird';
 import { MARKET_NAME } from '../../../helpers/env';
-import { parseUnits } from 'ethers/lib/utils';
+import MockAggregatorABI from '../../../abi/MockAggregator.json';
 
 const func: DeployFunction = async function ({
   getNamedAccounts,
   deployments,
   ...hre
 }: HardhatRuntimeEnvironment) {
-  const { deploy } = deployments;
+  const { deploy, save } = deployments;
   const { deployer } = await getNamedAccounts();
   const poolConfig = await loadPoolConfig(MARKET_NAME as ConfigNames);
   const network = (process.env.FORK ? process.env.FORK : hre.network.name) as eNetwork;
@@ -33,6 +34,27 @@ const func: DeployFunction = async function ({
   const reserves = await getReserveAddresses(poolConfig, network);
 
   let symbols = Object.keys(reserves);
+
+  if (poolConfig.ChainlinkAggregator) {
+    try {
+      const aggregators = getRequiredParamPerNetwork<ITokenAddress>(
+        poolConfig,
+        'ChainlinkAggregator',
+        network
+      );
+      if (aggregators) {
+        Object.entries(aggregators).map(([tokenSymbol, tokenAddress]) => {
+          save(`${tokenSymbol}${TESTNET_PRICE_AGGR_PREFIX}`, {
+            address: tokenAddress,
+            abi: MockAggregatorABI,
+          });
+        });
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   // Iterate each token symbol and deploy a mock aggregator
   await Bluebird.each(symbols, async (symbol) => {

@@ -30,6 +30,17 @@ export const CommonsConfig: ICommonConfiguration = {
   OracleQuoteUnit: '8',
   WrappedNativeTokenSymbol: 'WETH',
   ChainlinkAggregator: {
+    [eEthereumNetwork.sepolia]: {
+      DAI: '0x69Fd56D592Bb24481d8511cf430333542C539A7d',
+      LINK: '0xCe8021185636595EcedE301f75bf9D91ABE7DD9e',
+      USDC: '0x67A5Eb021116db0ADED617F4De3923a8fbA1D17b',
+      WBTC: '0xa49916295f54Df0F93101D7347588e84f4de14C7',
+      WETH: '0x53c124838885a84D4316F6a94067b52bB9F1b682',
+      USDT: '0x4D1c362927B4D94EfCf0793319140a27B00F4347',
+      HOPE: '0x7b8b1caE2A18D785d0B441Fee221D0A3a0fBbBD6',
+      StakingHOPE: '0xCB353A5dAb39Aef0867b7B415a48A4cCed10C48d',
+      EURS: '0x0fc0080B1b87deD9E0Cb6611169D33CeeD908Cc8',
+    },
     [eEthereumNetwork.main]: {
       HOPE: '0x547a514d5e3769680Ce22B2361c10Ea13619e8a9',
       DAI: '0xAed0c38402a5d19df6E4c03F4E2DceD6e29c1ee9',
