@@ -152,7 +152,7 @@ export default {
       'lend-periphery/contracts/misc/WalletBalanceProvider.sol',
       'lend-periphery/contracts/misc/WrappedTokenGateway.sol',
       'lend-periphery/contracts/misc/interfaces/IWETH.sol',
-      'lend-periphery/contracts/treasury/HopeLendEcosystemReserveV2.sol',
+      'lend-periphery/contracts/treasury/HopeLendEcosystemReserve.sol',
       'lend-periphery/contracts/treasury/HopeLendEcosystemReserveController.sol',
     ],
   },

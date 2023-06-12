@@ -1,17 +1,11 @@
-import { ZERO_ADDRESS } from "../../helpers/constants";
-import {
-  TREASURY_CONTROLLER_ID,
-  TREASURY_IMPL_ID,
-} from "../../helpers/deploy-ids";
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { DeployFunction } from "hardhat-deploy/types";
-import { COMMON_DEPLOY_PARAMS } from "../../helpers/env";
-import { TREASURY_PROXY_ID } from "../../helpers/deploy-ids";
-import {
-  InitializableAdminUpgradeabilityProxy,
-  waitForTx,
-} from "../../helpers";
-import { HopeLendEcosystemReserveV2 } from "../../typechain";
+import { ZERO_ADDRESS } from '../../helpers/constants';
+import { TREASURY_CONTROLLER_ID, TREASURY_IMPL_ID } from '../../helpers/deploy-ids';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { DeployFunction } from 'hardhat-deploy/types';
+import { COMMON_DEPLOY_PARAMS } from '../../helpers/env';
+import { TREASURY_PROXY_ID } from '../../helpers/deploy-ids';
+import { InitializableAdminUpgradeabilityProxy, waitForTx } from '../../helpers';
+import { HopeLendEcosystemReserve } from '../../typechain';
 
 /**
  * @notice A treasury proxy can be deployed per network or per market.
@@ -29,14 +23,14 @@ const func: DeployFunction = async function ({
   // Deploy Treasury proxy
   const treasuryProxyArtifact = await deploy(TREASURY_PROXY_ID, {
     from: deployer,
-    contract: "InitializableAdminUpgradeabilityProxy",
+    contract: 'InitializableAdminUpgradeabilityProxy',
     args: [],
   });
 
   // Deploy Treasury Controller
   const treasuryController = await deploy(TREASURY_CONTROLLER_ID, {
     from: deployer,
-    contract: "HopeLendEcosystemReserveController",
+    contract: 'HopeLendEcosystemReserveController',
     args: [treasuryProxyAdmin],
     ...COMMON_DEPLOY_PARAMS,
   });
@@ -44,7 +38,7 @@ const func: DeployFunction = async function ({
   // Deploy Treasury implementation and initialize proxy
   const treasuryImplArtifact = await deploy(TREASURY_IMPL_ID, {
     from: deployer,
-    contract: "HopeLendEcosystemReserveV2",
+    contract: 'HopeLendEcosystemReserve',
     args: [],
     ...COMMON_DEPLOY_PARAMS,
   });
@@ -52,7 +46,7 @@ const func: DeployFunction = async function ({
   const treasuryImpl = (await hre.ethers.getContractAt(
     treasuryImplArtifact.abi,
     treasuryImplArtifact.address
-  )) as HopeLendEcosystemReserveV2;
+  )) as HopeLendEcosystemReserve;
 
   // Call to initialize at implementation contract to prevent other calls.
   await waitForTx(await treasuryImpl.initialize(ZERO_ADDRESS));
@@ -63,13 +57,12 @@ const func: DeployFunction = async function ({
     treasuryProxyArtifact.address
   )) as InitializableAdminUpgradeabilityProxy;
 
-  const initializePayload = treasuryImpl.interface.encodeFunctionData(
-    "initialize",
-    [treasuryController.address]
-  );
+  const initializePayload = treasuryImpl.interface.encodeFunctionData('initialize', [
+    treasuryController.address,
+  ]);
 
   await waitForTx(
-    await proxy["initialize(address,address,bytes)"](
+    await proxy['initialize(address,address,bytes)'](
       treasuryImplArtifact.address,
       treasuryProxyAdmin,
       initializePayload
@@ -79,8 +72,8 @@ const func: DeployFunction = async function ({
   return true;
 };
 
-func.tags = ["periphery-pre", "TreasuryProxy"];
+func.tags = ['periphery-pre', 'TreasuryProxy'];
 func.dependencies = [];
-func.id = "Treasury";
+func.id = 'Treasury';
 
 export default func;
