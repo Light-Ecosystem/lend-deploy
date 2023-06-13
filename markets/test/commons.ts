@@ -101,4 +101,5 @@ export const CommonsConfig: ICommonConfiguration = {
   UnderlyingBurnerAddress: {},
   Permit2Address: {},
   FeeToVaultAddress: {},
+  ProxyAdminAddress: {},
 };

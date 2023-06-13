@@ -152,4 +152,9 @@ export const CommonsConfig: ICommonConfiguration = {
     [eEthereumNetwork.goerli]: '',
     [eEthereumNetwork.main]: '',
   },
+  ProxyAdminAddress: {
+    [eEthereumNetwork.sepolia]: '0x6D3ca6Ad5eC150bE920Be12d7659bB2531E50827',
+    [eEthereumNetwork.goerli]: '',
+    [eEthereumNetwork.main]: '0xcc0f986021010D4A3345CCA903BF5487AEa3bd39',
+  },
 };

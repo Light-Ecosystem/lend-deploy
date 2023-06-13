@@ -138,8 +138,8 @@ export const DEFAULT_NAMED_ACCOUNTS = {
   poolAdmin: {
     default: 0,
   },
-  treasuryProxyAdmin: {
-    default: 1,
+  treasuryAdmin: {
+    default: 0,
   },
   operator: {
     default: 0,

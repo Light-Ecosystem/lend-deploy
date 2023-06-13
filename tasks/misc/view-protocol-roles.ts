@@ -4,6 +4,7 @@ import {
   TREASURY_PROXY_ID,
   TREASURY_CONTROLLER_ID,
   POOL_ADDRESSES_PROVIDER_ID,
+  PROXY_ADMIN_ID,
 } from '../../helpers/deploy-ids';
 import {
   InitializableAdminUpgradeabilityProxy,
@@ -26,7 +27,7 @@ import { getFirstSigner } from '../../helpers';
 task(`view-protocol-roles`, `View current admin of each role and contract`).setAction(
   async (_, hre) => {
     // Deployer admins
-    const { poolAdmin, aclAdmin, emergencyAdmin, deployer, treasuryProxyAdmin, operator } =
+    const { poolAdmin, aclAdmin, emergencyAdmin, deployer, treasuryAdmin, operator } =
       await hre.getNamedAccounts();
 
     const deployerSigner = await hre.ethers.getSigner(deployer);
@@ -54,11 +55,13 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
       exit(403);
     }
     const poolAddressesProvider = await getPoolAddressesProvider();
+    const { address: proxyAdminAddress } = await hre.deployments.get(PROXY_ADMIN_ID);
 
     console.log('--- Current deployer addresses ---');
     console.table({
       poolAdmin,
-      treasuryProxyAdmin,
+      proxyAdminAddress,
+      treasuryAdmin,
     });
     console.log('--- Multisig and expected contract addresses ---');
     console.table({
@@ -167,12 +170,12 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
       {
         role: 'Treasury Proxy Admin',
         address: await getProxyAdminBySlot(treasuryProxy.address),
-        assert: (await getProxyAdminBySlot(treasuryProxy.address)) === desiredMultisig,
+        assert: (await getProxyAdminBySlot(treasuryProxy.address)) === proxyAdminAddress,
       },
       {
         role: 'Treasury Controller owner',
         address: await treasuryController.owner(),
-        assert: (await treasuryController.owner()) === desiredMultisig,
+        assert: (await treasuryController.owner()) === treasuryAdmin,
       },
       {
         role: 'GaugeFactory operator',

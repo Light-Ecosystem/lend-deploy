@@ -5,6 +5,7 @@ import {
   getGaugeFactory,
   getPoolAddressesProvider,
   getPoolAddressesProviderRegistry,
+  getTreasuryController,
   getWrappedTokenGateway,
 } from './../../helpers/contract-getters';
 import { task } from 'hardhat/config';
@@ -19,7 +20,7 @@ import {
 task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from deployer`).setAction(
   async (_, hre) => {
     // Deployer admins
-    const { poolAdmin, aclAdmin, deployer, emergencyAdmin, treasuryProxyAdmin, operator } =
+    const { poolAdmin, aclAdmin, deployer, emergencyAdmin, treasuryAdmin, operator } =
       await hre.getNamedAccounts();
 
     const networkId = FORK ? FORK : hre.network.name;
@@ -41,7 +42,7 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
       aclAdmin,
       deployer,
       emergencyAdmin,
-      treasuryProxyAdmin,
+      treasuryAdmin,
       operator,
     });
     console.log('--- DESIRED MULTISIG ADMIN ---');
@@ -52,6 +53,7 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
     const poolAddressesProviderRegistry = await getPoolAddressesProviderRegistry();
     const gaugeFactory = await getGaugeFactory();
     const wrappedGateway = await getWrappedTokenGateway();
+    const treasuryController = await getTreasuryController();
 
     const aclManager = (await getACLManager(await poolAddressesProvider.getACLManager())).connect(
       aclSigner
@@ -124,6 +126,14 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
     }
     /** End of WrappedTokenGateway ownership */
 
+    /** Start of TreasuryController transfer ownership */
+    const isDeployerTreasuryControllerOwner = (await treasuryController.owner()) === deployer;
+    if (isDeployerTreasuryControllerOwner) {
+      await waitForTx(await treasuryController.transferOwnership(treasuryAdmin));
+      console.log('- Transfering WrappedTokenGateway ownership');
+    }
+    /** End of WrappedTokenGateway ownership */
+
     /** Start of DEFAULT_ADMIN_ROLE transfer ownership */
     const isDeployerDefaultAdmin = await aclManager.hasRole(
       hre.ethers.constants.HashZero,
@@ -178,6 +188,12 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
         address: await wrappedGateway.owner(),
         pendingOwnerAddress: await wrappedGateway.pendingOwner(),
         assert: (await wrappedGateway.pendingOwner()) === desiredMultisig,
+      },
+      {
+        role: 'TreasuryController owner',
+        address: await treasuryController.owner(),
+        pendingOwnerAddress: await treasuryController.pendingOwner(),
+        assert: (await treasuryController.pendingOwner()) === treasuryAdmin,
       },
       {
         role: 'ACL Default Admin role revoked Deployer',

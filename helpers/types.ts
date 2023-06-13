@@ -534,6 +534,7 @@ export interface IBaseConfiguration {
   UnderlyingBurnerAddress: iParamsPerNetwork<tEthereumAddress>;
   Permit2Address: iParamsPerNetwork<tEthereumAddress>;
   FeeToVaultAddress: iParamsPerNetwork<tEthereumAddress>;
+  ProxyAdminAddress: iParamsPerNetwork<tEthereumAddress>;
 }
 
 export interface ICommonConfiguration extends IBaseConfiguration {}

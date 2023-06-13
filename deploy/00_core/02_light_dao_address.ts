@@ -11,6 +11,7 @@ import MinterArtifact from '../../extendedArtifacts/Minter.json';
 import BurnerManagerArtifact from '../../extendedArtifacts/BurnerManager.json';
 import UnderlyingBurnerArtifact from '../../extendedArtifacts/UnderlyingBurner.json';
 import FeeToVaultArtifact from '../../extendedArtifacts/FeeToVault.json';
+import ProxyAdminArtifact from '../../extendedArtifacts/ProxyAdmin.json';
 import MockGaugeArtifact from '../../extendedArtifacts/MockGauge.json';
 import { time } from '@nomicfoundation/hardhat-network-helpers';
 import {
@@ -22,6 +23,7 @@ import {
   LT_ID,
   MINTER_ID,
   PERMIT2_ID,
+  PROXY_ADMIN_ID,
   STAKING_HOPE_ID,
   UNDERLYING_BURNER_ID,
   VOTING_ESCROW_ID,
@@ -53,6 +55,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     BurnerManagerAddress,
     UnderlyingBurnerAddress,
     FeeToVaultAddress,
+    ProxyAdminAddress,
   } = poolConfig;
   const network = (process.env.FORK || hre.network.name) as eNetwork;
   const ltAddress = getParamPerNetwork(LTAddress, network);
@@ -96,6 +99,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     save(FEE_TO_VAULT_ID, {
       address: getParamPerNetwork(FeeToVaultAddress, network) as string,
       abi: FeeToVaultArtifact.abi,
+    });
+    save(PROXY_ADMIN_ID, {
+      address: getParamPerNetwork(ProxyAdminAddress, network) as string,
+      abi: ProxyAdminArtifact.abi,
     });
     return;
   }
@@ -242,6 +249,15 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       },
     },
     skipIfAlreadyDeployed: true,
+    ...COMMON_DEPLOY_PARAMS,
+  });
+
+  const ProxyAdmin = await deploy('ProxyAdmin', {
+    contract: {
+      abi: ProxyAdminArtifact.abi,
+      bytecode: ProxyAdminArtifact.bytecode,
+    },
+    from: deployer,
     ...COMMON_DEPLOY_PARAMS,
   });
 

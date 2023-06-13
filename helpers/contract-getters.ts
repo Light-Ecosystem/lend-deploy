@@ -34,6 +34,7 @@ import {
   WalletBalanceProvider,
   GaugeFactory,
   LendingGauge,
+  HopeLendEcosystemReserveController,
 } from '../typechain';
 import { tEthereumAddress } from './types';
 import {
@@ -238,6 +239,12 @@ export const getERC20Faucet = async (address?: string): Promise<ERC20Faucet> =>
 
 export const getWrappedTokenGateway = async (address?: string): Promise<WrappedTokenGateway> => {
   return getContract('WrappedTokenGateway', address);
+};
+
+export const getTreasuryController = async (
+  address?: string
+): Promise<HopeLendEcosystemReserveController> => {
+  return getContract('HopeLendEcosystemReserveController', address);
 };
 
 export const getUiPoolDataProvider = async (address?: string): Promise<UiPoolDataProvider> =>

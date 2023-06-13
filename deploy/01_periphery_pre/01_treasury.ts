@@ -1,5 +1,5 @@
 import { ZERO_ADDRESS } from '../../helpers/constants';
-import { TREASURY_CONTROLLER_ID, TREASURY_IMPL_ID } from '../../helpers/deploy-ids';
+import { PROXY_ADMIN_ID, TREASURY_CONTROLLER_ID, TREASURY_IMPL_ID } from '../../helpers/deploy-ids';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { DeployFunction } from 'hardhat-deploy/types';
 import { COMMON_DEPLOY_PARAMS } from '../../helpers/env';
@@ -18,7 +18,9 @@ const func: DeployFunction = async function ({
   ...hre
 }: HardhatRuntimeEnvironment) {
   const { deploy } = deployments;
-  const { deployer, treasuryProxyAdmin } = await getNamedAccounts();
+  const { deployer, treasuryAdmin } = await getNamedAccounts();
+
+  const proxyAdminArtifact = await deployments.get(PROXY_ADMIN_ID);
 
   // Deploy Treasury proxy
   const treasuryProxyArtifact = await deploy(TREASURY_PROXY_ID, {
@@ -31,7 +33,7 @@ const func: DeployFunction = async function ({
   const treasuryController = await deploy(TREASURY_CONTROLLER_ID, {
     from: deployer,
     contract: 'HopeLendEcosystemReserveController',
-    args: [treasuryProxyAdmin],
+    args: [treasuryAdmin],
     ...COMMON_DEPLOY_PARAMS,
   });
 
@@ -64,7 +66,7 @@ const func: DeployFunction = async function ({
   await waitForTx(
     await proxy['initialize(address,address,bytes)'](
       treasuryImplArtifact.address,
-      treasuryProxyAdmin,
+      proxyAdminArtifact.address,
       initializePayload
     )
   );
