@@ -147,8 +147,8 @@ export const CommonsConfig: ICommonConfiguration = {
     [eEthereumNetwork.goerli]: '',
     [eEthereumNetwork.main]: '',
   },
-  FeeToVault: {
-    [eEthereumNetwork.sepolia]: '',
+  FeeToVaultAddress: {
+    [eEthereumNetwork.sepolia]: '0xeFd79DD122032a331f24ef596E76C084C32668e8',
     [eEthereumNetwork.goerli]: '',
     [eEthereumNetwork.main]: '',
   },

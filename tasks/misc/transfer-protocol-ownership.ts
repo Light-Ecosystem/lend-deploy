@@ -139,10 +139,13 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
     /** End of DEFAULT_ADMIN_ROLE transfer ownership */
 
     /** Start of grant operator to GaugeFactory */
-    const isDeployerOperatorAtGaugeFactory = await gaugeFactory.isOperator(operator);
+    const isDeployerOperatorAtGaugeFactory = await gaugeFactory.isOperator(deployer);
     if (isDeployerOperatorAtGaugeFactory) {
+      console.log('- Transferring the OPERATOR_ROLE to the operator address');
       await waitForTx(await gaugeFactory.addOperator(operator));
-      console.log('- Grant GaugeFactory operator');
+      console.log('- Revoking deployer as OPERATOR_ROLE to the operator address');
+      await waitForTx(await gaugeFactory.removeOperator(deployer));
+      console.log('- Revoked OPERATOR_ROLE to deployer');
     }
     /** End of grant operator to GaugeFactory */
 

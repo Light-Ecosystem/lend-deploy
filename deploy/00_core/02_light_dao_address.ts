@@ -10,11 +10,13 @@ import GaugeControllerArtifact from '../../extendedArtifacts/GaugeController.jso
 import MinterArtifact from '../../extendedArtifacts/Minter.json';
 import BurnerManagerArtifact from '../../extendedArtifacts/BurnerManager.json';
 import UnderlyingBurnerArtifact from '../../extendedArtifacts/UnderlyingBurner.json';
+import FeeToVaultArtifact from '../../extendedArtifacts/FeeToVault.json';
 import MockGaugeArtifact from '../../extendedArtifacts/MockGauge.json';
 import { time } from '@nomicfoundation/hardhat-network-helpers';
 import {
   BURNER_MANAGER_ID,
   ConfigNames,
+  FEE_TO_VAULT_ID,
   GAUGE_CONTROLLER_ID,
   HOPE_ID,
   LT_ID,
@@ -50,6 +52,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     Permit2Address,
     BurnerManagerAddress,
     UnderlyingBurnerAddress,
+    FeeToVaultAddress,
   } = poolConfig;
   const network = (process.env.FORK || hre.network.name) as eNetwork;
   const ltAddress = getParamPerNetwork(LTAddress, network);
@@ -89,6 +92,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     save(UNDERLYING_BURNER_ID, {
       address: getParamPerNetwork(UnderlyingBurnerAddress, network) as string,
       abi: UnderlyingBurnerArtifact.abi,
+    });
+    save(FEE_TO_VAULT_ID, {
+      address: getParamPerNetwork(FeeToVaultAddress, network) as string,
+      abi: FeeToVaultArtifact.abi,
     });
     return;
   }
@@ -195,6 +202,48 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       ...COMMON_DEPLOY_PARAMS,
     });
   }
+
+  const BurnerManager = await deploy(BURNER_MANAGER_ID, {
+    contract: {
+      abi: BurnerManagerArtifact.abi,
+      bytecode: BurnerManagerArtifact.bytecode,
+    },
+    from: deployer,
+    ...COMMON_DEPLOY_PARAMS,
+  });
+
+  const UnderlyingBurner = await deploy(UNDERLYING_BURNER_ID, {
+    contract: {
+      abi: UnderlyingBurnerArtifact.abi,
+      bytecode: UnderlyingBurnerArtifact.bytecode,
+    },
+    from: deployer,
+    ...COMMON_DEPLOY_PARAMS,
+  });
+
+  const FeeToVault = await deploy(FEE_TO_VAULT_ID, {
+    contract: {
+      abi: FeeToVaultArtifact.abi,
+      bytecode: FeeToVaultArtifact.bytecode,
+    },
+    from: deployer,
+    proxy: {
+      owner: deployer,
+      proxyContract: 'OpenZeppelinTransparentProxy',
+      execute: {
+        init: {
+          methodName: 'initialize',
+          args: [
+            BurnerManager.address,
+            UnderlyingBurner.address,
+            (await deployments.get(HOPE_ID)).address,
+          ],
+        },
+      },
+    },
+    skipIfAlreadyDeployed: true,
+    ...COMMON_DEPLOY_PARAMS,
+  });
 
   const StakingHope = await deploy(STAKING_HOPE_ID, {
     contract: {

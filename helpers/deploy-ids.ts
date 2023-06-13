@@ -40,3 +40,4 @@ export const MINTER_ID = 'Minter';
 export const PERMIT2_ID = 'Permit2';
 export const BURNER_MANAGER_ID = 'BurnerManager';
 export const UNDERLYING_BURNER_ID = 'UnderlyingBurner';
+export const FEE_TO_VAULT_ID = 'FeeToVault';
