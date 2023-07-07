@@ -58,6 +58,7 @@ import {
   POOL_CONFIGURATOR_IMPL_ID,
   POOL_IMPL_ID,
   TREASURY_CONTROLLER_ID,
+  RESERVES_SETUP_HELPER_ID,
 } from './deploy-ids';
 import LTArtifact from '../extendedArtifacts/LT.json';
 import StakingHOPEArtifact from '../extendedArtifacts/StakingHOPE.json';
@@ -183,7 +184,11 @@ export const getPoolAddressesProviderRegistry = async (
 
 export const getReservesSetupHelper = async (
   address?: tEthereumAddress
-): Promise<ReservesSetupHelper> => getContract('ReservesSetupHelper', address);
+): Promise<ReservesSetupHelper> =>
+  getContract(
+    'ReservesSetupHelper',
+    address || (await hre.deployments.get(RESERVES_SETUP_HELPER_ID)).address
+  );
 
 export const getWETHMocked = async (address?: tEthereumAddress): Promise<WETH9Mocked> =>
   getContract('WETH9Mocked', address);
