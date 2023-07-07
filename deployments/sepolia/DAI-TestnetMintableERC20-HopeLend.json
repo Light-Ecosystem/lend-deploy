@@ -1,5 +1,5 @@
 {
-  "address": "0xc527C4003B0554A5703FA666D7D45dB205e3de99",
+  "address": "0xAd4979AE4a275c4f6bc194c14C3b3CFBcD435abb",
   "abi": [
     {
       "inputs": [
@@ -15,7 +15,7 @@
         },
         {
           "internalType": "uint8",
-          "name": "decimals",
+          "name": "decimals_",
           "type": "uint8"
         },
         {
@@ -497,13 +497,7 @@
         }
       ],
       "name": "mint",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
+      "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
@@ -516,13 +510,7 @@
         }
       ],
       "name": "mint",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
+      "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
@@ -732,7 +720,7 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "recipient",
+          "name": "to",
           "type": "address"
         },
         {
@@ -756,12 +744,12 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "sender",
+          "name": "from",
           "type": "address"
         },
         {
           "internalType": "address",
-          "name": "recipient",
+          "name": "to",
           "type": "address"
         },
         {
@@ -795,5 +783,5 @@
       "type": "function"
     }
   ],
-  "numDeployments": 4
+  "numDeployments": 2
 }

@@ -12,8 +12,8 @@ import { eNetwork, ITokenAddress } from '../../../helpers/types';
 import { FAUCET_ID, TESTNET_TOKEN_PREFIX } from '../../../helpers/deploy-ids';
 import Bluebird from 'bluebird';
 import { MARKET_NAME } from '../../../helpers/env';
-import MintableERC20ABI from '../../../abi/MintableERC20.json';
-import WETH9MockedABI from '../../../abi/WETH9Mocked.json';
+import MintableERC20Artifact from '../../../extendedArtifacts/MintableERC20.json';
+import WETH9MockedArtifact from '../../../extendedArtifacts/WETH9Mocked.json';
 
 const func: DeployFunction = async function ({
   getNamedAccounts,
@@ -49,30 +49,6 @@ const func: DeployFunction = async function ({
     args: [],
     ...COMMON_DEPLOY_PARAMS,
   });
-
-  if (poolConfig.ReserveAssets) {
-    try {
-      const reserveAddress = getRequiredParamPerNetwork<ITokenAddress>(
-        poolConfig,
-        'ReserveAssets',
-        network
-      );
-      if (reserveAddress) {
-        Object.entries(reserveAddress).map(([tokenSymbol, tokenAddress]) => {
-          save(`${tokenSymbol}${TESTNET_TOKEN_PREFIX}`, {
-            address: tokenAddress,
-            abi:
-              tokenSymbol == poolConfig.WrappedNativeTokenSymbol
-                ? WETH9MockedABI
-                : MintableERC20ABI,
-          });
-        });
-        return;
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   // 1. Deployment of ERC20 mintable tokens for testing purposes
   await Bluebird.each(reserveSymbols, async (symbol) => {

@@ -1,4 +1,4 @@
-import { MockL2Pool } from './../typechain';
+import { MockHopeLendEcosystemReserveV2, MockL2Pool, MockPoolV2 } from './../typechain';
 import { EMPTY_STORAGE_SLOT, ZERO_ADDRESS } from './constants';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { getPoolLibraries } from './contract-getters';
@@ -203,6 +203,17 @@ export const deployMockReserveConfiguration = async () =>
   deployContract<MockReserveConfiguration>('MockReserveConfiguration');
 
 export const deployMockPool = async () => deployContract<MockPool>('MockPool');
+
+export const deployMockPoolV2 = async (providerAddress: tEthereumAddress) => {
+  const instance = await deployContract<MockPoolV2>('MockPoolV2');
+
+  instance.initialize(providerAddress);
+
+  return instance;
+};
+
+export const deployMockHopeLendEcosystemReserveV2 = async () =>
+  deployContract<MockHopeLendEcosystemReserveV2>('MockHopeLendEcosystemReserveV2');
 
 export const deployMockInitializableImple = async () =>
   deployContract<MockInitializableImple>('MockInitializableImple');

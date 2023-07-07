@@ -11,7 +11,6 @@ import {
   ConfigNames,
   getReserveAddresses,
   isProductionMarket,
-  isUnitTestEnv,
   loadPoolConfig,
 } from '../../helpers/market-config-helpers';
 import { eEthereumNetwork, eNetwork } from '../../helpers/types';
@@ -42,6 +41,11 @@ const func: DeployFunction = async function ({
     console.log(`[Deployment] Added PriceOracle ${configPriceOracle} to PoolAddressesProvider`);
   }
 
+  if (network == eEthereumNetwork.main) {
+    console.log('[hope-oracle] Skipping fallback oracle setup at ethereum main production market');
+    return true;
+  }
+
   // 2. Set fallback oracle
   const hopeOracle = (await getContract(
     'HopeOracle',
@@ -50,7 +54,6 @@ const func: DeployFunction = async function ({
 
   const configFallbackOracle = (await deployments.get(FALLBACK_ORACLE_ID)).address;
   const stateFallbackOracle = await hopeOracle.getFallbackOracle();
-
   if (getAddress(configFallbackOracle) === getAddress(stateFallbackOracle)) {
     console.log('[hope-oracle] Fallback oracle already set. Skipping tx.');
   } else {

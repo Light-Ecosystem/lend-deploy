@@ -21,7 +21,10 @@ const func: DeployFunction = async function ({
   const network = (process.env.FORK ? process.env.FORK : hre.network.name) as eNetwork;
   const poolConfig = await loadPoolConfig(MARKET_NAME as ConfigNames);
 
-  if (!isProductionMarket(poolConfig)) {
+  if (!isProductionMarket(poolConfig) && !chainlinkAggregatorProxy[network]) {
+    console.log(
+      '[Deployments] Use the deployed data source in the deployments as the UiPoolDataProvider contract data source'
+    );
     const AGGREGATOR_ID = `WETH${TESTNET_PRICE_AGGR_PREFIX}`;
     const aggregatorAddress = (await deployments.get(AGGREGATOR_ID)).address;
     await deploy('UiPoolDataProvider', {

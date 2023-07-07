@@ -34,12 +34,12 @@ const func: DeployFunction = async function ({
   console.log('- Setup Liquidation protocol fee');
   await hre.run('setup-liquidation-protocol-fee');
 
-  if (isTestnetMarket(poolConfig)) {
-    // Unpause pool
-    const poolConfigurator = await getPoolConfiguratorProxy();
-    await waitForTx(await poolConfigurator.setPoolPause(false));
-    console.log('- Pool unpaused and accepting deposits.');
-  }
+  // if (isTestnetMarket(poolConfig)) {
+  //   // Unpause pool
+  //   const poolConfigurator = await getPoolConfiguratorProxy();
+  //   await waitForTx(await poolConfigurator.setPoolPause(false));
+  //   console.log('- Pool unpaused and accepting deposits.');
+  // }
 
   if (process.env.TRANSFER_OWNERSHIP === 'true') {
     await hre.run('transfer-protocol-ownership');

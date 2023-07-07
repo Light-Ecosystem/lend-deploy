@@ -35,6 +35,7 @@ export const ONE_ADDRESS = '0x0000000000000000000000000000000000000001';
 export const HOPELEND_REFERRAL = '0';
 
 export const WRAPPED_NATIVE_TOKEN_PER_NETWORK: { [network: string]: string } = {
+  [eEthereumNetwork.sepolia]: '0xE55a23aaFb3a712BFae5BE96E0f61C745dedf33C',
   [eEthereumNetwork.kovan]: ZERO_ADDRESS,
   [eEthereumNetwork.main]: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
   [eArbitrumNetwork.arbitrum]: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
@@ -96,7 +97,7 @@ export const chainlinkAggregatorProxy: Record<string, string> = {
   ropsten: '0x12BAaa24D85A4A180F0d5ae67b6aCbDDD58968EA',
   görli: '0x60E4B131f0F219c72b0346675283E73888e4AB24',
   [eArbitrumNetwork.görliNitro]: '0xC09e69E79106861dF5d289dA88349f10e2dc6b5C',
-  hardhat: '0x8f86403A4DE0BB5791fa46B8e795C547942fE4Cf',
+  sepolia: '0x53c124838885a84D4316F6a94067b52bB9F1b682',
 };
 
 export const chainlinkEthUsdAggregatorProxy: Record<string, string> = {
@@ -119,7 +120,7 @@ export const chainlinkEthUsdAggregatorProxy: Record<string, string> = {
   ropsten: '0x12BAaa24D85A4A180F0d5ae67b6aCbDDD58968EA',
   görli: '0x60E4B131f0F219c72b0346675283E73888e4AB24',
   [eArbitrumNetwork.görliNitro]: '0xC09e69E79106861dF5d289dA88349f10e2dc6b5C',
-  hardhat: '0x8f86403A4DE0BB5791fa46B8e795C547942fE4Cf',
+  sepolia: '0x53c124838885a84D4316F6a94067b52bB9F1b682',
 };
 
 export const EMPTY_STORAGE_SLOT =
@@ -140,9 +141,11 @@ export const DEFAULT_NAMED_ACCOUNTS = {
   },
   treasuryAdmin: {
     default: 0,
+    sepolia: '0xcbeD65Db7E177D4875dDF5B67E13326A43a7B03f',
   },
   operator: {
     default: 0,
+    sepolia: '0xcbeD65Db7E177D4875dDF5B67E13326A43a7B03f',
     main: '0xcF50cdB498BaA6e2Da5907d103d82A89a69b3e82',
   },
 };
@@ -152,6 +155,7 @@ export const GOVERNANCE_BRIDGE_EXECUTOR: { [key: string]: string } = {
 };
 
 export const MULTISIG_ADDRESS: { [key: string]: string } = {
+  [eEthereumNetwork.sepolia]: '0xcbeD65Db7E177D4875dDF5B67E13326A43a7B03f',
   [eArbitrumNetwork.arbitrum]: '0xbbd9f90699c1FA0D7A65870D241DD1f1217c96Eb',
   [eAvalancheNetwork.avalanche]: '0xa35b76E4935449E33C56aB24b23fcd3246f13470',
   [eFantomNetwork.main]: '0x39CB97b105173b56b5a2b4b33AD25d6a50E6c949',

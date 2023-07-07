@@ -57,6 +57,7 @@ import {
   STAKING_HOPE_ID,
   POOL_CONFIGURATOR_IMPL_ID,
   POOL_IMPL_ID,
+  TREASURY_CONTROLLER_ID,
 } from './deploy-ids';
 import LTArtifact from '../extendedArtifacts/LT.json';
 import StakingHOPEArtifact from '../extendedArtifacts/StakingHOPE.json';
@@ -242,10 +243,12 @@ export const getWrappedTokenGateway = async (address?: string): Promise<WrappedT
 };
 
 export const getTreasuryController = async (
-  address?: string
-): Promise<HopeLendEcosystemReserveController> => {
-  return getContract('HopeLendEcosystemReserveController', address);
-};
+  address?: tEthereumAddress
+): Promise<HopeLendEcosystemReserveController> =>
+  getContract(
+    'HopeLendEcosystemReserveController',
+    address || (await hre.deployments.get(TREASURY_CONTROLLER_ID)).address
+  );
 
 export const getUiPoolDataProvider = async (address?: string): Promise<UiPoolDataProvider> =>
   getContract('UiPoolDataProvider', address);

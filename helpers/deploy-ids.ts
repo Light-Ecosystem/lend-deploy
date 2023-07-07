@@ -30,6 +30,7 @@ export const STABLE_DEBT_PREFIX = `-StableDebtToken-${MARKET_NAME}`;
 export const L2_ENCODER = 'L2Encoder';
 export const LENDING_GAUGE_IMPL_ID = `LendingGauge-${IMPL_ID}`;
 export const GAUGE_FACTORY_ID = 'GaugeFactory';
+export const LENDING_GAUGE_PREFIX = '-LendingGauge';
 
 export const HOPE_ID = `HOPE${TESTNET_TOKEN_PREFIX}`;
 export const STAKING_HOPE_ID = `StakingHOPE${TESTNET_TOKEN_PREFIX}`;
@@ -42,3 +43,11 @@ export const BURNER_MANAGER_ID = 'BurnerManager';
 export const UNDERLYING_BURNER_ID = 'UnderlyingBurner';
 export const FEE_TO_VAULT_ID = 'FeeToVault';
 export const PROXY_ADMIN_ID = 'ProxyAdmin';
+
+export const UPGRADE_IMPL = `Upgrade-${IMPL_ID}`;
+export const HTOKEN_UPGRADE_IMPL_ID = `HToken-${UPGRADE_IMPL}-${MARKET_NAME}`;
+export const STABLE_DEBT_TOKEN_UPGRADE_IMPL_ID = `StableDebtToken-${UPGRADE_IMPL}-${MARKET_NAME}`;
+export const VARIABLE_DEBT_TOKEN_UPGRADE_IMPL_ID = `VariableDebtToken-${UPGRADE_IMPL}-${MARKET_NAME}`;
+export const POOL_UPGRADE_IMPL_ID = `Pool-${UPGRADE_IMPL}-${MARKET_NAME}`;
+export const POOL_CONFIGURATOR_UPGRADE_IMPL_ID = `PoolConfigurator-${UPGRADE_IMPL}-${MARKET_NAME}`;
+export const TREASURY_UPGRADE_IMPL_ID = `Treasury-${UPGRADE_IMPL}-${MARKET_NAME}`;

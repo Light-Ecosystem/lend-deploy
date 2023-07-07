@@ -4,6 +4,7 @@ import { FEE_TO_VAULT_ID, L2_POOL_IMPL_ID } from './../../helpers/deploy-ids';
 import {
   ConfigNames,
   isL2PoolSupported,
+  isUnitTestEnv,
   loadPoolConfig,
 } from './../../helpers/market-config-helpers';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
@@ -115,9 +116,9 @@ const func: DeployFunction = async function ({
     )
   );
 
-  // Set FeeToVault
+  // Set FeeToVault (Unit test cannot setting FeeToVault)
   const { address: feeToVaultAddress } = await deployments.get(FEE_TO_VAULT_ID);
-  if (feeToVaultAddress && getAddress(feeToVaultAddress) !== ZERO_ADDRESS) {
+  if (feeToVaultAddress && getAddress(feeToVaultAddress) !== ZERO_ADDRESS && !isUnitTestEnv()) {
     const poolInstance = await getPool();
     await waitForTx(await poolInstance.setFeeToVault(feeToVaultAddress));
   }

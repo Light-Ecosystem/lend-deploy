@@ -1,8 +1,4 @@
-import {
-  getChainlinkOracles,
-  isProductionMarket,
-  isUnitTestEnv,
-} from '../../helpers/market-config-helpers';
+import { getChainlinkOracles, isProductionMarket } from '../../helpers/market-config-helpers';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { DeployFunction } from 'hardhat-deploy/types';
 import { COMMON_DEPLOY_PARAMS } from '../../helpers/env';
@@ -60,13 +56,17 @@ const func: DeployFunction = async function ({
     ...COMMON_DEPLOY_PARAMS,
   });
 
-  // Deploy FallbackOracle
-  await deploy(FALLBACK_ORACLE_ID, {
-    contract: 'PriceOracle',
-    from: deployer,
-    args: [],
-    ...COMMON_DEPLOY_PARAMS,
-  });
+  if (network == eEthereumNetwork.main) {
+    console.log('[Deployment] Skipping fallback oracle deploy at ethereum main production market');
+  } else {
+    // Deploy FallbackOracle
+    await deploy(FALLBACK_ORACLE_ID, {
+      contract: 'PriceOracle',
+      from: deployer,
+      args: [],
+      ...COMMON_DEPLOY_PARAMS,
+    });
+  }
 
   return true;
 };

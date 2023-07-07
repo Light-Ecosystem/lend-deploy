@@ -36,7 +36,6 @@ const func: DeployFunction = async function ({
     args: [treasuryAdmin],
     ...COMMON_DEPLOY_PARAMS,
   });
-
   // Deploy Treasury implementation and initialize proxy
   const treasuryImplArtifact = await deploy(TREASURY_IMPL_ID, {
     from: deployer,

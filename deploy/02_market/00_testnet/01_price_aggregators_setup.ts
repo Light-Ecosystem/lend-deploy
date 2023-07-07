@@ -35,27 +35,6 @@ const func: DeployFunction = async function ({
 
   let symbols = Object.keys(reserves);
 
-  if (poolConfig.ChainlinkAggregator) {
-    try {
-      const aggregators = getRequiredParamPerNetwork<ITokenAddress>(
-        poolConfig,
-        'ChainlinkAggregator',
-        network
-      );
-      if (aggregators) {
-        Object.entries(aggregators).map(([tokenSymbol, tokenAddress]) => {
-          save(`${tokenSymbol}${TESTNET_PRICE_AGGR_PREFIX}`, {
-            address: tokenAddress,
-            abi: MockAggregatorABI,
-          });
-        });
-        return;
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   // Iterate each token symbol and deploy a mock aggregator
   await Bluebird.each(symbols, async (symbol) => {
     let price = MOCK_CHAINLINK_AGGREGATORS_PRICES[symbol];

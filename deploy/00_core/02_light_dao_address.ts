@@ -181,7 +181,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   });
 
   if (isUnitTestEnv()) {
-    // Only unit test need minable erc20 HOPE
+    // Only unit test need mintable erc20 HOPE
     await deploy(HOPE_ID, {
       from: deployer,
       contract: 'MintableERC20',

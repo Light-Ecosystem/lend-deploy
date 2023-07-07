@@ -125,20 +125,6 @@ export const checkRequiredEnvironment = () => {
   return false;
 };
 
-export const checkDaiGaugeExists = async (symbol: string) => {
-  const gaugeFactoryArtifact = await hre.deployments.getOrNull(GAUGE_FACTORY_ID);
-  if (gaugeFactoryArtifact == null) {
-    return false;
-  }
-  const gaugeFactory = (await hre.ethers.getContractAt(
-    gaugeFactoryArtifact.abi,
-    gaugeFactoryArtifact.address
-  )) as GaugeFactory;
-  const daiAddress = (await hre.deployments.get(`${symbol}${TESTNET_TOKEN_PREFIX}`)).address;
-  const daiLendingGaugeAddress = await gaugeFactory.lendingGauge(daiAddress);
-  return daiLendingGaugeAddress != ZERO_ADDRESS;
-};
-
 export const savePoolTokens = async (
   reservesConfig: ITokenAddress,
   dataProviderAddress: tEthereumAddress
