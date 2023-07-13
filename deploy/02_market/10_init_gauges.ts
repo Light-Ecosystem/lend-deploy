@@ -17,6 +17,8 @@ import {
   ConfigNames,
   advanceTimeAndBlock,
   eNetwork,
+  getMinterAddress,
+  getVotingEscrowAddress,
   isProductionMarket,
   isUnitTestEnv,
   loadPoolConfig,
@@ -38,15 +40,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [],
     log: true,
   });
+  const { address: poolAddress } = await deployments.get(POOL_PROXY_ID);
+  const minterAddress = await getMinterAddress(poolConfig, network);
+  const votingEscrowAddress = await getVotingEscrowAddress(poolConfig, network);
   // 2. Deploy GaugeFactory for create LendingGauge
   const GaugeFactory = await deploy(GAUGE_FACTORY_ID, {
     from: deployer,
-    args: [
-      (await deployments.get(POOL_PROXY_ID)).address,
-      LendingGaugeImpl.address,
-      (await deployments.get(MINTER_ID)).address,
-      (await deployments.get(VOTING_ESCROW_ID)).address,
-    ],
+    args: [poolAddress, LendingGaugeImpl.address, minterAddress, votingEscrowAddress],
   });
   const gaugeFactoryInstance = (await hre.ethers.getContractAt(
     GaugeFactory.abi,
@@ -58,7 +58,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   if (isProductionMarket(poolConfig)) {
     console.log('[Deployment] Skipping lending gauge setup at production market');
     // Early exit if is not a testnet market
-    return;
+    return true;
   }
   console.log(
     `- Setting up testnet lending gauge for "${MARKET_NAME}" market at "${network}" network`

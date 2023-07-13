@@ -140,6 +140,12 @@ export const getFlashLoanLogic = async (address?: tEthereumAddress): Promise<Fla
 export const getPool = async (address?: tEthereumAddress): Promise<Pool> =>
   getContract('Pool', address || (await hre.deployments.get(POOL_PROXY_ID)).address);
 
+export const getPoolProxy = async (address?: tEthereumAddress): Promise<Pool> =>
+  getContract(
+    'InitializableAdminUpgradeabilityProxy',
+    address || (await hre.deployments.get(POOL_PROXY_ID)).address
+  );
+
 export const getPoolImpl = async (address?: tEthereumAddress): Promise<Pool> =>
   getContract('Pool', address || (await hre.deployments.get(POOL_IMPL_ID)).address);
 

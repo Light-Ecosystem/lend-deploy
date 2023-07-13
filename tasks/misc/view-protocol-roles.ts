@@ -16,16 +16,26 @@ import {
   getGaugeFactory,
   getPoolAddressesProvider,
   getPoolAddressesProviderRegistry,
+  getReservesSetupHelper,
   getWrappedTokenGateway,
 } from '../../helpers/contract-getters';
 import { task } from 'hardhat/config';
 import { getAddressFromJson, getProxyAdminBySlot } from '../../helpers/utilities/tx';
 import { exit } from 'process';
 import { GOVERNANCE_BRIDGE_EXECUTOR, MULTISIG_ADDRESS } from '../../helpers/constants';
-import { getFirstSigner } from '../../helpers';
+import {
+  ConfigNames,
+  eNetwork,
+  getFirstSigner,
+  getProxyAdminAddress,
+  loadPoolConfig,
+} from '../../helpers';
+import { MARKET_NAME } from '../../helpers/env';
 
 task(`view-protocol-roles`, `View current admin of each role and contract`).setAction(
   async (_, hre) => {
+    const poolConfig = await loadPoolConfig(MARKET_NAME as ConfigNames);
+    const network = hre.network.name as eNetwork;
     // Deployer admins
     const { poolAdmin, aclAdmin, emergencyAdmin, deployer, treasuryAdmin, operator } =
       await hre.getNamedAccounts();
@@ -37,10 +47,6 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
     const desiredMultisig = networkId.includes('polygon')
       ? GOVERNANCE_BRIDGE_EXECUTOR[networkId]
       : MULTISIG_ADDRESS[networkId];
-    // Desired Emergency Admin at Polygon must be the multisig, not the crosschain executor
-    const desiredEmergencyAdmin = networkId.includes('polygon')
-      ? MULTISIG_ADDRESS[networkId]
-      : desiredMultisig;
     if (!desiredMultisig) {
       console.error(
         'The constant desired Multisig is undefined. Check missing admin address at MULTISIG_ADDRESS or GOVERNANCE_BRIDGE_EXECUTOR constant'
@@ -48,14 +54,8 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
       exit(403);
     }
 
-    if (!desiredEmergencyAdmin) {
-      console.error(
-        'The constant desired EmergencyAdmin is undefined. Check missing Multisig at MULTISIG_ADDRESS constant'
-      );
-      exit(403);
-    }
     const poolAddressesProvider = await getPoolAddressesProvider();
-    const { address: proxyAdminAddress } = await hre.deployments.get(PROXY_ADMIN_ID);
+    const proxyAdminAddress = await getProxyAdminAddress(poolConfig, network);
 
     console.log('--- Current deployer addresses ---');
     console.table({
@@ -107,6 +107,8 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
       );
     }
 
+    const reservesSetupHelper = await getReservesSetupHelper();
+
     /** Output of results*/
     const result = [
       {
@@ -146,6 +148,11 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
         assert: (await wrappedTokenGateway.owner()) === desiredMultisig,
       },
       {
+        role: 'ReservesSetupHelper owner',
+        address: await reservesSetupHelper.owner(),
+        assert: (await reservesSetupHelper.owner()) === desiredMultisig,
+      },
+      {
         role: 'PoolAdmin is multisig',
         address: (await aclManager.isPoolAdmin(desiredMultisig)) ? desiredMultisig : ZERO_ADDRESS,
         assert: await aclManager.isPoolAdmin(desiredMultisig),
@@ -157,10 +164,10 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
       },
       {
         role: 'EmergencyAdmin',
-        address: (await aclManager.isEmergencyAdmin(desiredEmergencyAdmin))
-          ? desiredEmergencyAdmin
-          : emergencyAdmin,
-        assert: await aclManager.isEmergencyAdmin(desiredEmergencyAdmin),
+        address: (await aclManager.isEmergencyAdmin(emergencyAdmin))
+          ? emergencyAdmin
+          : ZERO_ADDRESS,
+        assert: await aclManager.isEmergencyAdmin(emergencyAdmin),
       },
       {
         role: 'AssetListAdmin',

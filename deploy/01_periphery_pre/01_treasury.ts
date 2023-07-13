@@ -1,10 +1,17 @@
 import { ZERO_ADDRESS } from '../../helpers/constants';
-import { PROXY_ADMIN_ID, TREASURY_CONTROLLER_ID, TREASURY_IMPL_ID } from '../../helpers/deploy-ids';
+import { TREASURY_CONTROLLER_ID, TREASURY_IMPL_ID } from '../../helpers/deploy-ids';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { DeployFunction } from 'hardhat-deploy/types';
-import { COMMON_DEPLOY_PARAMS } from '../../helpers/env';
+import { COMMON_DEPLOY_PARAMS, MARKET_NAME } from '../../helpers/env';
 import { TREASURY_PROXY_ID } from '../../helpers/deploy-ids';
-import { InitializableAdminUpgradeabilityProxy, waitForTx } from '../../helpers';
+import {
+  ConfigNames,
+  InitializableAdminUpgradeabilityProxy,
+  eNetwork,
+  getProxyAdminAddress,
+  loadPoolConfig,
+  waitForTx,
+} from '../../helpers';
 import { HopeLendEcosystemReserve } from '../../typechain';
 
 /**
@@ -19,8 +26,8 @@ const func: DeployFunction = async function ({
 }: HardhatRuntimeEnvironment) {
   const { deploy } = deployments;
   const { deployer, treasuryAdmin } = await getNamedAccounts();
-
-  const proxyAdminArtifact = await deployments.get(PROXY_ADMIN_ID);
+  const poolConfig = await loadPoolConfig(MARKET_NAME as ConfigNames);
+  const network = (process.env.FORK ? process.env.FORK : hre.network.name) as eNetwork;
 
   // Deploy Treasury proxy
   const treasuryProxyArtifact = await deploy(TREASURY_PROXY_ID, {
@@ -62,10 +69,11 @@ const func: DeployFunction = async function ({
     treasuryController.address,
   ]);
 
+  const proxyAdminAddress = await getProxyAdminAddress(poolConfig, network);
   await waitForTx(
     await proxy['initialize(address,address,bytes)'](
       treasuryImplArtifact.address,
-      proxyAdminArtifact.address,
+      proxyAdminAddress,
       initializePayload
     )
   );

@@ -19,7 +19,7 @@ const func: DeployFunction = async function ({
 
   if (!isL2PoolSupported(poolConfig)) {
     console.log(`[INFO] Skipped L2 Pool due current network '${network}' is not supported`);
-    return;
+    return true;
   }
 
   const { address: addressesProviderAddress } = await deployments.get(POOL_ADDRESSES_PROVIDER_ID);

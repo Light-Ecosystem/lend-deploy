@@ -17,12 +17,21 @@ import {
   MULTISIG_ADDRESS,
   ZERO_ADDRESS,
 } from '../../helpers/constants';
+import { getAddress } from 'ethers/lib/utils';
 
 task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from deployer`).setAction(
   async (_, hre) => {
     // Deployer admins
-    const { poolAdmin, aclAdmin, deployer, emergencyAdmin, treasuryAdmin, operator } =
-      await hre.getNamedAccounts();
+    const {
+      poolAdmin,
+      aclAdmin,
+      deployer,
+      emergencyAdmin,
+      treasuryAdmin,
+      operator,
+      gatewayOwner,
+      flashBorrower,
+    } = await hre.getNamedAccounts();
 
     const networkId = FORK ? FORK : hre.network.name;
     // Desired Admin at Polygon must be the bridge crosschain executor, not the multisig
@@ -45,6 +54,8 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
       emergencyAdmin,
       treasuryAdmin,
       operator,
+      gatewayOwner,
+      flashBorrower,
     });
     console.log('--- DESIRED MULTISIG ADMIN ---');
     console.log(desiredMultisig);
@@ -74,6 +85,12 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
       exit(403);
     }
 
+    // Setup flashBorrower
+    if (flashBorrower && getAddress(flashBorrower) !== getAddress(ZERO_ADDRESS)) {
+      await waitForTx(await aclManager.addFlashBorrower(flashBorrower));
+      console.log(`- Setup FlashBorrower (${flashBorrower}) successful`);
+    }
+
     /** Start of Emergency Admin transfer */
     const isDeployerEmergencyAdmin = await aclManager.isEmergencyAdmin(emergencyAdmin);
     if (isDeployerEmergencyAdmin) {
@@ -94,16 +111,16 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
     }
     /** End of Pool Admin transfer */
 
-    /** Start of Pool Addresses Provider  Registry transfer ownership */
+    /** Start of Pool Addresses ACL Admin transfer */
     const isDeployerACLAdminAtPoolAddressesProviderOwner =
       (await poolAddressesProvider.getACLAdmin()) === deployer;
     if (isDeployerACLAdminAtPoolAddressesProviderOwner) {
       await waitForTx(await poolAddressesProvider.setACLAdmin(desiredMultisig));
       console.log('- Transferred ACL Admin');
     }
-    /** End of Pool Addresses Provider  Registry transfer ownership */
+    /** End of Pool Addresses ACL Admin transfer */
 
-    /** Start of Pool Addresses Provider  Registry transfer ownership */
+    /** Start of Pool Addresses Provider Registry transfer ownership */
     const isDeployerPoolAddressesProviderRegistryOwner =
       (await poolAddressesProviderRegistry.owner()) === deployer;
     if (isDeployerPoolAddressesProviderRegistryOwner) {
@@ -177,6 +194,11 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
         assert: await aclManager.isPoolAdmin(desiredMultisig),
       },
       {
+        role: 'FlashBorrower',
+        address: (await aclManager.isFlashBorrower(flashBorrower)) ? flashBorrower : ZERO_ADDRESS,
+        assert: await aclManager.isPoolAdmin(flashBorrower),
+      },
+      {
         role: 'PoolAddressesProvider owner',
         address: await poolAddressesProvider.owner(),
         pendingOwnerAddress: await poolAddressesProvider.pendingOwner(),
@@ -197,7 +219,7 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
         role: 'WrappedTokenGateway owner',
         address: await wrappedGateway.owner(),
         pendingOwnerAddress: await wrappedGateway.pendingOwner(),
-        assert: (await wrappedGateway.pendingOwner()) === desiredMultisig,
+        assert: (await wrappedGateway.owner()) === desiredMultisig,
       },
       {
         role: 'ReservesSetupHelper owner',
@@ -209,7 +231,7 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
         role: 'TreasuryController owner',
         address: await treasuryController.owner(),
         pendingOwnerAddress: await treasuryController.pendingOwner(),
-        assert: (await treasuryController.pendingOwner()) === treasuryAdmin,
+        assert: (await treasuryController.owner()) === treasuryAdmin,
       },
       {
         role: 'ACL Default Admin role revoked Deployer',

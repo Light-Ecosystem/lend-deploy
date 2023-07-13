@@ -28,7 +28,7 @@ const func: DeployFunction = async function ({
 
   if (isProductionMarket(poolConfig)) {
     console.log('[NOTICE] Skipping deployment of testnet price aggregators');
-    return;
+    return true;
   }
 
   const reserves = await getReserveAddresses(poolConfig, network);

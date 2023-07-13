@@ -9,6 +9,8 @@ import {
   POOL_CONFIGURATOR_IMPL_ID,
   getPoolAddressesProvider,
   POOL_ADDRESSES_PROVIDER_ID,
+  getPoolProxy,
+  POOL_PROXY_ID,
 } from '../../helpers';
 
 task(`verify-others`).setAction(async (_, { deployments, getNamedAccounts, ...hre }) => {
@@ -16,6 +18,7 @@ task(`verify-others`).setAction(async (_, { deployments, getNamedAccounts, ...hr
   const flashLoanLogic = await getFlashLoanLogic(
     await getAddressFromJson(network, 'FlashLoanLogic')
   );
+  const poolProxy = await getPoolProxy(await getAddressFromJson(network, POOL_PROXY_ID));
   const poolImpl = await getPoolImpl(await getAddressFromJson(network, POOL_IMPL_ID));
   const poolConfiguratorImpl = await getPoolConfiguratorImpl(
     await getAddressFromJson(network, POOL_CONFIGURATOR_IMPL_ID)
@@ -46,6 +49,15 @@ task(`verify-others`).setAction(async (_, { deployments, getNamedAccounts, ...hr
     await hre.run('verify:verify', {
       address: poolConfiguratorImpl.address,
       constructorArguments: [],
+    });
+  } catch (error) {
+    console.error(error);
+  }
+  console.log(`- Verifying Pool Proxy:`);
+  try {
+    await hre.run('verify:verify', {
+      address: poolProxy.address,
+      constructorArguments: [poolAddressesProvider.address],
     });
   } catch (error) {
     console.error(error);

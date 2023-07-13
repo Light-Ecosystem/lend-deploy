@@ -3,7 +3,9 @@ import { getPoolConfiguratorProxy, getPool } from './../../helpers/contract-gett
 import { FEE_TO_VAULT_ID, L2_POOL_IMPL_ID } from './../../helpers/deploy-ids';
 import {
   ConfigNames,
+  getFeeToVaultAddress,
   isL2PoolSupported,
+  isProductionMarket,
   isUnitTestEnv,
   loadPoolConfig,
 } from './../../helpers/market-config-helpers';
@@ -24,6 +26,7 @@ import { PoolAddressesProvider } from '../../typechain';
 import { getContract, waitForTx } from '../../helpers/utilities/tx';
 import { MARKET_NAME } from '../../helpers/env';
 import { getAddress } from 'ethers/lib/utils';
+import { eNetwork } from '../../helpers';
 
 const func: DeployFunction = async function ({
   getNamedAccounts,
@@ -33,6 +36,7 @@ const func: DeployFunction = async function ({
   const { save, deploy } = deployments;
   const { deployer } = await getNamedAccounts();
   const poolConfig = await loadPoolConfig(MARKET_NAME as ConfigNames);
+  const network = (process.env.FORK ? process.env.FORK : hre.network.name) as eNetwork;
 
   const proxyArtifact = await deployments.getExtendedArtifact(
     'InitializableImmutableAdminUpgradeabilityProxy'
@@ -64,7 +68,7 @@ const func: DeployFunction = async function ({
   }
 
   const poolProxyAddress = await addressesProviderInstance.getPool();
-  deployments.log('- Deployed Proxy:', poolProxyAddress);
+  deployments.log('- Deployed Pool Proxy:', poolProxyAddress);
 
   await save(POOL_PROXY_ID, {
     ...proxyArtifact,
@@ -85,7 +89,7 @@ const func: DeployFunction = async function ({
   }
   const poolConfiguratorProxyAddress = await addressesProviderInstance.getPoolConfigurator();
 
-  deployments.log('- Deployed Proxy:', poolConfiguratorProxyAddress);
+  deployments.log('- Deployed PoolConfigurator Proxy:', poolConfiguratorProxyAddress);
 
   await save(POOL_CONFIGURATOR_PROXY_ID, {
     ...proxyArtifact,
@@ -116,11 +120,12 @@ const func: DeployFunction = async function ({
     )
   );
 
-  // Set FeeToVault (Unit test cannot setting FeeToVault)
-  const { address: feeToVaultAddress } = await deployments.get(FEE_TO_VAULT_ID);
-  if (feeToVaultAddress && getAddress(feeToVaultAddress) !== ZERO_ADDRESS && !isUnitTestEnv()) {
+  if (isProductionMarket(poolConfig)) {
+    // Set FeeToVault (Unit test cannot setting FeeToVault)
+    const feeToVaultAddress = await getFeeToVaultAddress(poolConfig, network);
     const poolInstance = await getPool();
     await waitForTx(await poolInstance.setFeeToVault(feeToVaultAddress));
+    console.log(`[Pool] Setup FeeToVault ${feeToVaultAddress} successful`);
   }
 
   return true;

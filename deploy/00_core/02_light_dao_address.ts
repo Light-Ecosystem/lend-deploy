@@ -27,15 +27,11 @@ import {
   STAKING_HOPE_ID,
   UNDERLYING_BURNER_ID,
   VOTING_ESCROW_ID,
-  ZERO_ADDRESS,
-  eEthereumNetwork,
-  eNetwork,
-  getParamPerNetwork,
+  isProductionMarket,
   isUnitTestEnv,
   loadPoolConfig,
 } from '../../helpers';
 import { COMMON_DEPLOY_PARAMS, MARKET_NAME } from '../../helpers/env';
-import { getAddress } from 'ethers/lib/utils';
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments, getNamedAccounts } = hre;
@@ -44,67 +40,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const poolConfig = await loadPoolConfig(MARKET_NAME as ConfigNames);
 
-  const {
-    LTAddress,
-    HOPEAddress,
-    StakingHOPEAddress,
-    VotingEscrowAddress,
-    GaugeControllerAddress,
-    MinterAddress,
-    Permit2Address,
-    BurnerManagerAddress,
-    UnderlyingBurnerAddress,
-    FeeToVaultAddress,
-    ProxyAdminAddress,
-  } = poolConfig;
-  const network = (process.env.FORK || hre.network.name) as eNetwork;
-  const ltAddress = getParamPerNetwork(LTAddress, network);
-  if (ltAddress && getAddress(ltAddress) !== ZERO_ADDRESS) {
-    save(LT_ID, {
-      address: ltAddress,
-      abi: LTArtifact.abi,
-    });
-    save(HOPE_ID, {
-      address: getParamPerNetwork(HOPEAddress, network) as string,
-      abi: HOPEArtifact.abi,
-    });
-    save(STAKING_HOPE_ID, {
-      address: getParamPerNetwork(StakingHOPEAddress, network) as string,
-      abi: StakingHOPEArtifact.abi,
-    });
-    save(VOTING_ESCROW_ID, {
-      address: getParamPerNetwork(VotingEscrowAddress, network) as string,
-      abi: VotingEscrowArtifact.abi,
-    });
-    save(GAUGE_CONTROLLER_ID, {
-      address: getParamPerNetwork(GaugeControllerAddress, network) as string,
-      abi: GaugeControllerArtifact.abi,
-    });
-    save(MINTER_ID, {
-      address: getParamPerNetwork(MinterAddress, network) as string,
-      abi: MinterArtifact.abi,
-    });
-    save(PERMIT2_ID, {
-      address: getParamPerNetwork(Permit2Address, network) as string,
-      abi: Permit2Artifact.abi,
-    });
-    save(BURNER_MANAGER_ID, {
-      address: getParamPerNetwork(BurnerManagerAddress, network) as string,
-      abi: BurnerManagerArtifact.abi,
-    });
-    save(UNDERLYING_BURNER_ID, {
-      address: getParamPerNetwork(UnderlyingBurnerAddress, network) as string,
-      abi: UnderlyingBurnerArtifact.abi,
-    });
-    save(FEE_TO_VAULT_ID, {
-      address: getParamPerNetwork(FeeToVaultAddress, network) as string,
-      abi: FeeToVaultArtifact.abi,
-    });
-    save(PROXY_ADMIN_ID, {
-      address: getParamPerNetwork(ProxyAdminAddress, network) as string,
-      abi: ProxyAdminArtifact.abi,
-    });
-    return;
+  if (isProductionMarket(poolConfig)) {
+    console.log('[Deployment] Skipping light dao deploy at production market');
+    return true;
   }
 
   const LT = await deploy(LT_ID, {
@@ -252,7 +190,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     ...COMMON_DEPLOY_PARAMS,
   });
 
-  const ProxyAdmin = await deploy('ProxyAdmin', {
+  const ProxyAdmin = await deploy(PROXY_ADMIN_ID, {
     contract: {
       abi: ProxyAdminArtifact.abi,
       bytecode: ProxyAdminArtifact.bytecode,
@@ -305,7 +243,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     gaugeWeightStaking
   );
   await gaugeControllerInstance.addGauge(MockSwapGauge.address, swapTypeId, gaugeWeightSwap);
+  return true;
 };
 
 export default func;
+func.id = 'Light-DAO';
 func.tags = ['light-dao', 'init-testnet'];

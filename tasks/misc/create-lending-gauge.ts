@@ -67,8 +67,8 @@ task(`create-lending-gauge`, `Create lending gauge`)
       {
         start: parseUnits('0.65', 27),
         end: parseUnits('0.8', 27),
-        k: parseUnits('-4.66666666666666', 27),
-        b: parseUnits('3.733333333333333', 27),
+        k: '-4666666666666666666666666666',
+        b: '3733333333333333333333333333',
       },
       {
         start: parseUnits('0.8', 27),

@@ -25,7 +25,6 @@ import { isValidAddress } from './utilities/utils';
 import { GaugeFactory, HopeLendProtocolDataProvider } from '../typechain';
 import {
   HTOKEN_PREFIX,
-  HOPE_ID,
   STABLE_DEBT_PREFIX,
   TESTNET_PRICE_AGGR_PREFIX,
   TESTNET_TOKEN_PREFIX,
@@ -34,6 +33,11 @@ import {
   STAKING_HOPE_ID,
   GAUGE_CONTROLLER_ID,
   GAUGE_FACTORY_ID,
+  FEE_TO_VAULT_ID,
+  VOTING_ESCROW_ID,
+  MINTER_ID,
+  PROXY_ADMIN_ID,
+  FALLBACK_ORACLE_ID,
 } from './deploy-ids';
 import { ZERO_ADDRESS } from './constants';
 import { getTestnetReserveAddressFromSymbol, POOL_DATA_PROVIDER } from '.';
@@ -258,6 +262,113 @@ export const getTreasuryAddress = async (
   const deployedTreasury = await hre.deployments.get(TREASURY_PROXY_ID);
 
   return deployedTreasury.address;
+};
+
+export const getFeeToVaultAddress = async (
+  poolConfig: IBaseConfiguration,
+  network: eNetwork
+): Promise<tEthereumAddress> => {
+  const feeToVaultConfigAddress = getParamPerNetwork<string>(poolConfig.FeeToVaultAddress, network);
+
+  if (feeToVaultConfigAddress && getAddress(feeToVaultConfigAddress) !== getAddress(ZERO_ADDRESS)) {
+    return feeToVaultConfigAddress;
+  }
+
+  console.log(
+    '[WARNING] Using latest deployed FeeToVault proxy instead of FeeToVaultAddress from configuration file'
+  );
+
+  const deployedFeeToVault = await hre.deployments.get(FEE_TO_VAULT_ID);
+
+  return deployedFeeToVault.address;
+};
+
+export const getVotingEscrowAddress = async (
+  poolConfig: IBaseConfiguration,
+  network: eNetwork
+): Promise<tEthereumAddress> => {
+  const votingEscrowConfigAddress = getParamPerNetwork<string>(
+    poolConfig.VotingEscrowAddress,
+    network
+  );
+
+  if (
+    votingEscrowConfigAddress &&
+    getAddress(votingEscrowConfigAddress) !== getAddress(ZERO_ADDRESS)
+  ) {
+    return votingEscrowConfigAddress;
+  }
+
+  console.log(
+    '[WARNING] Using latest deployed VotingEscrow instead of VotingEscrowAddress from configuration file'
+  );
+
+  const deployedVotingEscrow = await hre.deployments.get(VOTING_ESCROW_ID);
+
+  return deployedVotingEscrow.address;
+};
+
+export const getMinterAddress = async (
+  poolConfig: IBaseConfiguration,
+  network: eNetwork
+): Promise<tEthereumAddress> => {
+  const minterConfigAddress = getParamPerNetwork<string>(poolConfig.MinterAddress, network);
+
+  if (minterConfigAddress && getAddress(minterConfigAddress) !== getAddress(ZERO_ADDRESS)) {
+    return minterConfigAddress;
+  }
+
+  console.log(
+    '[WARNING] Using latest deployed Minter instead of MinterAddress from configuration file'
+  );
+
+  const deployedMinter = await hre.deployments.get(MINTER_ID);
+
+  return deployedMinter.address;
+};
+
+export const getProxyAdminAddress = async (
+  poolConfig: IBaseConfiguration,
+  network: eNetwork
+): Promise<tEthereumAddress> => {
+  const proxyAdminConfigAddress = getParamPerNetwork<string>(poolConfig.ProxyAdminAddress, network);
+
+  if (proxyAdminConfigAddress && getAddress(proxyAdminConfigAddress) !== getAddress(ZERO_ADDRESS)) {
+    return proxyAdminConfigAddress;
+  }
+
+  console.log(
+    '[WARNING] Using latest deployed ProxyAdmin instead of ProxyAdminAddress from configuration file'
+  );
+
+  const deployedProxyAdmin = await hre.deployments.get(PROXY_ADMIN_ID);
+
+  return deployedProxyAdmin.address;
+};
+
+export const getFallbackOracleAddress = async (
+  poolConfig: IBaseConfiguration,
+  network: eNetwork
+): Promise<tEthereumAddress> => {
+  const fallbackOracleConfigAddress = getParamPerNetwork<string>(
+    poolConfig.FallbackOracle,
+    network
+  );
+
+  if (
+    fallbackOracleConfigAddress &&
+    getAddress(fallbackOracleConfigAddress) !== getAddress(ZERO_ADDRESS)
+  ) {
+    return fallbackOracleConfigAddress;
+  }
+
+  console.log(
+    '[WARNING] Using latest deployed FallbackOracle instead of FallbackOracle from configuration file'
+  );
+
+  const deployedFallbackOracle = await hre.deployments.get(FALLBACK_ORACLE_ID);
+
+  return deployedFallbackOracle.address;
 };
 
 export const isProductionMarket = (poolConfig: ICommonConfiguration): boolean => {

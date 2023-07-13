@@ -12,12 +12,7 @@ import {
 } from '../../helpers/market-config-helpers';
 import { eNetwork, IHopeLendConfiguration, ITokenAddress } from '../../helpers/types';
 import { configureReservesByHelper, initReservesByHelper } from '../../helpers/init-helpers';
-import {
-  HOPE_ID,
-  POOL_ADDRESSES_PROVIDER_ID,
-  POOL_DATA_PROVIDER,
-  STAKING_HOPE_ID,
-} from '../../helpers/deploy-ids';
+import { POOL_ADDRESSES_PROVIDER_ID, POOL_DATA_PROVIDER } from '../../helpers/deploy-ids';
 import { MARKET_NAME } from '../../helpers/env';
 import { getAddress } from 'ethers/lib/utils';
 

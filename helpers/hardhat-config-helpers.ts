@@ -104,6 +104,7 @@ export const NETWORKS_RPC_URL: iParamsPerNetwork<string> = {
 
 export const LIVE_NETWORKS: iParamsPerNetwork<boolean> = {
   [eEthereumNetwork.sepolia]: true,
+  [eEthereumNetwork.goerli]: true,
   [eEthereumNetwork.main]: true,
   [ePolygonNetwork.polygon]: true,
   [eArbitrumNetwork.arbitrum]: true,

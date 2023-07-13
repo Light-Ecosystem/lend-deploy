@@ -14,6 +14,7 @@ import Bluebird from 'bluebird';
 import { MARKET_NAME } from '../../../helpers/env';
 import MintableERC20Artifact from '../../../extendedArtifacts/MintableERC20.json';
 import WETH9MockedArtifact from '../../../extendedArtifacts/WETH9Mocked.json';
+import { CORE_VERSION } from '../../../helpers';
 
 const func: DeployFunction = async function ({
   getNamedAccounts,
@@ -28,7 +29,7 @@ const func: DeployFunction = async function ({
   if (isProductionMarket(poolConfig)) {
     console.log('[Deployment] Skipping testnet token setup at production market');
     // Early exit if is not a testnet market
-    return;
+    return true;
   }
 
   console.log(`- Setting up testnet tokens for "${MARKET_NAME}" market at "${network}" network`);
@@ -38,7 +39,7 @@ const func: DeployFunction = async function ({
 
   if (reserveSymbols.length === 0) {
     console.warn('Market Config does not contain ReservesConfig. Skipping testnet token setup.');
-    return;
+    return true;
   }
 
   // 0. Deployment of Faucet helperx contract
@@ -84,7 +85,10 @@ const func: DeployFunction = async function ({
   console.log(
     '[Deployment][WARNING] Remember to setup the Native Token Wrapper (ex WETH or WMATIC) at `helpers/constants.ts`'
   );
+  return true;
 };
+
+func.id = `MockTestnetToken:${MARKET_NAME}:lend-core@${CORE_VERSION}`;
 
 func.tags = ['market', 'init-testnet', 'token-setup'];
 

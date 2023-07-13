@@ -9,6 +9,7 @@ import { getAddress } from '@ethersproject/address';
 import {
   checkRequiredEnvironment,
   ConfigNames,
+  getFallbackOracleAddress,
   getReserveAddresses,
   isProductionMarket,
   loadPoolConfig,
@@ -41,18 +42,13 @@ const func: DeployFunction = async function ({
     console.log(`[Deployment] Added PriceOracle ${configPriceOracle} to PoolAddressesProvider`);
   }
 
-  if (network == eEthereumNetwork.main) {
-    console.log('[hope-oracle] Skipping fallback oracle setup at ethereum main production market');
-    return true;
-  }
-
   // 2. Set fallback oracle
   const hopeOracle = (await getContract(
     'HopeOracle',
     await addressesProviderInstance.getPriceOracle()
   )) as HopeOracle;
 
-  const configFallbackOracle = (await deployments.get(FALLBACK_ORACLE_ID)).address;
+  const configFallbackOracle = await getFallbackOracleAddress(poolConfig, network);
   const stateFallbackOracle = await hopeOracle.getFallbackOracle();
   if (getAddress(configFallbackOracle) === getAddress(stateFallbackOracle)) {
     console.log('[hope-oracle] Fallback oracle already set. Skipping tx.');
@@ -64,37 +60,35 @@ const func: DeployFunction = async function ({
   // 3. If testnet, setup fallback token prices
   if (isProductionMarket(poolConfig)) {
     console.log('[Deployment] Skipping testnet token prices setup');
-    // Early exit if is not a testnet market
-    return true;
-  } else {
-    console.log('[Deployment] Setting up fallback oracle default prices for testnet environment');
-
-    const reserves = await getReserveAddresses(poolConfig, network);
-
-    const symbols = [...Object.keys(reserves)];
-
-    const allTokens = {
-      ...reserves,
-    };
-
-    // Iterate each token symbol and deploy a mock aggregator
-    await Bluebird.each(symbols, async (symbol) => {
-      const price = MOCK_CHAINLINK_AGGREGATORS_PRICES[symbol];
-
-      if (!price) {
-        throw `[ERROR] Missing mock price for asset ${symbol} at MOCK_CHAINLINK_AGGREGATORS_PRICES constant located at src/constants.ts`;
-      }
-      await waitForTx(
-        await PriceOracle__factory.connect(
-          configFallbackOracle,
-          await hre.ethers.getSigner(deployer)
-        ).setAssetPrice(allTokens[symbol], price)
-      );
-    });
-
-    console.log('[Deployment] Fallback oracle asset prices updated');
     return true;
   }
+  console.log('[Deployment] Setting up fallback oracle default prices for testnet environment');
+
+  const reserves = await getReserveAddresses(poolConfig, network);
+
+  const symbols = [...Object.keys(reserves)];
+
+  const allTokens = {
+    ...reserves,
+  };
+
+  // Iterate each token symbol and deploy a mock aggregator
+  await Bluebird.each(symbols, async (symbol) => {
+    const price = MOCK_CHAINLINK_AGGREGATORS_PRICES[symbol];
+
+    if (!price) {
+      throw `[ERROR] Missing mock price for asset ${symbol} at MOCK_CHAINLINK_AGGREGATORS_PRICES constant located at src/constants.ts`;
+    }
+    await waitForTx(
+      await PriceOracle__factory.connect(
+        configFallbackOracle,
+        await hre.ethers.getSigner(deployer)
+      ).setAssetPrice(allTokens[symbol], price)
+    );
+  });
+
+  console.log('[Deployment] Fallback oracle asset prices updated');
+  return true;
 };
 
 // This script can only be run successfully once per market, core version, and network

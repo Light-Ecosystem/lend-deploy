@@ -56,8 +56,8 @@ const func: DeployFunction = async function ({
     ...COMMON_DEPLOY_PARAMS,
   });
 
-  if (network == eEthereumNetwork.main) {
-    console.log('[Deployment] Skipping fallback oracle deploy at ethereum main production market');
+  if (isProductionMarket(poolConfig)) {
+    console.log('[Deployment] Skipping fallback oracle deploy at production market');
   } else {
     // Deploy FallbackOracle
     await deploy(FALLBACK_ORACLE_ID, {

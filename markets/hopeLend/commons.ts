@@ -31,15 +31,23 @@ export const CommonsConfig: ICommonConfiguration = {
   WrappedNativeTokenSymbol: 'WETH',
   ChainlinkAggregator: {
     [eEthereumNetwork.sepolia]: {
-      DAI: '0x69Fd56D592Bb24481d8511cf430333542C539A7d',
+      DAI: '0x14866185B1962B63C3Ea9E03Bc1da838bab34C19',
       LINK: '0xCe8021185636595EcedE301f75bf9D91ABE7DD9e',
-      USDC: '0x67A5Eb021116db0ADED617F4De3923a8fbA1D17b',
-      WBTC: '0xa49916295f54Df0F93101D7347588e84f4de14C7',
-      WETH: '0x53c124838885a84D4316F6a94067b52bB9F1b682',
-      USDT: '0x4D1c362927B4D94EfCf0793319140a27B00F4347',
-      HOPE: '0x7b8b1caE2A18D785d0B441Fee221D0A3a0fBbBD6',
-      StakingHOPE: '0xCB353A5dAb39Aef0867b7B415a48A4cCed10C48d',
+      USDC: '0xA2F78ab2355fe2f984D808B5CeE7FD0A93D5270E',
+      WBTC: '0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43',
+      WETH: '0x694AA1769357215DE4FAC081bf1f309aDC325306',
+      USDT: '0x14866185B1962B63C3Ea9E03Bc1da838bab34C19',
+      HOPE: '0xFaf5730c9a83292Ae261EdA1285Ec2F564d49F91',
+      StakingHOPE: '0xFaf5730c9a83292Ae261EdA1285Ec2F564d49F91',
       EURS: '0x0fc0080B1b87deD9E0Cb6611169D33CeeD908Cc8',
+    },
+    [eEthereumNetwork.goerli]: {
+      DAI: '0x0d79df66BE487753B02D015Fb622DED7f0E9798d',
+      USDC: '0xAb5c49580294Aff77670F839ea425f5b78ab3Ae7',
+      WETH: '0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e',
+      USDT: '0x0d79df66BE487753B02D015Fb622DED7f0E9798d',
+      HOPE: '0x99f4E627093D6Bba806ea18284fB5C5EA1De6753',
+      StakingHOPE: '0x99f4E627093D6Bba806ea18284fB5C5EA1De6753',
     },
     [eEthereumNetwork.main]: {
       HOPE: '0x547a514d5e3769680Ce22B2361c10Ea13619e8a9',
@@ -64,11 +72,12 @@ export const CommonsConfig: ICommonConfiguration = {
   },
   ReserveFactorTreasuryAddress: {
     [eEthereumNetwork.kovan]: '0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c',
-    [eEthereumNetwork.main]: '0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c',
     [eArbitrumNetwork.arbitrumTestnet]: '0xeC67987831C4278160D8e652d3edb0Fc45B3766d',
     [eEthereumNetwork.rinkeby]: ZERO_ADDRESS,
   },
   FallbackOracle: {
+    [eEthereumNetwork.sepolia]: '0xA41Ca5f62A45a44239973C360060bFF14DF45119',
+    [eEthereumNetwork.goerli]: '0x2f4dabf7272178fD3DDA1523aacDcA58399A190f',
     [eEthereumNetwork.kovan]: '0x50913E8E1c650E790F8a1E741FF9B1B1bB251dfe',
     [eEthereumNetwork.main]: '0x5b09e578cfeaa23f1b11127a658855434e4f3e09',
     [eArbitrumNetwork.arbitrum]: ZERO_ADDRESS,
@@ -95,66 +104,31 @@ export const CommonsConfig: ICommonConfiguration = {
   },
   FlashLoanPremiums: {
     total: 0.0009e4,
-    protocol: 0.5e4,
+    protocol: 0.3e4,
   },
   RateStrategies: {
     rateStrategyVolatileOne,
     rateStrategyStableOne,
     rateStrategyStableTwo,
   },
-  HOPEAddress: {
-    [eEthereumNetwork.sepolia]: '0x70C8C67CfbE228c7437Ec586a751a408e23355F4',
-    [eEthereumNetwork.goerli]: '',
-    [eEthereumNetwork.main]: '',
-  },
-  StakingHOPEAddress: {
-    [eEthereumNetwork.sepolia]: '0x03D69A55579496821D8FdF0769F0C1a4A195788A',
-    [eEthereumNetwork.goerli]: '',
-    [eEthereumNetwork.main]: '',
-  },
-  GaugeControllerAddress: {
-    [eEthereumNetwork.sepolia]: '0x405604a1F28e89B736353016CF504Fe26C0E32Df',
-    [eEthereumNetwork.goerli]: '',
-    [eEthereumNetwork.main]: '',
-  },
   MinterAddress: {
     [eEthereumNetwork.sepolia]: '0x2DD369a0126B014f5A574f92FB5510B4EaB4eF01',
-    [eEthereumNetwork.goerli]: '',
-    [eEthereumNetwork.main]: '',
-  },
-  LTAddress: {
-    [eEthereumNetwork.sepolia]: '0xC0f5ee5C2e6E830d114BFAAecE310c7625C0EF00',
-    [eEthereumNetwork.goerli]: '',
+    [eEthereumNetwork.goerli]: '0x3c2AB5E5D31872B920497bD787cFFAba9fB3615A',
     [eEthereumNetwork.main]: '',
   },
   VotingEscrowAddress: {
     [eEthereumNetwork.sepolia]: '0x04d7D7ffa4ECFC3280ACF8508e9122dfD16e3A75',
-    [eEthereumNetwork.goerli]: '',
-    [eEthereumNetwork.main]: '',
-  },
-  BurnerManagerAddress: {
-    [eEthereumNetwork.sepolia]: '0x1549105D87e08A543897f7F70aEE00dA85b091D2',
-    [eEthereumNetwork.goerli]: '',
-    [eEthereumNetwork.main]: '',
-  },
-  UnderlyingBurnerAddress: {
-    [eEthereumNetwork.sepolia]: '0xE12fc8E54cDd8b2A8c73CB39e412d08Bf7448FC6',
-    [eEthereumNetwork.goerli]: '',
-    [eEthereumNetwork.main]: '',
-  },
-  Permit2Address: {
-    [eEthereumNetwork.sepolia]: '0xf3a2BD652E6d90B2f330c8450E2E85734336Eb54',
-    [eEthereumNetwork.goerli]: '',
+    [eEthereumNetwork.goerli]: '0x4BDB0F69f233C02bd82d5e5fBdF7e6F206E9FdE5',
     [eEthereumNetwork.main]: '',
   },
   FeeToVaultAddress: {
     [eEthereumNetwork.sepolia]: '0xF10121e7afdc3F1e55912246a8eE87711823a802',
-    [eEthereumNetwork.goerli]: '',
+    [eEthereumNetwork.goerli]: '0x4c481663D8d0b338760c5189807f46e0a7db58f2',
     [eEthereumNetwork.main]: '',
   },
   ProxyAdminAddress: {
     [eEthereumNetwork.sepolia]: '0x424008a0c704697DA09b94c562cF53db8C07CD8A',
-    [eEthereumNetwork.goerli]: '',
+    [eEthereumNetwork.goerli]: '0x9287Df5C18C4AfF42581e868D4D8f903Ee9E923a',
     [eEthereumNetwork.main]: '0xcc0f986021010D4A3345CCA903BF5487AEa3bd39',
   },
 };

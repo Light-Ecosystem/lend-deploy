@@ -30,7 +30,7 @@ export const HopeLendMarket: IHopeLendConfiguration = {
   ReservesConfig: {
     DAI: strategyDAI,
     USDC: strategyUSDC,
-    WBTC: strategyWBTC,
+    // WBTC: strategyWBTC,
     WETH: strategyWETH,
     USDT: strategyUSDT,
     HOPE: strategyHOPE,
@@ -45,6 +45,14 @@ export const HopeLendMarket: IHopeLendConfiguration = {
       USDT: '0x76127399A0CafeDB59615A93A7ACF8552c1aEE4c',
       HOPE: '0x70C8C67CfbE228c7437Ec586a751a408e23355F4',
       StakingHOPE: '0x03D69A55579496821D8FdF0769F0C1a4A195788A',
+    },
+    [eEthereumNetwork.goerli]: {
+      DAI: '0x5B71dC777A8aDCba065A644e30BBEeB8fCca273f',
+      USDC: '0x235eBFC0bE0E58cF267D1c5BCb8c03a002A711ed',
+      WETH: '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6',
+      USDT: '0x3da37B4A2F5172580411DdcddDCcae857f9a7aE6',
+      HOPE: '0x9bA97e0913Dd0fbd4E5fedA936db9D1f1C632273',
+      StakingHOPE: '0x89009881287EB51256141265B2f250b9960AaeE5',
     },
     [eEthereumNetwork.main]: {
       DAI: '0x6B175474E89094C44Da98b954EedeAC495271d0F',

@@ -524,15 +524,8 @@ export interface IBaseConfiguration {
     protocol: number;
   };
   RateStrategies: IStrategy;
-  HOPEAddress: iParamsPerNetwork<tEthereumAddress>;
-  StakingHOPEAddress: iParamsPerNetwork<tEthereumAddress>;
-  GaugeControllerAddress: iParamsPerNetwork<tEthereumAddress>;
   MinterAddress: iParamsPerNetwork<tEthereumAddress>;
-  LTAddress: iParamsPerNetwork<tEthereumAddress>;
   VotingEscrowAddress: iParamsPerNetwork<tEthereumAddress>;
-  BurnerManagerAddress: iParamsPerNetwork<tEthereumAddress>;
-  UnderlyingBurnerAddress: iParamsPerNetwork<tEthereumAddress>;
-  Permit2Address: iParamsPerNetwork<tEthereumAddress>;
   FeeToVaultAddress: iParamsPerNetwork<tEthereumAddress>;
   ProxyAdminAddress: iParamsPerNetwork<tEthereumAddress>;
 }
