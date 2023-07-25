@@ -91,12 +91,23 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
       console.log(`- Setup FlashBorrower (${flashBorrower}) successful`);
     }
 
-    /** Start of Emergency Admin transfer */
-    const isDeployerEmergencyAdmin = await aclManager.isEmergencyAdmin(emergencyAdmin);
-    if (isDeployerEmergencyAdmin) {
-      await waitForTx(await aclManager.addEmergencyAdmin(desiredMultisig));
+    /** Start of grant operator to GaugeFactory */
+    const isDeployerOperatorAtGaugeFactory = await gaugeFactory.isOperator(deployer);
+    if (isDeployerOperatorAtGaugeFactory) {
+      console.log('- Transferring the OPERATOR_ROLE to the operator address');
+      await waitForTx(await gaugeFactory.addOperator(operator));
+      console.log('- Revoking deployer as OPERATOR_ROLE to the operator address');
+      await waitForTx(await gaugeFactory.removeOperator(deployer));
+      console.log('- Revoked OPERATOR_ROLE to deployer');
+    }
+    /** End of grant operator to GaugeFactory */
 
-      await waitForTx(await aclManager.removeEmergencyAdmin(emergencyAdmin));
+    /** Start of Emergency Admin transfer */
+    const isDeployerEmergencyAdmin = await aclManager.isEmergencyAdmin(deployer);
+    if (isDeployerEmergencyAdmin) {
+      await waitForTx(await aclManager.addEmergencyAdmin(emergencyAdmin));
+
+      await waitForTx(await aclManager.removeEmergencyAdmin(deployer));
       console.log('- Transferred the ownership of Emergency Admin');
     }
     /** End of Emergency Admin transfer */
@@ -175,17 +186,6 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
     }
     /** End of DEFAULT_ADMIN_ROLE transfer ownership */
 
-    /** Start of grant operator to GaugeFactory */
-    const isDeployerOperatorAtGaugeFactory = await gaugeFactory.isOperator(deployer);
-    if (isDeployerOperatorAtGaugeFactory) {
-      console.log('- Transferring the OPERATOR_ROLE to the operator address');
-      await waitForTx(await gaugeFactory.addOperator(operator));
-      console.log('- Revoking deployer as OPERATOR_ROLE to the operator address');
-      await waitForTx(await gaugeFactory.removeOperator(deployer));
-      console.log('- Revoked OPERATOR_ROLE to deployer');
-    }
-    /** End of grant operator to GaugeFactory */
-
     /** Output of results*/
     const result = [
       {
@@ -196,7 +196,7 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
       {
         role: 'FlashBorrower',
         address: (await aclManager.isFlashBorrower(flashBorrower)) ? flashBorrower : ZERO_ADDRESS,
-        assert: await aclManager.isPoolAdmin(flashBorrower),
+        assert: await aclManager.isFlashBorrower(flashBorrower),
       },
       {
         role: 'PoolAddressesProvider owner',
@@ -218,7 +218,6 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
       {
         role: 'WrappedTokenGateway owner',
         address: await wrappedGateway.owner(),
-        pendingOwnerAddress: await wrappedGateway.pendingOwner(),
         assert: (await wrappedGateway.owner()) === desiredMultisig,
       },
       {
@@ -230,7 +229,6 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
       {
         role: 'TreasuryController owner',
         address: await treasuryController.owner(),
-        pendingOwnerAddress: await treasuryController.pendingOwner(),
         assert: (await treasuryController.owner()) === treasuryAdmin,
       },
       {

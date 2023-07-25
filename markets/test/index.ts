@@ -25,7 +25,7 @@ export const HopeLendMarket: IHopeLendConfiguration = {
     WETH: strategyWETH,
     LINK: strategyLINK,
     HOPE: strategyHOPE,
-    StakingHOPE: strategyStakingHOPE,
+    stHOPE: strategyStakingHOPE,
   },
   ReserveAssets: {
     [eEthereumNetwork.main]: {

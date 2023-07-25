@@ -35,8 +35,8 @@ export const ONE_ADDRESS = '0x0000000000000000000000000000000000000001';
 export const HOPELEND_REFERRAL = '0';
 
 export const WRAPPED_NATIVE_TOKEN_PER_NETWORK: { [network: string]: string } = {
-  [eEthereumNetwork.sepolia]: '0xE55a23aaFb3a712BFae5BE96E0f61C745dedf33C',
-  [eEthereumNetwork.goerli]: '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6',
+  [eEthereumNetwork.sepolia]: '0x6209f6CADe90416BecaAA48Ca693D2652ecc36D9',
+  [eEthereumNetwork.goerli]: '0x6Cc53D3AeaEe7aAfbd2Ac304AA64d017E6cb4f2a',
   [eEthereumNetwork.kovan]: ZERO_ADDRESS,
   [eEthereumNetwork.main]: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
   [eArbitrumNetwork.arbitrum]: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
@@ -52,7 +52,7 @@ export const ZERO_BYTES_32 = '0x000000000000000000000000000000000000000000000000
 
 export const MOCK_CHAINLINK_AGGREGATORS_PRICES: { [key: string]: string } = {
   HOPE: parseUnits('300', 8).toString(),
-  StakingHOPE: parseUnits('0.6', 8).toString(),
+  stHOPE: parseUnits('0.6', 8).toString(),
   WETH: parseUnits('4000', 8).toString(),
   ETH: parseUnits('4000', 8).toString(),
   DAI: parseUnits('1', 8).toString(),
@@ -141,28 +141,31 @@ export const DEFAULT_NAMED_ACCOUNTS = {
   },
   emergencyAdmin: {
     default: 0,
+    sepolia: '0xfAabAc253c7fb43f2e3275CeBfDb34839c4eefA5',
     goerli: '0xc6C1eF70746F6Bed0A43C912B2B2047f25d3eA87',
     main: '',
   },
   treasuryAdmin: {
     default: 0,
-    sepolia: '0xcbeD65Db7E177D4875dDF5B67E13326A43a7B03f',
+    sepolia: '0xfAabAc253c7fb43f2e3275CeBfDb34839c4eefA5',
     goerli: '0xc6C1eF70746F6Bed0A43C912B2B2047f25d3eA87',
     main: '',
   },
   operator: {
     default: 0,
-    sepolia: '0xcbeD65Db7E177D4875dDF5B67E13326A43a7B03f',
+    sepolia: '0x22363A093C81E56b39F3551DbFa011f8A4952Da2',
     goerli: '0x3141f8D6BE4e4d9137577798C1e127Db81D196d7',
     main: '0xcF50cdB498BaA6e2Da5907d103d82A89a69b3e82',
   },
   gatewayOwner: {
     default: 0,
+    sepolia: '0xfAabAc253c7fb43f2e3275CeBfDb34839c4eefA5',
     goerli: '0xc6C1eF70746F6Bed0A43C912B2B2047f25d3eA87',
     main: '',
   },
   flashBorrower: {
     default: 0,
+    sepolia: '0x6A63253Da5ae2c71866E09234f41505540432aD0',
     goerli: '',
     main: '',
   },
@@ -173,7 +176,7 @@ export const GOVERNANCE_BRIDGE_EXECUTOR: { [key: string]: string } = {
 };
 
 export const MULTISIG_ADDRESS: { [key: string]: string } = {
-  [eEthereumNetwork.sepolia]: '0xcbeD65Db7E177D4875dDF5B67E13326A43a7B03f',
+  [eEthereumNetwork.sepolia]: '0xfAabAc253c7fb43f2e3275CeBfDb34839c4eefA5',
   [eEthereumNetwork.goerli]: '0xc6C1eF70746F6Bed0A43C912B2B2047f25d3eA87',
   [eArbitrumNetwork.arbitrum]: '0xbbd9f90699c1FA0D7A65870D241DD1f1217c96Eb',
   [eAvalancheNetwork.avalanche]: '0xa35b76E4935449E33C56aB24b23fcd3246f13470',

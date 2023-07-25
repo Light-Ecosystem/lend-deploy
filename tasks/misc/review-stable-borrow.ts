@@ -44,8 +44,8 @@ task(`review-stable-borrow`, ``)
       for (let index = 0; index < reservesToCheck.length; index++) {
         const { symbol, tokenAddress } = reservesToCheck[index];
 
-        const normalizedSymbol = normalizedSymbols.find((s) =>
-          symbol.toUpperCase().includes(s.toUpperCase())
+        const normalizedSymbol = normalizedSymbols.find(
+          (s) => symbol.toUpperCase() === s.toUpperCase()
         );
         if (!normalizedSymbol) {
           console.error(`- Missing address ${tokenAddress} at ReserveAssets configuration.`);
@@ -54,7 +54,7 @@ task(`review-stable-borrow`, ``)
 
         console.log('- Checking reserve', symbol, `, normalized symbol`, normalizedSymbol);
         const expectedStableRateEnabled =
-          poolConfig.ReservesConfig[normalizedSymbol.toUpperCase()].stableBorrowRateEnabled;
+          poolConfig.ReservesConfig[normalizedSymbol].stableBorrowRateEnabled;
         const onChainStableRateEnabled = (
           await dataProvider.getReserveConfigurationData(tokenAddress)
         ).stableBorrowRateEnabled;

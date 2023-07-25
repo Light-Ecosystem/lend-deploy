@@ -68,7 +68,7 @@ const func: DeployFunction = async function ({
         ...COMMON_DEPLOY_PARAMS,
       });
     } else {
-      if (symbol !== 'StakingHOPE' && symbol !== 'HOPE') {
+      if (symbol !== 'stHOPE' && symbol !== 'HOPE') {
         await deploy(`${symbol}${TESTNET_TOKEN_PREFIX}`, {
           from: deployer,
           contract: 'MintableERC20',

@@ -33,7 +33,7 @@ export const GAUGE_FACTORY_ID = 'GaugeFactory';
 export const LENDING_GAUGE_PREFIX = '-LendingGauge';
 
 export const HOPE_ID = `HOPE${TESTNET_TOKEN_PREFIX}`;
-export const STAKING_HOPE_ID = `StakingHOPE${TESTNET_TOKEN_PREFIX}`;
+export const STAKING_HOPE_ID = `stHOPE${TESTNET_TOKEN_PREFIX}`;
 export const LT_ID = 'LT';
 export const VOTING_ESCROW_ID = 'VotingEscrow';
 export const GAUGE_CONTROLLER_ID = 'GaugeController';

@@ -37,8 +37,15 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
     const poolConfig = await loadPoolConfig(MARKET_NAME as ConfigNames);
     const network = hre.network.name as eNetwork;
     // Deployer admins
-    const { poolAdmin, aclAdmin, emergencyAdmin, deployer, treasuryAdmin, operator } =
-      await hre.getNamedAccounts();
+    const {
+      poolAdmin,
+      aclAdmin,
+      emergencyAdmin,
+      deployer,
+      treasuryAdmin,
+      operator,
+      flashBorrower,
+    } = await hre.getNamedAccounts();
 
     const deployerSigner = await hre.ethers.getSigner(deployer);
     const aclSigner = await hre.ethers.getSigner(aclAdmin);
@@ -151,6 +158,11 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
         role: 'ReservesSetupHelper owner',
         address: await reservesSetupHelper.owner(),
         assert: (await reservesSetupHelper.owner()) === desiredMultisig,
+      },
+      {
+        role: 'FlashBorrower is contract',
+        address: (await aclManager.isFlashBorrower(flashBorrower)) ? flashBorrower : ZERO_ADDRESS,
+        assert: await aclManager.isFlashBorrower(flashBorrower),
       },
       {
         role: 'PoolAdmin is multisig',

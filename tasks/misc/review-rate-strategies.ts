@@ -2,7 +2,11 @@ import { eNetwork } from './../../helpers/types';
 import { getFirstSigner } from '../../helpers/utilities/signer';
 import { DefaultReserveInterestRateStrategy } from '../../typechain';
 import { loadPoolConfig } from '../../helpers/market-config-helpers';
-import { getPoolAddressesProvider, getPoolConfiguratorProxy } from '../../helpers/contract-getters';
+import {
+  getPoolAddressesProvider,
+  getPoolConfiguratorProxy,
+  getStakingHope,
+} from '../../helpers/contract-getters';
 import { IInterestRateStrategyParams } from '../../helpers/types';
 import { task } from 'hardhat/config';
 import { waitForTx } from '../../helpers/utilities/tx';
@@ -45,9 +49,8 @@ task(`review-rate-strategies`, ``)
 
       for (let index = 0; index < reservesToCheck.length; index++) {
         const { symbol, tokenAddress } = reservesToCheck[index];
-
-        const normalizedSymbol = normalizedSymbols.find((s) =>
-          symbol.toUpperCase().includes(s.toUpperCase())
+        const normalizedSymbol = normalizedSymbols.find(
+          (s) => symbol.toUpperCase() === s.toUpperCase()
         );
         if (!normalizedSymbol) {
           console.error(`- Missing address ${tokenAddress} at ReserveAssets configuration.`);
@@ -56,7 +59,7 @@ task(`review-rate-strategies`, ``)
 
         console.log('- Checking reserve', symbol, `, normalized symbol`, normalizedSymbol);
         const expectedStrategy: IInterestRateStrategyParams =
-          poolConfig.ReservesConfig[normalizedSymbol.toUpperCase()].strategy;
+          poolConfig.ReservesConfig[normalizedSymbol].strategy;
         const onChainStrategy = await hre.ethers.getContractAt(
           'DefaultReserveInterestRateStrategy',
           await dataProvider.getInterestRateStrategyAddress(tokenAddress),
