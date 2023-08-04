@@ -14,40 +14,37 @@ import { parseUnits } from 'ethers/lib/utils';
 import LendingGaugeImplABI from '../../abi/LendingGauge.json';
 import { POOL_DATA_PROVIDER, POOL_PROXY_ID, eNetwork } from '../../helpers';
 
-task(`setup-lending-gauge`, `Create lending gauge`)
-  .addParam('symbol', 'The ERC20 symbol')
+task(`create-lending-gauge`, `Create lending gauge`)
+  .addParam('symbol', 'The ERC20 address')
   .setAction(async ({ symbol }, hre) => {
     const network = hre.network.name as eNetwork;
+    const gaugeFactoryInstance = await getGaugeFactory();
     const poolInstance = await getPool();
     const dataProvider = await getHopeLendProtocolDataProvider();
-    const gaugeFactory = await getGaugeFactory();
     const reserves = await dataProvider.getAllReservesTokens();
-    let tokenAddress;
+    let address;
     for (let x = 0; x < reserves.length; x++) {
-      const { symbol: tokenSymbol, tokenAddress: address } = reserves[x];
+      const { symbol: tokenSymbol, tokenAddress } = reserves[x];
       if (symbol == tokenSymbol) {
-        tokenAddress = address;
+        address = tokenAddress;
         console.log(`- Symbol: ${symbol} Address: ${tokenAddress}`);
       }
     }
-
-    if (!tokenAddress) {
-      console.log('[ERROR] ERC20 address is unkown!');
+    if (!address) {
+      console.log('[ERROR] address is unkown!');
       return;
     }
-
     // Create ${SYMBOL} LendingGauge
-    await waitForTx(await gaugeFactory.createLendingGauge(tokenAddress));
-    // Get ${SYMBOL} LendingGauge
-    const gaugeAddress = await gaugeFactory.lendingGauge(tokenAddress);
-    if (!gaugeAddress) {
-      console.log('[ERROR] gauge not created!');
-      return;
-    }
-    console.log(`- Gauge Address: ${gaugeAddress}`);
+    await waitForTx(await gaugeFactoryInstance.createLendingGauge(address));
+    // Get ${SYMBOL} LendingGauge address
+    const lendingGaugeAddress = await gaugeFactoryInstance.lendingGauge(address);
+    console.log(`[Created] LendingGauge is: ${lendingGaugeAddress}`);
 
     // Get ${SYMBOL} LendingGauge contract instance
-    const lendingGaugeInstance = await hre.ethers.getContractAt(LendingGaugeImplABI, gaugeAddress);
+    const lendingGaugeInstance = await hre.ethers.getContractAt(
+      LendingGaugeImplABI,
+      lendingGaugeAddress
+    );
     // Init phases data (offchain calculate)
     const inputParams: {
       start: BigNumberish;
@@ -57,24 +54,24 @@ task(`setup-lending-gauge`, `Create lending gauge`)
     }[] = [
       {
         start: parseUnits('0', 0),
-        end: parseUnits('0.3', 27),
-        k: '1833333333333333333333333333',
+        end: parseUnits('0.35', 27),
+        k: parseUnits('2', 27),
         b: parseUnits('0', 0),
       },
       {
-        start: parseUnits('0.3', 27),
+        start: parseUnits('0.35', 27),
         end: parseUnits('0.65', 27),
         k: parseUnits('0', 0),
-        b: parseUnits('0.55', 27),
+        b: parseUnits('0.7', 27),
       },
       {
         start: parseUnits('0.65', 27),
-        end: parseUnits('0.9', 27),
-        k: parseUnits('-2.2', 27),
-        b: parseUnits('1.98', 27),
+        end: parseUnits('0.8', 27),
+        k: '-4666666666666666666666666666',
+        b: '3733333333333333333333333333',
       },
       {
-        start: parseUnits('0.9', 27),
+        start: parseUnits('0.8', 27),
         end: parseUnits('1', 27),
         k: parseUnits('0', 0),
         b: parseUnits('0', 0),
@@ -83,6 +80,6 @@ task(`setup-lending-gauge`, `Create lending gauge`)
     // For ${SYMBOL} LendingGauge add phases
     await waitForTx(await lendingGaugeInstance.addPhases(inputParams));
     // For h${SYMBOL}、variableDebt${SYMBOL} set LendingGauge by Pool Contract
-    await poolInstance.setLendingGauge(tokenAddress, gaugeAddress);
+    await poolInstance.setLendingGauge(address, lendingGaugeAddress);
     console.log('[Setup] LendingGauge configuration completed!');
   });

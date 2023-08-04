@@ -41,7 +41,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const poolConfig = await loadPoolConfig(MARKET_NAME as ConfigNames);
 
   if (isProductionMarket(poolConfig)) {
-    console.log('[Deployment] Skipping light dao deploy at production market');
+    console.log('[Deployment] Skipping LightDAO address save at production market');
     return true;
   }
 

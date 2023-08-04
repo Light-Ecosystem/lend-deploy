@@ -6,7 +6,6 @@ import {
   getFeeToVaultAddress,
   isL2PoolSupported,
   isProductionMarket,
-  isUnitTestEnv,
   loadPoolConfig,
 } from './../../helpers/market-config-helpers';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';

@@ -11,7 +11,8 @@ import { MARKET_NAME } from '../../helpers/env';
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { getNamedAccounts, deployments } = hre;
   const { deploy } = deployments;
-  const { deployer, poolAdmin, aclAdmin, emergencyAdmin } = await getNamedAccounts();
+  const { deployer, poolAdmin, aclAdmin, emergencyAdmin, assetListingAdmin, riskAdmin } =
+    await getNamedAccounts();
 
   const aclAdminSigner = await hre.ethers.getSigner(aclAdmin);
 
@@ -44,20 +45,32 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   // 4. Add PoolAdmin to ACLManager contract
   await waitForTx(await aclManager.connect(aclAdminSigner).addPoolAdmin(poolAdmin));
 
-  // 5. Add EmergencyAdmin  to ACLManager contract
+  // 5. Add EmergencyAdmin to ACLManager contract
   await waitForTx(await aclManager.connect(aclAdminSigner).addEmergencyAdmin(emergencyAdmin));
+
+  // 6. Add AssetListingAdmin to ACLManager contract
+  await waitForTx(await aclManager.connect(aclAdminSigner).addAssetListingAdmin(assetListingAdmin));
+
+  // 7. Add RiskAdmin to ACLManager contract
+  await waitForTx(await aclManager.connect(aclAdminSigner).addRiskAdmin(riskAdmin));
 
   const isACLAdmin = await aclManager.hasRole(ZERO_BYTES_32, aclAdmin);
   const isPoolAdmin = await aclManager.isPoolAdmin(poolAdmin);
   const isEmergencyAdmin = await aclManager.isEmergencyAdmin(emergencyAdmin);
+  const isAssetListingAdmin = await aclManager.isAssetListingAdmin(assetListingAdmin);
+  const isRiskAdmin = await aclManager.isRiskAdmin(assetListingAdmin);
 
   if (!isACLAdmin) throw '[ACL][ERROR] ACLAdmin is not setup correctly';
   if (!isPoolAdmin) throw '[ACL][ERROR] PoolAdmin is not setup correctly';
   if (!isEmergencyAdmin) throw '[ACL][ERROR] EmergencyAdmin is not setup correctly';
+  if (!isAssetListingAdmin) throw '[ACL][ERROR] AssetListingAdmin is not setup correctly';
+  if (!isRiskAdmin) throw '[ACL][ERROR] RiskAdmin is not setup correctly';
   console.log('== Market Admins ==');
   console.log('- ACL Admin', aclAdmin);
   console.log('- Pool Admin', poolAdmin);
   console.log('- Emergency Admin', emergencyAdmin);
+  console.log('- AssetListing Admin', assetListingAdmin);
+  console.log('- RiskAdmin Admin', riskAdmin);
 
   return true;
 };

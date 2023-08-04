@@ -60,6 +60,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     // Early exit if is not a testnet market
     return true;
   }
+  if (!isUnitTestEnv()) {
+    console.log('[Deployment] Skipping lending gauge setup at testnet market');
+    // Early exit if is not a test market
+    return true;
+  }
   console.log(
     `- Setting up testnet lending gauge for "${MARKET_NAME}" market at "${network}" network`
   );

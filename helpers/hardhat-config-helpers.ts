@@ -67,9 +67,7 @@ export const NETWORKS_RPC_URL: iParamsPerNetwork<string> = {
   [eEthereumNetwork.kovan]: `https://eth-kovan.alchemyapi.io/v2/${getAlchemyKey(
     eEthereumNetwork.kovan
   )}`,
-  [eEthereumNetwork.main]: `https://eth-mainnet.alchemyapi.io/v2/${getAlchemyKey(
-    eEthereumNetwork.main
-  )}`,
+  [eEthereumNetwork.main]: `https://mainnet.infura.io/v3/${getInfuraKey(eEthereumNetwork.main)}`,
   [eEthereumNetwork.coverage]: 'http://localhost:8555',
   [eEthereumNetwork.hardhat]: 'http://localhost:8545',
   [ePolygonNetwork.mumbai]: `https://polygon-mumbai.g.alchemy.com/v2/${getAlchemyKey(

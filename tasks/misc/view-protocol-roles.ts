@@ -41,9 +41,12 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
       poolAdmin,
       aclAdmin,
       emergencyAdmin,
+      assetListingAdmin,
+      riskAdmin,
       deployer,
       treasuryAdmin,
       operator,
+      gatewayOwner,
       flashBorrower,
     } = await hre.getNamedAccounts();
 
@@ -67,8 +70,13 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
     console.log('--- Current deployer addresses ---');
     console.table({
       poolAdmin,
-      proxyAdminAddress,
+      aclAdmin,
+      deployer,
+      emergencyAdmin,
       treasuryAdmin,
+      operator,
+      gatewayOwner,
+      flashBorrower,
     });
     console.log('--- Multisig and expected contract addresses ---');
     console.table({
@@ -129,6 +137,21 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
         assert: (await poolAddressesProviderRegistry.owner()) === desiredMultisig,
       },
       {
+        role: 'WrappedTokenGateway owner',
+        address: await wrappedTokenGateway.owner(),
+        assert: (await wrappedTokenGateway.owner()) === desiredMultisig,
+      },
+      {
+        role: 'ReservesSetupHelper owner',
+        address: await reservesSetupHelper.owner(),
+        assert: (await reservesSetupHelper.owner()) === desiredMultisig,
+      },
+      {
+        role: 'Treasury Controller owner',
+        address: await treasuryController.owner(),
+        assert: (await treasuryController.owner()) === treasuryAdmin,
+      },
+      {
         role: 'AddressesProvider ACL Admin',
         address: await poolAddressesProvider.getACLAdmin(),
         assert: (await poolAddressesProvider.getACLAdmin()) === desiredMultisig,
@@ -148,16 +171,6 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
           ? 'NOT REVOKED'
           : 'REVOKED',
         assert: !(await aclManager.hasRole(hre.ethers.constants.HashZero, deployer)),
-      },
-      {
-        role: 'WrappedTokenGateway owner',
-        address: await wrappedTokenGateway.owner(),
-        assert: (await wrappedTokenGateway.owner()) === desiredMultisig,
-      },
-      {
-        role: 'ReservesSetupHelper owner',
-        address: await reservesSetupHelper.owner(),
-        assert: (await reservesSetupHelper.owner()) === desiredMultisig,
       },
       {
         role: 'FlashBorrower is contract',
@@ -183,18 +196,20 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
       },
       {
         role: 'AssetListAdmin',
-        address: (await aclManager.isAssetListingAdmin(poolAdmin)) ? poolAdmin : 'DISABLED',
-        assert: (await aclManager.isAssetListingAdmin(poolAdmin)) === false,
+        address: (await aclManager.isAssetListingAdmin(assetListingAdmin))
+          ? assetListingAdmin
+          : 'DISABLED',
+        assert: await aclManager.isAssetListingAdmin(assetListingAdmin),
+      },
+      {
+        role: 'RiskAdmin',
+        address: (await aclManager.isRiskAdmin(riskAdmin)) ? riskAdmin : 'DISABLED',
+        assert: await aclManager.isRiskAdmin(riskAdmin),
       },
       {
         role: 'Treasury Proxy Admin',
         address: await getProxyAdminBySlot(treasuryProxy.address),
         assert: (await getProxyAdminBySlot(treasuryProxy.address)) === proxyAdminAddress,
-      },
-      {
-        role: 'Treasury Controller owner',
-        address: await treasuryController.owner(),
-        assert: (await treasuryController.owner()) === treasuryAdmin,
       },
       {
         role: 'GaugeFactory operator',

@@ -9,6 +9,7 @@ import { getAddress } from '@ethersproject/address';
 import {
   checkRequiredEnvironment,
   ConfigNames,
+  getChainlinkOracles,
   getFallbackOracleAddress,
   getReserveAddresses,
   isProductionMarket,
@@ -17,6 +18,7 @@ import {
 import { eEthereumNetwork, eNetwork } from '../../helpers/types';
 import Bluebird from 'bluebird';
 import { MARKET_NAME } from '../../helpers/env';
+import { getPairsTokenAggregator } from '../../helpers';
 
 const func: DeployFunction = async function ({
   getNamedAccounts,
@@ -42,12 +44,21 @@ const func: DeployFunction = async function ({
     console.log(`[Deployment] Added PriceOracle ${configPriceOracle} to PoolAddressesProvider`);
   }
 
-  // 2. Set fallback oracle
   const hopeOracle = (await getContract(
     'HopeOracle',
     await addressesProviderInstance.getPriceOracle()
   )) as HopeOracle;
 
+  // 2. Set AssetSources
+  console.log(`[Deployment] Waiting for new blocks to be generated...`);
+  await new Promise((res) => setTimeout(() => res(null), 15000));
+  const reserveAssets = await getReserveAddresses(poolConfig, network);
+  const chainlinkAggregators = await getChainlinkOracles(poolConfig, network);
+  const [assets, sources] = getPairsTokenAggregator(reserveAssets, chainlinkAggregators);
+  await waitForTx(await hopeOracle.setAssetSources(assets, sources));
+  console.log(`[Deployment] Added AssetSources to HopeOracle`);
+
+  // 3. Set fallback oracle
   const configFallbackOracle = await getFallbackOracleAddress(poolConfig, network);
   const stateFallbackOracle = await hopeOracle.getFallbackOracle();
   if (getAddress(configFallbackOracle) === getAddress(stateFallbackOracle)) {
@@ -57,7 +68,7 @@ const func: DeployFunction = async function ({
     console.log(`[Deployment] Added Fallback oracle ${configPriceOracle} to HopeOracle`);
   }
 
-  // 3. If testnet, setup fallback token prices
+  // 4. If testnet, setup fallback token prices
   if (isProductionMarket(poolConfig)) {
     console.log('[Deployment] Skipping testnet token prices setup');
     return true;

@@ -381,7 +381,7 @@ export const isTestnetMarket = (poolConfig: ICommonConfiguration): boolean =>
 
 export const isUnitTestEnv = (): boolean => {
   let network = (process.env.FORK ? process.env.FORK : hre.network.name) as eNetwork;
-  return network === eEthereumNetwork.hardhat || MARKET_NAME === ConfigNames.Test;
+  return network === eEthereumNetwork.hardhat && MARKET_NAME === ConfigNames.Test;
 };
 
 export const getReserveAddress = async (poolConfig: ICommonConfiguration, symbol: string) => {

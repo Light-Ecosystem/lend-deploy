@@ -37,18 +37,14 @@ const func: DeployFunction = async function ({
   const fallbackOracleAddress =
     (await getParamPerNetwork(poolConfig.FallbackOracle, network)) || ZERO_ADDRESS;
 
-  const reserveAssets = await getReserveAddresses(poolConfig, network);
-  const chainlinkAggregators = await getChainlinkOracles(poolConfig, network);
-
-  const [assets, sources] = getPairsTokenAggregator(reserveAssets, chainlinkAggregators);
   // Deploy HopeOracle
   await deploy(ORACLE_ID, {
     contract: 'HopeOracle',
     from: deployer,
     args: [
       addressesProviderAddress,
-      assets,
-      sources,
+      [],
+      [],
       fallbackOracleAddress,
       ZERO_ADDRESS,
       parseUnits('1', OracleQuoteUnit),
