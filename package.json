@@ -1,6 +1,6 @@
 {
   "name": "@hopelend/deploy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "files": [
     "dist",
     "LICENSE",
@@ -71,6 +71,10 @@
   },
   "publishConfig": {
     "registry": " https://registry.npmjs.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Light-Ecosystem/lend-deploy"
   },
   "dependencies": {
     "defender-relay-client": "^1.11.1"

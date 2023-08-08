@@ -1,6 +1,6 @@
 # HopeLend Deployments
 
-[![npm (scoped)](https://www.npmjs.com/package/@hopelend/deploy)]
+[![npm (scoped)](https://img.shields.io/npm/v/@hopelend/deploy)](https://www.npmjs.com/package/@hopelend/deploy)
 
 This Node.js repository contains the configuration and deployment scripts for the HopeLend protocol core and periphery contracts. The repository makes use of `hardhat` and `hardhat-deploy` tools to facilitate the deployment of HopeLend protocol.
 
