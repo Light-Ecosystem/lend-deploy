@@ -92,7 +92,7 @@ const func: DeployFunction = async function ({
 };
 
 // This script can only be run successfully once per market, core version, and network
-func.id = `ReservesInit:${MARKET_NAME}:lend-core@${CORE_VERSION}`;
+func.id = `ReservesInit:${MARKET_NAME}:@hopelend/core@${CORE_VERSION}`;
 
 func.tags = ['market', 'init-reserves'];
 func.dependencies = ['before-deploy', 'core', 'periphery-pre', 'provider', 'init-pool', 'oracles'];

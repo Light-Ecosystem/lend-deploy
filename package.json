@@ -1,5 +1,5 @@
 {
-  "name": "lend-deploy",
+  "name": "@hopelend/deploy",
   "version": "1.0.0",
   "files": [
     "dist",
@@ -15,6 +15,8 @@
   "author": "HopeLend",
   "main": "dist/helpers/index.js",
   "devDependencies": {
+    "@hopelend/core": "^1.0.0",
+    "@hopelend/periphery": "^1.0.0",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.0",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
@@ -40,8 +42,6 @@
     "hardhat-deploy": "^0.11.29",
     "hardhat-gas-reporter": "^1.0.8",
     "jsondiffpatch": "^0.4.1",
-    "lend-core": "file:../lend-core",
-    "lend-periphery": "file:../lend-periphery",
     "prettier": "^2.3.2",
     "solidity-coverage": "^0.8.1",
     "ts-node": "^10.2.1",
@@ -62,15 +62,12 @@
     "node": "npx hardhat node --no-deploy",
     "node:fork": "FORK=main npm run node --no-deploy",
     "deploy": "if [ \"$SKIP_COMPILE\" = 'true' ]; then echo '[Warning] Skipping compilation'; else npm run compile; fi && npx hardhat deploy --no-compile",
-    "test": "npm run compile && npm run test:local && npm run test:fork",
-    "test:fork": "MARKET_NAME=HopeLend FORK=main npx hardhat test ./tests/__setup.spec.ts ./tests/fork/check-list.spec.ts",
-    "test:local": "MARKET_NAME=HopeLend npx hardhat test ./tests/__setup.spec.ts ./tests/*.spec.ts",
     "deploy:market:hope:fork": "FORK=main MARKET_NAME=HopeLend npm run deploy"
   },
   "peerDependencies": {
     "hardhat": "^2.6.1",
-    "lend-core": "file:../lend-core",
-    "lend-periphery": "file:../lend-periphery"
+    "@hopelend/core": ">=1.0.0",
+    "@hopelend/periphery": ">=1.0.0"
   },
   "publishConfig": {
     "registry": " https://registry.npmjs.org"

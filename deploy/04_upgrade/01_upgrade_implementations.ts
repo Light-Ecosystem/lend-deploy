@@ -157,7 +157,7 @@ const func: DeployFunction = async function ({
   return true;
 };
 
-func.id = `UpgradeImplementations:${MARKET_NAME}:lend-core@${CORE_VERSION}`;
+func.id = `UpgradeImplementations:${MARKET_NAME}:@hopelend/core@${CORE_VERSION}`;
 
 func.tags = ['upgrades'];
 

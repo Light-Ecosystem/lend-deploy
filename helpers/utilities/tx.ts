@@ -50,7 +50,7 @@ export const advanceTimeAndBlock = async function (forwardTime: number) {
 
 export const parseUnitsFromToken = async (tokenAddress: tEthereumAddress, amount: string) => {
   const artifact = await hre.deployments.getArtifact(
-    'lend-core/contracts/dependencies/openzeppelin/contracts/IERC20Detailed.sol:IERC20Detailed'
+    '@hopelend/core/contracts/dependencies/openzeppelin/contracts/IERC20Detailed.sol:IERC20Detailed'
   );
   const token = (await hre.ethers.getContractAt(artifact.abi, tokenAddress)) as IERC20Detailed;
 

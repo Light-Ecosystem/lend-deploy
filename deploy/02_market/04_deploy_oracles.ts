@@ -67,7 +67,7 @@ const func: DeployFunction = async function ({
   return true;
 };
 
-func.id = `Oracles:${MARKET_NAME}:lend-core@${CORE_VERSION}`;
+func.id = `Oracles:${MARKET_NAME}:@hopelend/core@${CORE_VERSION}`;
 
 func.tags = ['market', 'oracle'];
 

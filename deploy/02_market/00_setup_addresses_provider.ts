@@ -89,7 +89,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 };
 
 // This script can only be run successfully once per market, core version, and network
-func.id = `PoolAddressesProvider:${MARKET_NAME}:lend-core@${CORE_VERSION}`;
+func.id = `PoolAddressesProvider:${MARKET_NAME}:@hopelend/core@${CORE_VERSION}`;
 
 func.tags = ['market', 'provider'];
 

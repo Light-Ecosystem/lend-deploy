@@ -103,7 +103,7 @@ const func: DeployFunction = async function ({
 };
 
 // This script can only be run successfully once per market, core version, and network
-func.id = `InitOracles:${MARKET_NAME}:lend-core@${CORE_VERSION}`;
+func.id = `InitOracles:${MARKET_NAME}:@hopelend/core@${CORE_VERSION}`;
 
 func.tags = ['market', 'oracles'];
 
