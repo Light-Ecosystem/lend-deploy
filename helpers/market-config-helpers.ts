@@ -88,7 +88,7 @@ export const getAddressFromConfig = (
   const value = getParamPerNetwork<tEthereumAddress | undefined>(param, network);
   if (!value || !isValidAddress(value)) {
     throw Error(
-      `[lend-deploy] Input parameter ${key ? `"${key}"` : ''} is missing or is not an address.`
+      `[@hopelend/deploy] Input parameter ${key ? `"${key}"` : ''} is missing or is not an address.`
     );
   }
   return value;

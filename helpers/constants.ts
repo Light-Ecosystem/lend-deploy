@@ -13,13 +13,13 @@ const {
   version: coreVersion,
 }: {
   version: string;
-} = require('lend-core/package.json');
+} = require('@hopelend/core/package.json');
 const {
   version: peripheryVersion,
 }: {
   _resolved: string;
   version: string;
-} = require('lend-periphery/package.json');
+} = require('@hopelend/periphery/package.json');
 
 export const CORE_VERSION = coreVersion;
 export const PERIPHERY_VERSION = peripheryVersion;

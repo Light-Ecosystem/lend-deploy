@@ -88,7 +88,7 @@ const func: DeployFunction = async function ({
   return true;
 };
 
-func.id = `MockTestnetToken:${MARKET_NAME}:lend-core@${CORE_VERSION}`;
+func.id = `MockTestnetToken:${MARKET_NAME}:@hopelend/core@${CORE_VERSION}`;
 
 func.tags = ['market', 'init-testnet', 'token-setup'];
 

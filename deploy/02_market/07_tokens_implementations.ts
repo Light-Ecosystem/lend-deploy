@@ -99,7 +99,7 @@ const func: DeployFunction = async function ({
   return true;
 };
 
-func.id = `TokenImplementations:${MARKET_NAME}:lend-core@${CORE_VERSION}`;
+func.id = `TokenImplementations:${MARKET_NAME}:@hopelend/core@${CORE_VERSION}`;
 
 func.tags = ['market', 'tokens'];
 

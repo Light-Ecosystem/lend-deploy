@@ -40,7 +40,7 @@ const func: DeployFunction = async function ({
 };
 
 // This script can only be run successfully once per market, core version, and network
-func.id = `PeripheryInit:${MARKET_NAME}:lend-periphery@${PERIPHERY_VERSION}`;
+func.id = `PeripheryInit:${MARKET_NAME}:@hopelend/periphery@${PERIPHERY_VERSION}`;
 
 func.tags = ["market", "init-periphery"];
 

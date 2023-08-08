@@ -85,7 +85,7 @@ export const getStableDebtToken = async (address: tEthereumAddress): Promise<Sta
 
 export const getERC20 = async (address: tEthereumAddress): Promise<IERC20Detailed> =>
   getContract(
-    'lend-core/contracts/dependencies/openzeppelin/contracts/IERC20Detailed.sol:IERC20Detailed',
+    '@hopelend/core/contracts/dependencies/openzeppelin/contracts/IERC20Detailed.sol:IERC20Detailed',
     address
   );
 
@@ -162,7 +162,7 @@ export const getMintableERC20 = async (address: tEthereumAddress): Promise<Minta
 
 export const getIErc20Detailed = async (address: tEthereumAddress): Promise<IERC20Detailed> =>
   getContract(
-    'lend-core/contracts/dependencies/openzeppelin/contracts/IERC20Detailed.sol:IERC20Detailed',
+    '@hopelend/core/contracts/dependencies/openzeppelin/contracts/IERC20Detailed.sol:IERC20Detailed',
     address
   );
 
