@@ -58,7 +58,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const isPoolAdmin = await aclManager.isPoolAdmin(poolAdmin);
   const isEmergencyAdmin = await aclManager.isEmergencyAdmin(emergencyAdmin);
   const isAssetListingAdmin = await aclManager.isAssetListingAdmin(assetListingAdmin);
-  const isRiskAdmin = await aclManager.isRiskAdmin(assetListingAdmin);
+  const isRiskAdmin = await aclManager.isRiskAdmin(riskAdmin);
 
   if (!isACLAdmin) throw '[ACL][ERROR] ACLAdmin is not setup correctly';
   if (!isPoolAdmin) throw '[ACL][ERROR] PoolAdmin is not setup correctly';

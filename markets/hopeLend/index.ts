@@ -32,7 +32,7 @@ export const HopeLendMarket: IHopeLendConfiguration = {
     USDT: strategyUSDT,
     USDC: strategyUSDC,
     HOPE: strategyHOPE,
-    stHOPE: strategyHOPE,
+    stHOPE: strategyStakingHOPE,
     WBTC: strategyWBTC,
   },
   ReserveAssets: {

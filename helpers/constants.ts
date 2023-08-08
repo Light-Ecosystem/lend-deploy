@@ -142,45 +142,24 @@ export const DEFAULT_NAMED_ACCOUNTS = {
   },
   emergencyAdmin: {
     default: 0,
-    sepolia: '0xfAabAc253c7fb43f2e3275CeBfDb34839c4eefA5',
-    goerli: '0xc6C1eF70746F6Bed0A43C912B2B2047f25d3eA87',
-    main: '',
   },
   assetListingAdmin: {
     default: 0,
-    sepolia: '0xfAabAc253c7fb43f2e3275CeBfDb34839c4eefA5',
-    goerli: '0xc6C1eF70746F6Bed0A43C912B2B2047f25d3eA87',
-    main: '',
   },
   riskAdmin: {
     default: 0,
-    sepolia: '0xfAabAc253c7fb43f2e3275CeBfDb34839c4eefA5',
-    goerli: '0xc6C1eF70746F6Bed0A43C912B2B2047f25d3eA87',
-    main: '',
   },
   treasuryAdmin: {
     default: 0,
-    sepolia: '0xfAabAc253c7fb43f2e3275CeBfDb34839c4eefA5',
-    goerli: '0xc6C1eF70746F6Bed0A43C912B2B2047f25d3eA87',
-    main: '',
   },
   operator: {
     default: 0,
-    sepolia: '0x22363A093C81E56b39F3551DbFa011f8A4952Da2',
-    goerli: '0x3141f8D6BE4e4d9137577798C1e127Db81D196d7',
-    main: '0xcF50cdB498BaA6e2Da5907d103d82A89a69b3e82',
   },
   gatewayOwner: {
     default: 0,
-    sepolia: '0xfAabAc253c7fb43f2e3275CeBfDb34839c4eefA5',
-    goerli: '0xc6C1eF70746F6Bed0A43C912B2B2047f25d3eA87',
-    main: '',
   },
   flashBorrower: {
     default: 0,
-    sepolia: '0x6A63253Da5ae2c71866E09234f41505540432aD0',
-    goerli: '',
-    main: '',
   },
 };
 
@@ -191,6 +170,7 @@ export const GOVERNANCE_BRIDGE_EXECUTOR: { [key: string]: string } = {
 export const MULTISIG_ADDRESS: { [key: string]: string } = {
   [eEthereumNetwork.sepolia]: '0xfAabAc253c7fb43f2e3275CeBfDb34839c4eefA5',
   [eEthereumNetwork.goerli]: '0xc6C1eF70746F6Bed0A43C912B2B2047f25d3eA87',
+  [eEthereumNetwork.main]: '0xC2D0108307Ff76eBb0ea05B78567b5eAF5AC7830',
   [eArbitrumNetwork.arbitrum]: '0xbbd9f90699c1FA0D7A65870D241DD1f1217c96Eb',
   [eAvalancheNetwork.avalanche]: '0xa35b76E4935449E33C56aB24b23fcd3246f13470',
   [eFantomNetwork.main]: '0x39CB97b105173b56b5a2b4b33AD25d6a50E6c949',
@@ -198,4 +178,12 @@ export const MULTISIG_ADDRESS: { [key: string]: string } = {
   [eOptimismNetwork.main]: '0xE50c8C619d05ff98b22Adf991F17602C774F785c',
   // Polygon Multisig
   [ePolygonNetwork.polygon]: '0x1450F2898D6bA2710C98BE9CAF3041330eD5ae58',
+};
+
+export const MULTISIG_ACL_ADMIN_ADDRESS: { [key: string]: string } = {
+  [eEthereumNetwork.goerli]: '0xc6C1eF70746F6Bed0A43C912B2B2047f25d3eA87',
+};
+
+export const MULTISIG_POOL_ADMIN_ADDRESS: { [key: string]: string } = {
+  [eEthereumNetwork.goerli]: '0xc6C1eF70746F6Bed0A43C912B2B2047f25d3eA87',
 };

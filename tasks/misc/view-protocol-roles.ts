@@ -22,7 +22,12 @@ import {
 import { task } from 'hardhat/config';
 import { getAddressFromJson, getProxyAdminBySlot } from '../../helpers/utilities/tx';
 import { exit } from 'process';
-import { GOVERNANCE_BRIDGE_EXECUTOR, MULTISIG_ADDRESS } from '../../helpers/constants';
+import {
+  GOVERNANCE_BRIDGE_EXECUTOR,
+  MULTISIG_ADDRESS,
+  MULTISIG_POOL_ADMIN_ADDRESS,
+  MULTISIG_ACL_ADMIN_ADDRESS,
+} from '../../helpers/constants';
 import {
   ConfigNames,
   eNetwork,
@@ -57,6 +62,8 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
     const desiredMultisig = networkId.includes('polygon')
       ? GOVERNANCE_BRIDGE_EXECUTOR[networkId]
       : MULTISIG_ADDRESS[networkId];
+    const desiredPoolAdminMultisig = MULTISIG_POOL_ADMIN_ADDRESS[networkId];
+    const desiredACLAdminMultisig = MULTISIG_ACL_ADMIN_ADDRESS[networkId];
     if (!desiredMultisig) {
       console.error(
         'The constant desired Multisig is undefined. Check missing admin address at MULTISIG_ADDRESS or GOVERNANCE_BRIDGE_EXECUTOR constant'
@@ -80,7 +87,9 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
     });
     console.log('--- Multisig and expected contract addresses ---');
     console.table({
-      multisig: desiredMultisig,
+      multisigOwner: desiredMultisig,
+      multisigPoolAdmin: desiredPoolAdminMultisig,
+      multisigACLAdmin: desiredACLAdminMultisig,
       poolAddressesProvider: poolAddressesProvider.address,
     });
 
@@ -154,16 +163,16 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
       {
         role: 'AddressesProvider ACL Admin',
         address: await poolAddressesProvider.getACLAdmin(),
-        assert: (await poolAddressesProvider.getACLAdmin()) === desiredMultisig,
+        assert: (await poolAddressesProvider.getACLAdmin()) === desiredACLAdminMultisig,
       },
       {
         role: 'ACL Manager Default Admin role granted Multisig',
-        address: (await aclManager.hasRole(hre.ethers.constants.HashZero, desiredMultisig))
-          ? desiredMultisig
+        address: (await aclManager.hasRole(hre.ethers.constants.HashZero, desiredACLAdminMultisig))
+          ? desiredACLAdminMultisig
           : (await aclManager.hasRole(hre.ethers.constants.HashZero, deployer))
           ? deployer
           : 'UNKNOWN',
-        assert: await aclManager.hasRole(hre.ethers.constants.HashZero, desiredMultisig),
+        assert: await aclManager.hasRole(hre.ethers.constants.HashZero, desiredACLAdminMultisig),
       },
       {
         role: 'ACL Manager  Default Admin role revoked Deployer',
@@ -179,8 +188,10 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
       },
       {
         role: 'PoolAdmin is multisig',
-        address: (await aclManager.isPoolAdmin(desiredMultisig)) ? desiredMultisig : ZERO_ADDRESS,
-        assert: await aclManager.isPoolAdmin(desiredMultisig),
+        address: (await aclManager.isPoolAdmin(desiredPoolAdminMultisig))
+          ? desiredPoolAdminMultisig
+          : ZERO_ADDRESS,
+        assert: await aclManager.isPoolAdmin(desiredPoolAdminMultisig),
       },
       {
         role: 'Deployer revoked PoolAdmin',

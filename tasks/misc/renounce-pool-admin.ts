@@ -4,7 +4,7 @@ import { getACLManager, getPoolAddressesProvider } from '../../helpers/contract-
 import { task } from 'hardhat/config';
 import { getAddressFromJson, waitForTx } from '../../helpers/utilities/tx';
 import { exit } from 'process';
-import { MULTISIG_ADDRESS, GOVERNANCE_BRIDGE_EXECUTOR } from '../../helpers/constants';
+import { MULTISIG_POOL_ADMIN_ADDRESS, GOVERNANCE_BRIDGE_EXECUTOR } from '../../helpers/constants';
 
 task(`renounce-pool-admin`, `Renounce PoolAdmin role as deployer if `).setAction(async (_, hre) => {
   const { deployer } = await hre.getNamedAccounts();
@@ -13,12 +13,10 @@ task(`renounce-pool-admin`, `Renounce PoolAdmin role as deployer if `).setAction
 
   const networkId = FORK ? FORK : hre.network.name;
   // Desired Admin at Polygon must be the bridge crosschain executor, not the multisig
-  const desiredMultisig = networkId.includes('polygon')
-    ? GOVERNANCE_BRIDGE_EXECUTOR[networkId]
-    : MULTISIG_ADDRESS[networkId];
+  const desiredMultisig = MULTISIG_POOL_ADMIN_ADDRESS[networkId];
   if (!desiredMultisig) {
     console.error(
-      'The constant desired Multisig is undefined. Check missing admin address at MULTISIG_ADDRESS or GOVERNANCE_BRIDGE_EXECUTOR constant'
+      'The constant desired Multisig is undefined. Check missing admin address at MULTISIG_POOL_ADMIN_ADDRESS'
     );
     exit(403);
   }

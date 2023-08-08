@@ -15,6 +15,8 @@ import { exit } from 'process';
 import {
   GOVERNANCE_BRIDGE_EXECUTOR,
   MULTISIG_ADDRESS,
+  MULTISIG_POOL_ADMIN_ADDRESS,
+  MULTISIG_ACL_ADMIN_ADDRESS,
   ZERO_ADDRESS,
 } from '../../helpers/constants';
 import { getAddress } from 'ethers/lib/utils';
@@ -38,6 +40,8 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
     const desiredMultisig = networkId.includes('polygon')
       ? GOVERNANCE_BRIDGE_EXECUTOR[networkId]
       : MULTISIG_ADDRESS[networkId];
+    const desiredPoolAdminMultisig = MULTISIG_POOL_ADMIN_ADDRESS[networkId];
+    const desiredACLAdminMultisig = MULTISIG_ACL_ADMIN_ADDRESS[networkId];
     // Desired Emergency Admin at Polygon must be the multisig, not the crosschain executor
     if (!desiredMultisig) {
       console.error(
@@ -57,8 +61,12 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
       gatewayOwner,
       flashBorrower,
     });
-    console.log('--- DESIRED MULTISIG ADMIN ---');
+    console.log('--- DESIRED MULTISIG OWNER ---');
     console.log(desiredMultisig);
+    console.log('--- DESIRED MULTISIG POOL ADMIN ---');
+    console.log(desiredPoolAdminMultisig);
+    console.log('--- DESIRED MULTISIG ACL ADMIN ---');
+    console.log(desiredACLAdminMultisig);
     const aclSigner = await hre.ethers.getSigner(aclAdmin);
 
     const poolAddressesProvider = await getPoolAddressesProvider();
@@ -86,7 +94,8 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
     }
 
     // Setup flashBorrower
-    if (flashBorrower && getAddress(flashBorrower) !== getAddress(ZERO_ADDRESS)) {
+    const isFlashBorrower = await aclManager.isFlashBorrower(flashBorrower);
+    if (!isFlashBorrower && getAddress(flashBorrower) !== getAddress(ZERO_ADDRESS)) {
       await waitForTx(await aclManager.addFlashBorrower(flashBorrower));
       console.log(`- Setup FlashBorrower (${flashBorrower}) successful`);
     }
@@ -115,7 +124,7 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
     /** Start of Pool Admin transfer */
     const isDeployerPoolAdmin = await aclManager.isPoolAdmin(poolAdmin);
     if (isDeployerPoolAdmin) {
-      await waitForTx(await aclManager.addPoolAdmin(desiredMultisig));
+      await waitForTx(await aclManager.addPoolAdmin(desiredPoolAdminMultisig));
 
       await waitForTx(await aclManager.removePoolAdmin(poolAdmin));
       console.log('- Transferred the ownership of Pool Admin');
@@ -126,7 +135,7 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
     const isDeployerACLAdminAtPoolAddressesProviderOwner =
       (await poolAddressesProvider.getACLAdmin()) === deployer;
     if (isDeployerACLAdminAtPoolAddressesProviderOwner) {
-      await waitForTx(await poolAddressesProvider.setACLAdmin(desiredMultisig));
+      await waitForTx(await poolAddressesProvider.setACLAdmin(desiredACLAdminMultisig));
       console.log('- Transferred ACL Admin');
     }
     /** End of Pool Addresses ACL Admin transfer */
@@ -179,7 +188,9 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
     );
     if (isDeployerDefaultAdmin) {
       console.log('- Transferring the DEFAULT_ADMIN_ROLE to the multisig address');
-      await waitForTx(await aclManager.grantRole(hre.ethers.constants.HashZero, desiredMultisig));
+      await waitForTx(
+        await aclManager.grantRole(hre.ethers.constants.HashZero, desiredACLAdminMultisig)
+      );
       console.log('- Revoking deployer as DEFAULT_ADMIN_ROLE to the multisig address');
       await waitForTx(await aclManager.revokeRole(hre.ethers.constants.HashZero, deployer));
       console.log('- Revoked DEFAULT_ADMIN_ROLE to deployer ');
@@ -190,8 +201,10 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
     const result = [
       {
         role: 'PoolAdmin',
-        address: (await aclManager.isPoolAdmin(desiredMultisig)) ? desiredMultisig : poolAdmin,
-        assert: await aclManager.isPoolAdmin(desiredMultisig),
+        address: (await aclManager.isPoolAdmin(desiredPoolAdminMultisig))
+          ? desiredPoolAdminMultisig
+          : poolAdmin,
+        assert: await aclManager.isPoolAdmin(desiredPoolAdminMultisig),
       },
       {
         role: 'FlashBorrower',
@@ -240,12 +253,12 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
       },
       {
         role: 'ACL Default Admin role granted Multisig',
-        address: (await aclManager.hasRole(hre.ethers.constants.HashZero, desiredMultisig))
-          ? desiredMultisig
+        address: (await aclManager.hasRole(hre.ethers.constants.HashZero, desiredACLAdminMultisig))
+          ? desiredACLAdminMultisig
           : (await aclManager.hasRole(hre.ethers.constants.HashZero, deployer))
           ? deployer
           : 'UNKNOWN',
-        assert: await aclManager.hasRole(hre.ethers.constants.HashZero, desiredMultisig),
+        assert: await aclManager.hasRole(hre.ethers.constants.HashZero, desiredACLAdminMultisig),
       },
     ];
 

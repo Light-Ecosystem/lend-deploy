@@ -11,6 +11,7 @@ import {
   POOL_ADDRESSES_PROVIDER_ID,
   getPoolProxy,
   POOL_PROXY_ID,
+  RESERVES_SETUP_HELPER_ID,
 } from '../../helpers';
 
 task(`verify-others`).setAction(async (_, { deployments, getNamedAccounts, ...hre }) => {
@@ -25,6 +26,9 @@ task(`verify-others`).setAction(async (_, { deployments, getNamedAccounts, ...hr
   );
   const poolAddressesProvider = await getPoolAddressesProvider(
     await getAddressFromJson(network, POOL_ADDRESSES_PROVIDER_ID)
+  );
+  const reservesSetupHelper = await getPoolProxy(
+    await getAddressFromJson(network, RESERVES_SETUP_HELPER_ID)
   );
   console.log(`- Verifying FlashLoanLogic:`);
   try {
@@ -58,6 +62,15 @@ task(`verify-others`).setAction(async (_, { deployments, getNamedAccounts, ...hr
     await hre.run('verify:verify', {
       address: poolProxy.address,
       constructorArguments: [poolAddressesProvider.address],
+    });
+  } catch (error) {
+    console.error(error);
+  }
+  console.log(`- Verifying ReservesSetupHelper:`);
+  try {
+    await hre.run('verify:verify', {
+      address: reservesSetupHelper.address,
+      constructorArguments: [],
     });
   } catch (error) {
     console.error(error);

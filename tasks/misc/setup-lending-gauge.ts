@@ -12,7 +12,7 @@ import { BigNumber, BigNumberish } from 'ethers';
 import { MARKET_NAME } from '../../helpers/env';
 import { parseUnits } from 'ethers/lib/utils';
 import LendingGaugeImplABI from '../../abi/LendingGauge.json';
-import { POOL_DATA_PROVIDER, POOL_PROXY_ID, eNetwork } from '../../helpers';
+import { POOL_DATA_PROVIDER, POOL_PROXY_ID, ZERO_ADDRESS, eNetwork } from '../../helpers';
 
 task(`setup-lending-gauge`, `Create lending gauge`)
   .addParam('symbol', 'The ERC20 symbol')
@@ -40,7 +40,7 @@ task(`setup-lending-gauge`, `Create lending gauge`)
     await waitForTx(await gaugeFactory.createLendingGauge(tokenAddress));
     // Get ${SYMBOL} LendingGauge
     const gaugeAddress = await gaugeFactory.lendingGauge(tokenAddress);
-    if (!gaugeAddress) {
+    if (!gaugeAddress || gaugeAddress == ZERO_ADDRESS) {
       console.log('[ERROR] gauge not created!');
       return;
     }
@@ -57,24 +57,24 @@ task(`setup-lending-gauge`, `Create lending gauge`)
     }[] = [
       {
         start: parseUnits('0', 0),
-        end: parseUnits('0.3', 27),
-        k: '1833333333333333333333333333',
+        end: parseUnits('0.05', 27),
+        k: parseUnits('12', 27),
         b: parseUnits('0', 0),
       },
       {
-        start: parseUnits('0.3', 27),
-        end: parseUnits('0.65', 27),
+        start: parseUnits('0.05', 27),
+        end: parseUnits('0.45', 27),
         k: parseUnits('0', 0),
-        b: parseUnits('0.55', 27),
+        b: parseUnits('0.6', 27),
       },
       {
-        start: parseUnits('0.65', 27),
-        end: parseUnits('0.9', 27),
-        k: parseUnits('-2.2', 27),
-        b: parseUnits('1.98', 27),
+        start: parseUnits('0.45', 27),
+        end: parseUnits('0.5', 27),
+        k: parseUnits('-12', 27),
+        b: parseUnits('6', 27),
       },
       {
-        start: parseUnits('0.9', 27),
+        start: parseUnits('0.5', 27),
         end: parseUnits('1', 27),
         k: parseUnits('0', 0),
         b: parseUnits('0', 0),
@@ -82,6 +82,7 @@ task(`setup-lending-gauge`, `Create lending gauge`)
     ];
     // For ${SYMBOL} LendingGauge add phases
     await waitForTx(await lendingGaugeInstance.addPhases(inputParams));
+    console.log('[Setup] LendingGauge add phases completed!');
     // For h${SYMBOL}、variableDebt${SYMBOL} set LendingGauge by Pool Contract
     await poolInstance.setLendingGauge(tokenAddress, gaugeAddress);
     console.log('[Setup] LendingGauge configuration completed!');
