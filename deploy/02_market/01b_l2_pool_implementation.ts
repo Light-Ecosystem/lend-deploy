@@ -26,10 +26,7 @@ const func: DeployFunction = async function ({
 
   const commonLibraries = await getPoolLibraries();
 
-  // Deploy L2 libraries
-  const calldataLogicLibrary = await deploy('CalldataLogic', {
-    from: deployer,
-  });
+  const calldataLibraryArtifact = await deployments.get('CalldataLogic');
 
   // Deploy L2 supported Pool
   const poolArtifact = await deploy(L2_POOL_IMPL_ID, {
@@ -38,7 +35,7 @@ const func: DeployFunction = async function ({
     args: [addressesProviderAddress],
     libraries: {
       ...commonLibraries,
-      CalldataLogic: calldataLogicLibrary.address,
+      CalldataLogic: calldataLibraryArtifact.address,
     },
     ...COMMON_DEPLOY_PARAMS,
   });

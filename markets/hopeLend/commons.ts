@@ -123,20 +123,24 @@ export const CommonsConfig: ICommonConfiguration = {
     [eEthereumNetwork.sepolia]: '0xeaB3D0eb85A6052C278Ea1FB7Ed5e699e97B650E',
     [eEthereumNetwork.goerli]: '0xf38F371b16Aa1e3396A64BC03e4995C9B67fb3F3',
     [eEthereumNetwork.main]: '0x94aFb2C17af24cFAcf19f364628F459dfAB2688f',
+    [eArbitrumNetwork.arbitrum]: '0x94aFb2C17af24cFAcf19f364628F459dfAB2688f',
   },
   VotingEscrowAddress: {
     [eEthereumNetwork.sepolia]: '0x061a7D9E2D8332c0ddb56Af639778aA85A09F71C',
     [eEthereumNetwork.goerli]: '0xD4729aCC86d55925f92d79AEDD50D7B82Ff7eb9A',
     [eEthereumNetwork.main]: '0xe909f37F3003fa37AAd83C1baf2A98E5a7b67400',
+    [eArbitrumNetwork.arbitrum]: '0x94aFb2C17af24cFAcf19f364628F459dfAB2688f',
   },
   FeeToVaultAddress: {
     [eEthereumNetwork.sepolia]: '0x8b0e0f46Fc96F31a2219feBF599A644d7b096B5c',
     [eEthereumNetwork.goerli]: '0xf8b4976f87Ee3aCd23d4E946C2635A7C8985a259',
     [eEthereumNetwork.main]: '0x93b70B66ce507f49790390F07955940030475cd1',
+    [eArbitrumNetwork.arbitrum]: '0x94aFb2C17af24cFAcf19f364628F459dfAB2688f',
   },
   ProxyAdminAddress: {
     [eEthereumNetwork.sepolia]: '0xC4f5Ecc8d241C9639efAb2252207DC3c9e4f7690',
     [eEthereumNetwork.goerli]: '0xBED762ED11C5Deab70Ec9C3c037Ca1b195B8F8aF',
     [eEthereumNetwork.main]: '0xcc0f986021010D4A3345CCA903BF5487AEa3bd39',
+    [eArbitrumNetwork.arbitrum]: '0x94aFb2C17af24cFAcf19f364628F459dfAB2688f',
   },
 };

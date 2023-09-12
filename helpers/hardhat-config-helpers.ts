@@ -76,7 +76,9 @@ export const NETWORKS_RPC_URL: iParamsPerNetwork<string> = {
   [ePolygonNetwork.polygon]: `https://polygon-mainnet.g.alchemy.com/v2/${getAlchemyKey(
     ePolygonNetwork.polygon
   )}`,
-  [eArbitrumNetwork.arbitrum]: `https://arb1.arbitrum.io/rpc`,
+  [eArbitrumNetwork.arbitrum]: `https://arbitrum-mainnet.infura.io/v3/${getInfuraKey(
+    eArbitrumNetwork.arbitrum
+  )}`,
   [eArbitrumNetwork.arbitrumTestnet]: `https://rinkeby.arbitrum.io/rpc`,
   [eEthereumNetwork.rinkeby]: `https://eth-rinkeby.alchemyapi.io/v2/${getAlchemyKey(
     eEthereumNetwork.rinkeby

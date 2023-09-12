@@ -43,7 +43,6 @@ task(`review-stable-borrow`, ``)
 
       for (let index = 0; index < reservesToCheck.length; index++) {
         const { symbol, tokenAddress } = reservesToCheck[index];
-
         const normalizedSymbol = normalizedSymbols.find(
           (s) => symbol.toUpperCase() === s.toUpperCase()
         );

@@ -19,23 +19,17 @@ export const ArbitrumConfig: IHopeLendConfiguration = {
   SymbolPrefix: 'Arb',
   ProviderId: 36,
   ReservesConfig: {
-    DAI: strategyDAI,
     USDC: strategyUSDC,
     WBTC: strategyWBTC,
     WETH: strategyWETH,
     USDT: strategyUSDT,
-    HOPE: strategyHOPE,
   },
   ReserveAssets: {
     [eArbitrumNetwork.arbitrum]: {
-      DAI: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
-      LINK: '0xf97f4df75117a78c1A5a0DBb814Af92458539FB4',
       USDC: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
       WBTC: '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f',
       WETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
       USDT: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
-      HOPE: '0xba5DdD1f9d7F570dc94a51479a000E3BCE967196',
-      EURS: '0xD22a58f79e9481D1a88e00c343885A588b34b68B',
     },
     [eArbitrumNetwork.arbitrumTestnet]: {
       DAI: ZERO_ADDRESS,
@@ -65,7 +59,7 @@ export const ArbitrumConfig: IHopeLendConfiguration = {
       liquidationThreshold: '9750',
       liquidationBonus: '10100',
       label: 'Stablecoins',
-      assets: ['USDC', 'USDT', 'DAI', 'EURS'],
+      assets: ['USDC', 'USDT'],
     },
   },
   ChainlinkAggregator: {

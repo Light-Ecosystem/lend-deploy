@@ -95,15 +95,15 @@ const func: DeployFunction = async function ({
     address: poolConfiguratorProxyAddress,
   });
 
-  if (isL2PoolSupported(poolConfig)) {
-    // Deploy L2 Encoder
-    await deploy(L2_ENCODER, {
-      from: deployer,
-      contract: 'L2Encoder',
-      args: [poolProxyAddress],
-      ...COMMON_DEPLOY_PARAMS,
-    });
-  }
+  // if (isL2PoolSupported(poolConfig)) {
+  //   // Deploy L2 Encoder
+  //   await deploy(L2_ENCODER, {
+  //     from: deployer,
+  //     contract: 'L2Encoder',
+  //     args: [poolProxyAddress],
+  //     ...COMMON_DEPLOY_PARAMS,
+  //   });
+  // }
 
   // Set Flash Loan premiums
   const poolConfiguratorInstance = await getPoolConfiguratorProxy();

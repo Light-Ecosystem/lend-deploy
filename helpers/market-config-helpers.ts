@@ -355,10 +355,7 @@ export const getFallbackOracleAddress = async (
     network
   );
 
-  if (
-    fallbackOracleConfigAddress &&
-    getAddress(fallbackOracleConfigAddress) !== getAddress(ZERO_ADDRESS)
-  ) {
+  if (fallbackOracleConfigAddress) {
     return fallbackOracleConfigAddress;
   }
 
