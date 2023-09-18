@@ -48,6 +48,23 @@ export const advanceTimeAndBlock = async function (forwardTime: number) {
   await hre.ethers.provider.send('evm_mine', []);
 };
 
+export const fillNonceTransaction = async (transactionCount: number) => {
+  const { deployer } = await hre.getNamedAccounts();
+  const signer = await hre.ethers.getSigner(deployer);
+  console.log(`[Transaction] Send ${transactionCount} empty transaction`);
+  for (let i = 0; i < transactionCount; i++) {
+    const nonce = await signer.getTransactionCount();
+    const emptyTransaction = {
+      nonce: nonce,
+      gasLimit: 21000,
+      to: signer.address,
+      value: 0,
+    };
+
+    await waitForTx(await signer.sendTransaction(emptyTransaction));
+  }
+};
+
 export const parseUnitsFromToken = async (tokenAddress: tEthereumAddress, amount: string) => {
   const artifact = await hre.deployments.getArtifact(
     '@hopelend/core/contracts/dependencies/openzeppelin/contracts/IERC20Detailed.sol:IERC20Detailed'

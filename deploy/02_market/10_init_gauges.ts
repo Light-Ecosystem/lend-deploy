@@ -17,6 +17,7 @@ import {
   ConfigNames,
   advanceTimeAndBlock,
   eNetwork,
+  fillNonceTransaction,
   getMinterAddress,
   getVotingEscrowAddress,
   isL2PoolSupported,
@@ -37,19 +38,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   if (isL2PoolSupported(poolConfig)) {
     console.log(`[INFO] Skipped LendingGauge due current network '${network}' is not supported`);
     if (process.env.RELEASE == 'true') {
-      const deployerSigner = await hre.ethers.getSigner(deployer);
-      const transactionCount = 3;
-      console.log(`[Transaction] Send ${transactionCount} empty transaction`);
-      for (let i = 0; i < transactionCount; i++) {
-        const nonce = await deployerSigner.getTransactionCount();
-        const emptyTransaction = {
-          nonce: nonce,
-          gasLimit: 21000,
-          to: deployerSigner.address,
-          value: 0,
-        };
-        await waitForTx(await deployerSigner.sendTransaction(emptyTransaction));
-      }
+      await fillNonceTransaction(3);
     }
     return;
   }

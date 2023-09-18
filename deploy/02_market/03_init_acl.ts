@@ -2,7 +2,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { DeployFunction } from 'hardhat-deploy/types';
 import { COMMON_DEPLOY_PARAMS } from '../../helpers/env';
 import { CORE_VERSION, ZERO_BYTES_32 } from '../../helpers/constants';
-import { waitForTx } from '../../helpers/utilities/tx';
+import { fillNonceTransaction, waitForTx } from '../../helpers/utilities/tx';
 import { ACLManager, PoolAddressesProvider } from '../../typechain';
 import {
   ConfigNames,
@@ -81,16 +81,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log('- RiskAdmin Admin', riskAdmin);
 
   if (isL2PoolSupported(poolConfig) && process.env.RELEASE == 'true') {
-    console.log('[Transaction] Send 1 empty transaction');
-    const deployerSigner = await hre.ethers.getSigner(deployer);
-    const nonce = await deployerSigner.getTransactionCount();
-    const emptyTransaction = {
-      nonce: nonce,
-      gasLimit: 21000,
-      to: deployerSigner.address,
-      value: 0,
-    };
-    await waitForTx(await deployerSigner.sendTransaction(emptyTransaction));
+    await fillNonceTransaction(1);
   }
 
   return true;
