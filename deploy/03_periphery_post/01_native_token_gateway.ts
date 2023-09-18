@@ -8,7 +8,7 @@ import { DeployFunction } from 'hardhat-deploy/types';
 import { WRAPPED_NATIVE_TOKEN_PER_NETWORK } from '../../helpers/constants';
 import { eNetwork } from '../../helpers/types';
 import { POOL_PROXY_ID, TESTNET_TOKEN_PREFIX } from '../../helpers';
-import { MARKET_NAME } from '../../helpers/env';
+import { COMMON_DEPLOY_PARAMS, MARKET_NAME } from '../../helpers/env';
 
 const func: DeployFunction = async function ({
   getNamedAccounts,
@@ -38,7 +38,9 @@ const func: DeployFunction = async function ({
 
   await deploy('WrappedTokenGateway', {
     from: deployer,
+    contract: 'WrappedTokenGateway',
     args: [wrappedNativeTokenAddress, gatewayOwner, poolAddress],
+    ...COMMON_DEPLOY_PARAMS,
   });
 };
 

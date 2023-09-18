@@ -42,6 +42,7 @@ import {
 import { ZERO_ADDRESS } from './constants';
 import { getTestnetReserveAddressFromSymbol, POOL_DATA_PROVIDER } from '.';
 import { MARKET_NAME } from './env';
+import BaseConfig from '../markets/base';
 
 declare var hre: HardhatRuntimeEnvironment;
 
@@ -55,6 +56,7 @@ export enum ConfigNames {
   Polygon = 'Polygon',
   Optimistic = 'Optimistic',
   Arbitrum = 'Arbitrum',
+  Base = 'Base',
 }
 
 export const getParamPerNetwork = <T>(
@@ -112,6 +114,8 @@ export const loadPoolConfig = (configName: ConfigNames): PoolConfiguration => {
       return OptimisticConfig;
     case ConfigNames.Arbitrum:
       return ArbitrumConfig;
+    case ConfigNames.Base:
+      return BaseConfig;
     default:
       throw new Error(
         `Unsupported pool configuration: ${configName} is not one of the supported configs ${Object.values(
@@ -366,6 +370,22 @@ export const getFallbackOracleAddress = async (
   const deployedFallbackOracle = await hre.deployments.get(FALLBACK_ORACLE_ID);
 
   return deployedFallbackOracle.address;
+};
+
+export const getSequencerOracleAddress = async (
+  poolConfig: IBaseConfiguration,
+  network: eNetwork
+): Promise<tEthereumAddress> => {
+  const sequencerOracleConfigAddress = getParamPerNetwork<string>(
+    poolConfig.SequencerOracle,
+    network
+  );
+
+  if (sequencerOracleConfigAddress) {
+    return sequencerOracleConfigAddress;
+  }
+
+  return '';
 };
 
 export const isProductionMarket = (poolConfig: ICommonConfiguration): boolean => {

@@ -1,6 +1,7 @@
 import {
   AssetType,
   eAvalancheNetwork,
+  eBaseNetwork,
   eFantomNetwork,
   eHarmonyNetwork,
   eOptimismNetwork,
@@ -76,7 +77,7 @@ export const CommonsConfig: ICommonConfiguration = {
   },
   ReserveFactorTreasuryAddress: {
     [eEthereumNetwork.kovan]: '0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c',
-    [eArbitrumNetwork.arbitrumTestnet]: '0xeC67987831C4278160D8e652d3edb0Fc45B3766d',
+    [eArbitrumNetwork.arbitrumGoerli]: '0xeC67987831C4278160D8e652d3edb0Fc45B3766d',
     [eEthereumNetwork.rinkeby]: ZERO_ADDRESS,
   },
   FallbackOracle: {
@@ -85,9 +86,16 @@ export const CommonsConfig: ICommonConfiguration = {
     [eEthereumNetwork.kovan]: '0x50913E8E1c650E790F8a1E741FF9B1B1bB251dfe',
     [eEthereumNetwork.main]: '0xdFc3d796E16fEDC97e9b843BA4F1c8E5E762F867',
     [eArbitrumNetwork.arbitrum]: ZERO_ADDRESS,
-    [eArbitrumNetwork.arbitrumTestnet]: ZERO_ADDRESS,
+    [eArbitrumNetwork.arbitrumGoerli]: ZERO_ADDRESS,
     [eEthereumNetwork.rinkeby]: ZERO_ADDRESS,
   },
+  SequencerOracle: {
+    [eArbitrumNetwork.arbitrum]: '0xFdB631F5EE196F0ed6FAa767959853A9F217697D',
+    [eArbitrumNetwork.arbitrumGoerli]: '0x4da69F028a5790fCCAfe81a75C0D24f46ceCDd69',
+    [eBaseNetwork.base]: '0xBCF85224fc0756B9Fa45aA7892530B47e10b6433',
+    [eBaseNetwork.baseGoerli]: '',
+  },
+  gracePeriod: '3600',
   ReservesConfig: {},
   EModes: {
     // StableEMode: {
@@ -101,8 +109,9 @@ export const CommonsConfig: ICommonConfiguration = {
   },
   L2PoolEnabled: {
     [eArbitrumNetwork.arbitrum]: true,
-    [eArbitrumNetwork.görliNitro]: true,
-    [eArbitrumNetwork.arbitrumTestnet]: true,
+    [eArbitrumNetwork.arbitrumGoerli]: true,
+    [eBaseNetwork.base]: true,
+    [eBaseNetwork.baseGoerli]: true,
     [eOptimismNetwork.main]: true,
     [eOptimismNetwork.testnet]: true,
   },
@@ -136,11 +145,13 @@ export const CommonsConfig: ICommonConfiguration = {
     [eEthereumNetwork.goerli]: '0xf8b4976f87Ee3aCd23d4E946C2635A7C8985a259',
     [eEthereumNetwork.main]: '0x93b70B66ce507f49790390F07955940030475cd1',
     [eArbitrumNetwork.arbitrum]: '0x94aFb2C17af24cFAcf19f364628F459dfAB2688f',
+    [eArbitrumNetwork.arbitrumGoerli]: '0x94aFb2C17af24cFAcf19f364628F459dfAB2688f',
   },
   ProxyAdminAddress: {
     [eEthereumNetwork.sepolia]: '0xC4f5Ecc8d241C9639efAb2252207DC3c9e4f7690',
     [eEthereumNetwork.goerli]: '0xBED762ED11C5Deab70Ec9C3c037Ca1b195B8F8aF',
     [eEthereumNetwork.main]: '0xcc0f986021010D4A3345CCA903BF5487AEa3bd39',
     [eArbitrumNetwork.arbitrum]: '0x94aFb2C17af24cFAcf19f364628F459dfAB2688f',
+    [eArbitrumNetwork.arbitrumGoerli]: '0x94aFb2C17af24cFAcf19f364628F459dfAB2688f',
   },
 };

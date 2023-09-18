@@ -1,4 +1,4 @@
-import { eArbitrumNetwork, IHopeLendConfiguration } from './../../helpers/types';
+import { eArbitrumNetwork, IHopeLendConfiguration } from '../../helpers/types';
 import HopeLendMarket from '../hopeLend';
 import { ZERO_ADDRESS } from '../../helpers';
 import {
@@ -12,14 +12,14 @@ import {
   strategyStakingHOPE,
 } from '../hopeLend/reservesConfigs';
 
-export const ArbitrumConfig: IHopeLendConfiguration = {
+export const BaseConfig: IHopeLendConfiguration = {
   ...HopeLendMarket,
-  MarketId: 'Arbitrum HopeLend Market',
-  HTokenNamePrefix: 'Arbitrum',
-  StableDebtTokenNamePrefix: 'Arbitrum',
-  VariableDebtTokenNamePrefix: 'Arbitrum',
-  SymbolPrefix: 'Arb',
-  ProviderId: 36,
+  MarketId: 'Base HopeLend Market',
+  HTokenNamePrefix: 'Base',
+  StableDebtTokenNamePrefix: 'Base',
+  VariableDebtTokenNamePrefix: 'Base',
+  SymbolPrefix: 'Base',
+  ProviderId: 37,
   ReservesConfig: {
     WETH: strategyWETH,
     wstETH: strategyWstETH,
@@ -81,4 +81,4 @@ export const ArbitrumConfig: IHopeLendConfiguration = {
   },
 };
 
-export default ArbitrumConfig;
+export default BaseConfig;

@@ -15,41 +15,30 @@ const func: DeployFunction = async function ({
 
   const deployerSigner = await hre.ethers.getSigner(deployer);
   if (isL2PoolSupported(poolConfig)) {
+    if (process.env.RELEASE == 'true') {
+      // Prod is 6
+      const transactionCount = 6;
+      console.log(`[Transaction] Send ${transactionCount} empty transaction`);
+      for (let i = 0; i < transactionCount; i++) {
+        const nonce = await deployerSigner.getTransactionCount();
+
+        const emptyTransaction = {
+          nonce: nonce,
+          gasLimit: 21000,
+          to: deployerSigner.address,
+          value: 0,
+        };
+
+        await waitForTx(await deployerSigner.sendTransaction(emptyTransaction));
+      }
+    }
     // Deploy L2 libraries
     await deploy('CalldataLogic', {
       from: deployer,
       args: [],
       ...COMMON_DEPLOY_PARAMS,
     });
-  } else {
-    for (let i = 0; i < 1; i++) {
-      // 获取当前 nonce
-      const nonce = await deployerSigner.getTransactionCount();
-
-      // 创建一个空交易
-      const emptyTransaction = {
-        nonce: nonce, // 指定要占用的 nonce
-        gasLimit: 21000, // 根据网络设置合适的 gasLimit
-        to: deployerSigner.address, // 可以发送到自己的地址
-        value: 0, // 没有转账价值
-      };
-
-      // 发送空交易
-      await waitForTx(await deployerSigner.sendTransaction(emptyTransaction));
-    }
   }
-
-  // if (!isL2PoolSupported(poolConfig)) {
-  //   console.log(`[INFO] Skipped L2 Pool due current network '${network}' is not supported`);
-  //   return true;
-  // }
-
-  // Deploy L2 libraries
-  // await deploy('CalldataLogic', {
-  //   from: deployer,
-  //   args: [],
-  //   ...COMMON_DEPLOY_PARAMS,
-  // });
 
   return true;
 };

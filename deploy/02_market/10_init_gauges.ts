@@ -19,6 +19,7 @@ import {
   eNetwork,
   getMinterAddress,
   getVotingEscrowAddress,
+  isL2PoolSupported,
   isProductionMarket,
   isUnitTestEnv,
   loadPoolConfig,
@@ -32,6 +33,26 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployer } = await getNamedAccounts();
   const poolConfig = await loadPoolConfig(MARKET_NAME as ConfigNames);
   const network = (process.env.FORK ? process.env.FORK : hre.network.name) as eNetwork;
+
+  if (isL2PoolSupported(poolConfig)) {
+    console.log(`[INFO] Skipped LendingGauge due current network '${network}' is not supported`);
+    if (process.env.RELEASE == 'true') {
+      const deployerSigner = await hre.ethers.getSigner(deployer);
+      const transactionCount = 3;
+      console.log(`[Transaction] Send ${transactionCount} empty transaction`);
+      for (let i = 0; i < transactionCount; i++) {
+        const nonce = await deployerSigner.getTransactionCount();
+        const emptyTransaction = {
+          nonce: nonce,
+          gasLimit: 21000,
+          to: deployerSigner.address,
+          value: 0,
+        };
+        await waitForTx(await deployerSigner.sendTransaction(emptyTransaction));
+      }
+    }
+    return;
+  }
 
   // 1. Deploy LendingGauge Impl as template
   const LendingGaugeImpl = await deploy(LENDING_GAUGE_IMPL_ID, {

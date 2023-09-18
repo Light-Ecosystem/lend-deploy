@@ -14,6 +14,7 @@ export type eNetwork =
   | eXDaiNetwork
   | eAvalancheNetwork
   | eArbitrumNetwork
+  | eBaseNetwork
   | eHarmonyNetwork
   | eFantomNetwork
   | eOptimismNetwork
@@ -60,8 +61,12 @@ export enum eAvalancheNetwork {
 
 export enum eArbitrumNetwork {
   arbitrum = 'arbitrum',
-  arbitrumTestnet = 'arbitrum-testnet',
-  görliNitro = 'arbitrum-görli',
+  arbitrumGoerli = 'arbitrum-goerli',
+}
+
+export enum eBaseNetwork {
+  base = 'base',
+  baseGoerli = 'base-goerli',
 }
 
 export enum eHarmonyNetwork {
@@ -419,6 +424,10 @@ export type iParamsPerNetwork<T> = {
   [k in eNetwork]?: T;
 };
 
+export type iParamsPerNetworkString<T> = {
+  [k in string]?: T;
+};
+
 export type iParamsPerNetworkWithDefault<T> = {
   [k in eNetwork]?: T;
 } & {
@@ -453,7 +462,7 @@ export interface iAvalancheParamsPerNetwork<T> {
 
 export interface iArbitrumParamsPerNetwork<T> {
   [eArbitrumNetwork.arbitrum]: T;
-  [eArbitrumNetwork.arbitrumTestnet]: T;
+  [eArbitrumNetwork.arbitrumGoerli]: T;
 }
 
 export interface iParamsPerPool<T> {
@@ -506,6 +515,8 @@ export interface IBaseConfiguration {
   TestnetMarket?: boolean;
   ProviderRegistryOwner?: iParamsPerNetwork<tEthereumAddress | undefined>;
   FallbackOracle?: iParamsPerNetwork<tEthereumAddress>;
+  SequencerOracle?: iParamsPerNetwork<tEthereumAddress>;
+  gracePeriod?: string;
   ChainlinkAggregator: iParamsPerNetwork<ITokenAddress>;
   WrappedTokenGateway?: iParamsPerNetwork<tEthereumAddress>;
   ReserveFactorTreasuryAddress: iParamsPerNetwork<tEthereumAddress>;

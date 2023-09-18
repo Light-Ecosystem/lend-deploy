@@ -42,7 +42,7 @@ export const HopeLendMarket: IHopeLendConfiguration = {
       WETH: ZERO_ADDRESS,
       LINK: ZERO_ADDRESS,
     },
-    [eArbitrumNetwork.arbitrumTestnet]: {
+    [eArbitrumNetwork.arbitrumGoerli]: {
       HOPE: ZERO_ADDRESS,
       DAI: ZERO_ADDRESS,
       USDC: ZERO_ADDRESS,

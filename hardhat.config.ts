@@ -1,4 +1,6 @@
 import {
+  ARBISCAN_KEY,
+  BASESCAN_KEY,
   DETERMINISTIC_DEPLOYMENT,
   DETERMINISTIC_FACTORIES,
   ETHERSCAN_KEY,
@@ -8,6 +10,7 @@ import {
 } from './helpers/hardhat-config-helpers';
 import {
   eArbitrumNetwork,
+  eBaseNetwork,
   eAvalancheNetwork,
   eEthereumNetwork,
   eFantomNetwork,
@@ -24,6 +27,8 @@ import 'hardhat-contract-sizer';
 import 'hardhat-dependency-compiler';
 import 'hardhat-abi-exporter';
 import '@nomiclabs/hardhat-ethers';
+// @ts-ignore
+import { accounts } from './test-wallets.js';
 
 const SKIP_LOAD = process.env.SKIP_LOAD === 'true';
 const TASK_FOLDERS = ['misc', 'market-registry'];
@@ -56,20 +61,36 @@ export default {
           evmVersion: 'berlin',
         },
       },
-      {
+    ],
+    overrides: {
+      '@hopelend/core/contracts/protocol/pool/L2Pool.sol': {
         version: '0.8.17',
         settings: {
-          optimizer: { enabled: true, runs: 100_000 },
+          optimizer: { enabled: true, runs: 30_000 },
+          evmVersion: 'berlin',
         },
       },
-    ],
+      '@hopelend/core/contracts/mocks/helpers/MockL2Pool.sol': {
+        version: '0.8.17',
+        settings: {
+          optimizer: { enabled: true, runs: 30_000 },
+          evmVersion: 'berlin',
+        },
+      },
+    },
   },
   typechain: {
     outDir: 'typechain',
     target: 'ethers-v5',
   },
   networks: {
-    hardhat: hardhatNetworkSettings,
+    hardhat: {
+      ...hardhatNetworkSettings,
+      // accounts: accounts.map(({ secretKey, balance }: { secretKey: string; balance: string }) => ({
+      //   privateKey: secretKey,
+      //   balance,
+      // })),
+    },
     localhost: {
       url: 'http://127.0.0.1:8545',
       ...hardhatNetworkSettings,
@@ -81,11 +102,40 @@ export default {
     ropsten: getCommonNetworkConfig(eEthereumNetwork.ropsten, 3),
     [ePolygonNetwork.polygon]: getCommonNetworkConfig(ePolygonNetwork.polygon, 137),
     [ePolygonNetwork.mumbai]: getCommonNetworkConfig(ePolygonNetwork.mumbai, 80001),
-    arbitrum: getCommonNetworkConfig(eArbitrumNetwork.arbitrum, 42161),
-    [eArbitrumNetwork.arbitrumTestnet]: getCommonNetworkConfig(
-      eArbitrumNetwork.arbitrumTestnet,
-      421611
-    ),
+    arbitrum: {
+      ...getCommonNetworkConfig(eArbitrumNetwork.arbitrum, 42161),
+      verify: {
+        etherscan: {
+          apiKey: ARBISCAN_KEY,
+        },
+      },
+    },
+    [eArbitrumNetwork.arbitrumGoerli]: {
+      ...getCommonNetworkConfig(eArbitrumNetwork.arbitrumGoerli, 421613),
+      verify: {
+        etherscan: {
+          apiKey: ARBISCAN_KEY,
+        },
+      },
+    },
+    base: {
+      ...getCommonNetworkConfig(eBaseNetwork.base, 8453),
+      verify: {
+        etherscan: {
+          apiUrl: 'https://api.basescan.org',
+          apiKey: BASESCAN_KEY,
+        },
+      },
+    },
+    [eBaseNetwork.baseGoerli]: {
+      ...getCommonNetworkConfig(eBaseNetwork.baseGoerli, 84531),
+      verify: {
+        etherscan: {
+          apiUrl: 'https://api-goerli.basescan.org',
+          apiKey: BASESCAN_KEY,
+        },
+      },
+    },
     [eHarmonyNetwork.main]: getCommonNetworkConfig(eHarmonyNetwork.main, 1666600000),
     [eHarmonyNetwork.testnet]: getCommonNetworkConfig(eHarmonyNetwork.testnet, 1666700000),
     [eAvalancheNetwork.avalanche]: getCommonNetworkConfig(eAvalancheNetwork.avalanche, 43114),
@@ -96,7 +146,6 @@ export default {
     [eOptimismNetwork.main]: getCommonNetworkConfig(eOptimismNetwork.main, 10),
     [eEthereumNetwork.goerli]: getCommonNetworkConfig(eEthereumNetwork.goerli, 5),
     [eEthereumNetwork.sepolia]: getCommonNetworkConfig(eEthereumNetwork.sepolia, 11155111),
-    [eArbitrumNetwork.görliNitro]: getCommonNetworkConfig(eArbitrumNetwork.görliNitro, 421613),
   },
   namedAccounts: {
     ...DEFAULT_NAMED_ACCOUNTS,
@@ -150,6 +199,13 @@ export default {
       '@hopelend/core/contracts/dependencies/openzeppelin/contracts/IERC20Detailed.sol',
       '@hopelend/core/contracts/mocks/oracle/PriceOracle.sol',
       '@hopelend/core/contracts/mocks/tokens/MintableDelegationERC20.sol',
+      '@hopelend/core/contracts/protocol/tokenization/L2HToken.sol',
+      '@hopelend/core/contracts/protocol/tokenization/L2StableDebtToken.sol',
+      '@hopelend/core/contracts/protocol/tokenization/L2VariableDebtToken.sol',
+      '@hopelend/core/contracts/mocks/helpers/MockL2HToken.sol',
+      '@hopelend/core/contracts/mocks/helpers/MockL2VariableDebtToken.sol',
+      '@hopelend/core/contracts/mocks/helpers/MockL2StableDebtToken.sol',
+      '@hopelend/core/contracts/protocol/configuration/PriceOracleSentinel.sol',
       '@hopelend/periphery/contracts/misc/UiPoolDataProvider.sol',
       '@hopelend/periphery/contracts/misc/WalletBalanceProvider.sol',
       '@hopelend/periphery/contracts/misc/WrappedTokenGateway.sol',
@@ -166,6 +222,32 @@ export default {
     },
   },
   etherscan: {
-    apiKey: ETHERSCAN_KEY,
+    apiKey: {
+      mainnet: ETHERSCAN_KEY,
+      sepolia: ETHERSCAN_KEY,
+      goerli: ETHERSCAN_KEY,
+      arbitrumOne: ARBISCAN_KEY,
+      arbitrumGoerli: ARBISCAN_KEY,
+      base: BASESCAN_KEY,
+      baseGoerli: BASESCAN_KEY,
+    },
+    customChains: [
+      {
+        network: 'base',
+        chainId: 8453,
+        urls: {
+          apiURL: 'https://api.basescan.org/api',
+          browserURL: 'https://basescan.org/',
+        },
+      },
+      {
+        network: 'baseGoerli',
+        chainId: 84531,
+        urls: {
+          apiURL: 'https://api-goerli.basescan.org/api',
+          browserURL: 'https://goerli.basescan.org',
+        },
+      },
+    ],
   },
 };

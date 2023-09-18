@@ -39,7 +39,7 @@ export const CommonsConfig: ICommonConfiguration = {
       // Note: EUR/USD, not EURS dedicated oracle
       EURS: '0xb49f677943BC038e9857d61E7d053CaA2C1734C1',
     },
-    [eArbitrumNetwork.arbitrumTestnet]: {
+    [eArbitrumNetwork.arbitrumGoerli]: {
       LINK: '0x52C9Eb2Cc68555357221CAe1e5f2dD956bC194E5',
       USDC: '0xe020609A0C31f4F96dCBB8DF9882218952dD95c4',
       DAI: '0xcAE7d280828cf4a0869b26341155E4E9b864C7b2',
@@ -61,14 +61,14 @@ export const CommonsConfig: ICommonConfiguration = {
   ReserveFactorTreasuryAddress: {
     [eEthereumNetwork.kovan]: '0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c',
     [eEthereumNetwork.main]: '0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c',
-    [eArbitrumNetwork.arbitrumTestnet]: '0xeC67987831C4278160D8e652d3edb0Fc45B3766d',
+    [eArbitrumNetwork.arbitrumGoerli]: '0xeC67987831C4278160D8e652d3edb0Fc45B3766d',
     [eEthereumNetwork.rinkeby]: ZERO_ADDRESS,
   },
   FallbackOracle: {
     [eEthereumNetwork.kovan]: '0x50913E8E1c650E790F8a1E741FF9B1B1bB251dfe',
     [eEthereumNetwork.main]: '0x5b09e578cfeaa23f1b11127a658855434e4f3e09',
     [eArbitrumNetwork.arbitrum]: ZERO_ADDRESS,
-    [eArbitrumNetwork.arbitrumTestnet]: ZERO_ADDRESS,
+    [eArbitrumNetwork.arbitrumGoerli]: ZERO_ADDRESS,
     [eEthereumNetwork.rinkeby]: ZERO_ADDRESS,
   },
   ReservesConfig: {},
@@ -82,6 +82,7 @@ export const CommonsConfig: ICommonConfiguration = {
       assets: ['USDC', 'DAI'],
     },
   },
+  L2PoolEnabled: {},
   FlashLoanPremiums: {
     total: 0.0009e4,
     protocol: 0,

@@ -13,6 +13,7 @@ import {
   getFallbackOracleAddress,
   getReserveAddresses,
   isProductionMarket,
+  isUnitTestEnv,
   loadPoolConfig,
 } from '../../helpers/market-config-helpers';
 import { eEthereumNetwork, eNetwork } from '../../helpers/types';
@@ -50,8 +51,10 @@ const func: DeployFunction = async function ({
   )) as HopeOracle;
 
   // 2. Set AssetSources
-  console.log(`[Deployment] Waiting for new blocks to be generated...`);
-  await new Promise((res) => setTimeout(() => res(null), 15000));
+  if (!isUnitTestEnv()) {
+    console.log(`[Deployment] Waiting for new blocks to be generated...`);
+    await new Promise((res) => setTimeout(() => res(null), 15000));
+  }
   const reserveAssets = await getReserveAddresses(poolConfig, network);
   const chainlinkAggregators = await getChainlinkOracles(poolConfig, network);
   const [assets, sources] = getPairsTokenAggregator(reserveAssets, chainlinkAggregators);

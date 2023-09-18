@@ -11,6 +11,7 @@ import {
   eAvalancheNetwork,
   eFantomNetwork,
   eOptimismNetwork,
+  eBaseNetwork,
 } from './types';
 
 require('dotenv').config();
@@ -79,7 +80,11 @@ export const NETWORKS_RPC_URL: iParamsPerNetwork<string> = {
   [eArbitrumNetwork.arbitrum]: `https://arbitrum-mainnet.infura.io/v3/${getInfuraKey(
     eArbitrumNetwork.arbitrum
   )}`,
-  [eArbitrumNetwork.arbitrumTestnet]: `https://rinkeby.arbitrum.io/rpc`,
+  [eArbitrumNetwork.arbitrumGoerli]: `https://arbitrum-goerli.infura.io/v3/${getInfuraKey(
+    eArbitrumNetwork.arbitrum
+  )}`,
+  [eBaseNetwork.base]: `https://mainnet.base.org`,
+  [eBaseNetwork.baseGoerli]: `https://goerli.base.org`,
   [eEthereumNetwork.rinkeby]: `https://eth-rinkeby.alchemyapi.io/v2/${getAlchemyKey(
     eEthereumNetwork.rinkeby
   )}`,
@@ -99,7 +104,6 @@ export const NETWORKS_RPC_URL: iParamsPerNetwork<string> = {
   [eEthereumNetwork.sepolia]: `https://sepolia.infura.io/v3/${getInfuraKey(
     eEthereumNetwork.sepolia
   )}`,
-  [eArbitrumNetwork.görliNitro]: `https://goerli-rollup.arbitrum.io/rpc`,
 };
 
 export const LIVE_NETWORKS: iParamsPerNetwork<boolean> = {
@@ -108,6 +112,9 @@ export const LIVE_NETWORKS: iParamsPerNetwork<boolean> = {
   [eEthereumNetwork.main]: true,
   [ePolygonNetwork.polygon]: true,
   [eArbitrumNetwork.arbitrum]: true,
+  [eArbitrumNetwork.arbitrumGoerli]: true,
+  [eBaseNetwork.base]: true,
+  [eBaseNetwork.baseGoerli]: true,
   [eHarmonyNetwork.main]: true,
   [eAvalancheNetwork.avalanche]: true,
   [eFantomNetwork.main]: true,
@@ -115,7 +122,8 @@ export const LIVE_NETWORKS: iParamsPerNetwork<boolean> = {
 };
 
 const GAS_PRICE_PER_NET: iParamsPerNetwork<string | number> = {
-  [eArbitrumNetwork.görliNitro]: 100000001,
+  [eArbitrumNetwork.arbitrumGoerli]: 100000001,
+  [eBaseNetwork.baseGoerli]: 10000000,
 };
 
 export const buildForkConfig = (): HardhatNetworkForkingUserConfig | undefined => {
@@ -167,7 +175,7 @@ const MNEMONICS: iParamsPerNetwork<string> = {
   [eAvalancheNetwork.fuji]: process.env.FUJI_MNEMONIC,
   [eFantomNetwork.testnet]: process.env.FANTOM_MNEMONIC,
   [eHarmonyNetwork.testnet]: process.env.HARMONY_MNEMONIC,
-  [eArbitrumNetwork.arbitrumTestnet]: process.env.ARBITRUM_MNEMONIC,
+  [eArbitrumNetwork.arbitrumGoerli]: process.env.ARBITRUM_MNEMONIC,
   [ePolygonNetwork.mumbai]: process.env.POLYGON_MUMBAI_MNEMONIC,
   [ePolygonNetwork.polygon]: process.env.POLYGON_MNEMONIC,
 };
@@ -258,3 +266,7 @@ export const DETERMINISTIC_DEPLOYMENT = process.env.DETERMINISTIC_DEPLOYMENT
   : null;
 
 export const ETHERSCAN_KEY = process.env.ETHERSCAN_KEY || '';
+
+export const ARBISCAN_KEY = process.env.ARBISCAN_KEY || '';
+
+export const BASESCAN_KEY = process.env.BASESCAN_KEY || '';

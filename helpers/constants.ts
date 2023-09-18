@@ -2,6 +2,7 @@ import { parseEther, parseUnits } from 'ethers/lib/utils';
 import {
   eArbitrumNetwork,
   eAvalancheNetwork,
+  eBaseNetwork,
   eEthereumNetwork,
   eFantomNetwork,
   eHarmonyNetwork,
@@ -40,7 +41,9 @@ export const WRAPPED_NATIVE_TOKEN_PER_NETWORK: { [network: string]: string } = {
   [eEthereumNetwork.kovan]: ZERO_ADDRESS,
   [eEthereumNetwork.main]: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
   [eArbitrumNetwork.arbitrum]: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
-  [eArbitrumNetwork.arbitrumTestnet]: '0x8592a357252606f5cA2897BD4f500201F7245C28',
+  [eArbitrumNetwork.arbitrumGoerli]: '0x8592a357252606f5cA2897BD4f500201F7245C28',
+  [eBaseNetwork.base]: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
+  [eBaseNetwork.baseGoerli]: '0x8592a357252606f5cA2897BD4f500201F7245C28',
   [eOptimismNetwork.main]: '0x4200000000000000000000000000000000000006',
   [eAvalancheNetwork.avalanche]: '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7',
   [eFantomNetwork.main]: '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83',
@@ -88,7 +91,7 @@ export const chainlinkAggregatorProxy: Record<string, string> = {
   fuji: '0x5498BB86BC934c8D34FDA08E81D444153d0D06aD',
   tenderly: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419',
   arbitrum: '0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612',
-  'arbitrum-testnet': '0x5f0423B1a6935dc5596e7A24d98532b67A0AeFd8',
+  [eArbitrumNetwork.arbitrumGoerli]: '0x5f0423B1a6935dc5596e7A24d98532b67A0AeFd8',
   rinkeby: '0x8A753747A1Fa494EC906cE90E9f37563A8AF630e',
   harmony: '0xdCD81FbbD6c4572A69a534D8b8152c562dA8AbEF',
   optimism: '0xA969bEB73d918f6100163Cd0fba3C586C269bee1',
@@ -98,9 +101,10 @@ export const chainlinkAggregatorProxy: Record<string, string> = {
   'fantom-testnet': '0xe04676B9A9A2973BCb0D1478b5E1E9098BBB7f3D',
   ropsten: '0x12BAaa24D85A4A180F0d5ae67b6aCbDDD58968EA',
   görli: '0x60E4B131f0F219c72b0346675283E73888e4AB24',
-  [eArbitrumNetwork.görliNitro]: '0xC09e69E79106861dF5d289dA88349f10e2dc6b5C',
   sepolia: '0x694AA1769357215DE4FAC081bf1f309aDC325306',
   goerli: '0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e',
+  [eBaseNetwork.base]: '0xC09e69E79106861dF5d289dA88349f10e2dc6b5C',
+  [eBaseNetwork.baseGoerli]: '0xC09e69E79106861dF5d289dA88349f10e2dc6b5C',
 };
 
 export const chainlinkEthUsdAggregatorProxy: Record<string, string> = {
@@ -112,7 +116,7 @@ export const chainlinkEthUsdAggregatorProxy: Record<string, string> = {
   fuji: '0x86d67c3D38D2bCeE722E601025C25a575021c6EA',
   tenderly: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419',
   arbitrum: '0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612',
-  'arbitrum-testnet': '0x5f0423B1a6935dc5596e7A24d98532b67A0AeFd8',
+  [eArbitrumNetwork.arbitrumGoerli]: '0x5f0423B1a6935dc5596e7A24d98532b67A0AeFd8',
   rinkeby: '0x8A753747A1Fa494EC906cE90E9f37563A8AF630e',
   harmony: '0xbaf7C8149D586055ed02c286367A41E0aDA96b7C',
   optimism: '0xA969bEB73d918f6100163Cd0fba3C586C269bee1',
@@ -122,9 +126,10 @@ export const chainlinkEthUsdAggregatorProxy: Record<string, string> = {
   'fantom-testnet': '0xB8C458C957a6e6ca7Cc53eD95bEA548c52AFaA24',
   ropsten: '0x12BAaa24D85A4A180F0d5ae67b6aCbDDD58968EA',
   görli: '0x60E4B131f0F219c72b0346675283E73888e4AB24',
-  [eArbitrumNetwork.görliNitro]: '0xC09e69E79106861dF5d289dA88349f10e2dc6b5C',
   sepolia: '0x694AA1769357215DE4FAC081bf1f309aDC325306',
   goerli: '0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e',
+  [eBaseNetwork.base]: '0xC09e69E79106861dF5d289dA88349f10e2dc6b5C',
+  [eBaseNetwork.baseGoerli]: '0xC09e69E79106861dF5d289dA88349f10e2dc6b5C',
 };
 
 export const EMPTY_STORAGE_SLOT =
@@ -142,24 +147,38 @@ export const DEFAULT_NAMED_ACCOUNTS = {
   },
   emergencyAdmin: {
     default: 0,
+    [eArbitrumNetwork.arbitrumGoerli]: '0x3141f8D6BE4e4d9137577798C1e127Db81D196d7',
+    [eBaseNetwork.baseGoerli]: '0x3141f8D6BE4e4d9137577798C1e127Db81D196d7',
   },
   assetListingAdmin: {
     default: 0,
+    [eArbitrumNetwork.arbitrumGoerli]: '0x3141f8D6BE4e4d9137577798C1e127Db81D196d7',
+    [eBaseNetwork.baseGoerli]: '0x3141f8D6BE4e4d9137577798C1e127Db81D196d7',
   },
   riskAdmin: {
     default: 0,
+    [eArbitrumNetwork.arbitrumGoerli]: '0x3141f8D6BE4e4d9137577798C1e127Db81D196d7',
+    [eBaseNetwork.baseGoerli]: '0x3141f8D6BE4e4d9137577798C1e127Db81D196d7',
   },
   treasuryAdmin: {
     default: 0,
+    [eArbitrumNetwork.arbitrumGoerli]: '0x3141f8D6BE4e4d9137577798C1e127Db81D196d7',
+    [eBaseNetwork.baseGoerli]: '0x3141f8D6BE4e4d9137577798C1e127Db81D196d7',
   },
   operator: {
     default: 0,
+    [eArbitrumNetwork.arbitrumGoerli]: '0x3141f8D6BE4e4d9137577798C1e127Db81D196d7',
+    [eBaseNetwork.baseGoerli]: '0x3141f8D6BE4e4d9137577798C1e127Db81D196d7',
   },
   gatewayOwner: {
     default: 0,
+    [eArbitrumNetwork.arbitrumGoerli]: '0x3141f8D6BE4e4d9137577798C1e127Db81D196d7',
+    [eBaseNetwork.baseGoerli]: '0x3141f8D6BE4e4d9137577798C1e127Db81D196d7',
   },
   flashBorrower: {
     default: 0,
+    [eArbitrumNetwork.arbitrumGoerli]: '0x3141f8D6BE4e4d9137577798C1e127Db81D196d7',
+    [eBaseNetwork.baseGoerli]: '0x3141f8D6BE4e4d9137577798C1e127Db81D196d7',
   },
 };
 
@@ -172,6 +191,9 @@ export const MULTISIG_ADDRESS: { [key: string]: string } = {
   [eEthereumNetwork.goerli]: '0xc6C1eF70746F6Bed0A43C912B2B2047f25d3eA87',
   [eEthereumNetwork.main]: '0xC2D0108307Ff76eBb0ea05B78567b5eAF5AC7830',
   [eArbitrumNetwork.arbitrum]: '0xbbd9f90699c1FA0D7A65870D241DD1f1217c96Eb',
+  [eArbitrumNetwork.arbitrumGoerli]: '0xbbd9f90699c1FA0D7A65870D241DD1f1217c96Eb',
+  [eBaseNetwork.base]: '0xbbd9f90699c1FA0D7A65870D241DD1f1217c96Eb',
+  [eBaseNetwork.baseGoerli]: '0xbbd9f90699c1FA0D7A65870D241DD1f1217c96Eb',
   [eAvalancheNetwork.avalanche]: '0xa35b76E4935449E33C56aB24b23fcd3246f13470',
   [eFantomNetwork.main]: '0x39CB97b105173b56b5a2b4b33AD25d6a50E6c949',
   [eHarmonyNetwork.main]: '0xb2f0C5f37f4beD2cB51C44653cD5D84866BDcd2D',
@@ -182,8 +204,12 @@ export const MULTISIG_ADDRESS: { [key: string]: string } = {
 
 export const MULTISIG_ACL_ADMIN_ADDRESS: { [key: string]: string } = {
   [eEthereumNetwork.goerli]: '0xc6C1eF70746F6Bed0A43C912B2B2047f25d3eA87',
+  [eArbitrumNetwork.arbitrumGoerli]: '0x3141f8D6BE4e4d9137577798C1e127Db81D196d7',
+  [eBaseNetwork.baseGoerli]: '0x3141f8D6BE4e4d9137577798C1e127Db81D196d7',
 };
 
 export const MULTISIG_POOL_ADMIN_ADDRESS: { [key: string]: string } = {
   [eEthereumNetwork.goerli]: '0xc6C1eF70746F6Bed0A43C912B2B2047f25d3eA87',
+  [eArbitrumNetwork.arbitrumGoerli]: '0x3141f8D6BE4e4d9137577798C1e127Db81D196d7',
+  [eBaseNetwork.baseGoerli]: '0x3141f8D6BE4e4d9137577798C1e127Db81D196d7',
 };

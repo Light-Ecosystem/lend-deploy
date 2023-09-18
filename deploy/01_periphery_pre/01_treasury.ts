@@ -70,12 +70,12 @@ const func: DeployFunction = async function ({
   ]);
 
   let proxyAdminAddress;
-  if(hre.network.name == "hardhat") {
+  if (hre.network.name == 'hardhat') {
     proxyAdminAddress = deployer;
   } else {
     proxyAdminAddress = await getProxyAdminAddress(poolConfig, network);
   }
-  
+
   await waitForTx(
     await proxy['initialize(address,address,bytes)'](
       treasuryImplArtifact.address,

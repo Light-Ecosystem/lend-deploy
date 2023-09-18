@@ -1,4 +1,11 @@
-import { MockHopeLendEcosystemReserveV2, MockL2Pool, MockPoolV2 } from './../typechain';
+import {
+  MockHopeLendEcosystemReserveV2,
+  MockL2HToken,
+  MockL2Pool,
+  MockL2StableDebtToken,
+  MockL2VariableDebtToken,
+  MockPoolV2,
+} from './../typechain';
 import { EMPTY_STORAGE_SLOT, ZERO_ADDRESS } from './constants';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { getPoolLibraries } from './contract-getters';
@@ -195,6 +202,38 @@ export const deployMockHToken = async (
   const instance = await deployContract<MockHToken>('MockHToken', [args[0]]);
 
   await instance.initialize(args[0], args[2], args[1], '18', args[3], args[4], args[5]);
+
+  return instance;
+};
+
+export const deployMockL2HToken = async (
+  args: [tEthereumAddress, tEthereumAddress, tEthereumAddress, string, string, string]
+) => {
+  const instance = await deployContract<MockL2HToken>('MockL2HToken', [args[0]]);
+
+  await instance.initialize(args[0], args[2], args[1], '18', args[3], args[4], args[5]);
+
+  return instance;
+};
+
+export const deployMockL2VariableDebtToken = async (
+  args: [tEthereumAddress, tEthereumAddress, string, string, string]
+) => {
+  const instance = await deployContract<MockL2VariableDebtToken>('MockL2VariableDebtToken', [
+    args[0],
+  ]);
+
+  await instance.initialize(args[0], args[1], '18', args[2], args[3], args[4]);
+
+  return instance;
+};
+
+export const deployMockL2StableDebtToken = async (
+  args: [tEthereumAddress, tEthereumAddress, string, string, string]
+) => {
+  const instance = await deployContract<MockL2StableDebtToken>('MockL2StableDebtToken', [args[0]]);
+
+  await instance.initialize(args[0], args[1], '18', args[2], args[3], args[4]);
 
   return instance;
 };

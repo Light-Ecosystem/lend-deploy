@@ -15,7 +15,7 @@
   "author": "HopeLend",
   "main": "dist/helpers/index.js",
   "devDependencies": {
-    "@hopelend/core": "^1.0.0",
+    "@hopelend/core": "file:../lend-core",
     "@hopelend/periphery": "^1.0.0",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.0",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
