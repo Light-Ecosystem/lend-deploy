@@ -36,7 +36,7 @@ const func: DeployFunction = async function ({
   const addressesProviderArtifact = await deployments.get(POOL_ADDRESSES_PROVIDER_ID);
 
   const sequencerOracleAddress = await getSequencerOracleAddress(poolConfig, network);
-  const gracePeriod = poolConfig.gracePeriod;
+  const gracePeriod = poolConfig.GracePeriod;
 
   if (sequencerOracleAddress == '' || !gracePeriod || gracePeriod == '') {
     console.log('[ERROR] SequencerOracle or GracePeriod not config');

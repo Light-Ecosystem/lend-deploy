@@ -77,7 +77,6 @@ export const CommonsConfig: ICommonConfiguration = {
   },
   ReserveFactorTreasuryAddress: {
     [eEthereumNetwork.kovan]: '0x464c71f6c2f760dda6093dcb91c24c39e5d6e18c',
-    [eArbitrumNetwork.arbitrumGoerli]: '0xeC67987831C4278160D8e652d3edb0Fc45B3766d',
     [eEthereumNetwork.rinkeby]: ZERO_ADDRESS,
   },
   FallbackOracle: {
@@ -86,16 +85,18 @@ export const CommonsConfig: ICommonConfiguration = {
     [eEthereumNetwork.kovan]: '0x50913E8E1c650E790F8a1E741FF9B1B1bB251dfe',
     [eEthereumNetwork.main]: '0xdFc3d796E16fEDC97e9b843BA4F1c8E5E762F867',
     [eArbitrumNetwork.arbitrum]: ZERO_ADDRESS,
-    [eArbitrumNetwork.arbitrumGoerli]: ZERO_ADDRESS,
+    [eArbitrumNetwork.arbitrumGoerli]: '0x670ED9fDdaccc790e422BCC9A4596e8dd69f29b7',
+    [eBaseNetwork.base]: ZERO_ADDRESS,
+    [eBaseNetwork.baseGoerli]: ZERO_ADDRESS,
     [eEthereumNetwork.rinkeby]: ZERO_ADDRESS,
   },
   SequencerOracle: {
     [eArbitrumNetwork.arbitrum]: '0xFdB631F5EE196F0ed6FAa767959853A9F217697D',
-    [eArbitrumNetwork.arbitrumGoerli]: '0x4da69F028a5790fCCAfe81a75C0D24f46ceCDd69',
+    [eArbitrumNetwork.arbitrumGoerli]: '0xefD8AF75161aB0540D641D30C2e4D2FE8b0f3AC1',
     [eBaseNetwork.base]: '0xBCF85224fc0756B9Fa45aA7892530B47e10b6433',
-    [eBaseNetwork.baseGoerli]: '',
+    [eBaseNetwork.baseGoerli]: '0xefD8AF75161aB0540D641D30C2e4D2FE8b0f3AC1',
   },
-  gracePeriod: '3600',
+  GracePeriod: '3600',
   ReservesConfig: {},
   EModes: {
     // StableEMode: {
@@ -132,26 +133,28 @@ export const CommonsConfig: ICommonConfiguration = {
     [eEthereumNetwork.sepolia]: '0xeaB3D0eb85A6052C278Ea1FB7Ed5e699e97B650E',
     [eEthereumNetwork.goerli]: '0xf38F371b16Aa1e3396A64BC03e4995C9B67fb3F3',
     [eEthereumNetwork.main]: '0x94aFb2C17af24cFAcf19f364628F459dfAB2688f',
-    [eArbitrumNetwork.arbitrum]: '0x94aFb2C17af24cFAcf19f364628F459dfAB2688f',
   },
   VotingEscrowAddress: {
     [eEthereumNetwork.sepolia]: '0x061a7D9E2D8332c0ddb56Af639778aA85A09F71C',
     [eEthereumNetwork.goerli]: '0xD4729aCC86d55925f92d79AEDD50D7B82Ff7eb9A',
     [eEthereumNetwork.main]: '0xe909f37F3003fa37AAd83C1baf2A98E5a7b67400',
-    [eArbitrumNetwork.arbitrum]: '0x94aFb2C17af24cFAcf19f364628F459dfAB2688f',
   },
   FeeToVaultAddress: {
     [eEthereumNetwork.sepolia]: '0x8b0e0f46Fc96F31a2219feBF599A644d7b096B5c',
     [eEthereumNetwork.goerli]: '0xf8b4976f87Ee3aCd23d4E946C2635A7C8985a259',
     [eEthereumNetwork.main]: '0x93b70B66ce507f49790390F07955940030475cd1',
     [eArbitrumNetwork.arbitrum]: '0x94aFb2C17af24cFAcf19f364628F459dfAB2688f',
-    [eArbitrumNetwork.arbitrumGoerli]: '0x94aFb2C17af24cFAcf19f364628F459dfAB2688f',
+    [eArbitrumNetwork.arbitrumGoerli]: '0x76DCA359C309B17ad7918389837535cE6d3C3610',
+    [eBaseNetwork.base]: '0x94aFb2C17af24cFAcf19f364628F459dfAB2688f',
+    [eBaseNetwork.baseGoerli]: '0x76DCA359C309B17ad7918389837535cE6d3C3610',
   },
   ProxyAdminAddress: {
     [eEthereumNetwork.sepolia]: '0xC4f5Ecc8d241C9639efAb2252207DC3c9e4f7690',
     [eEthereumNetwork.goerli]: '0xBED762ED11C5Deab70Ec9C3c037Ca1b195B8F8aF',
     [eEthereumNetwork.main]: '0xcc0f986021010D4A3345CCA903BF5487AEa3bd39',
     [eArbitrumNetwork.arbitrum]: '0x94aFb2C17af24cFAcf19f364628F459dfAB2688f',
-    [eArbitrumNetwork.arbitrumGoerli]: '0x94aFb2C17af24cFAcf19f364628F459dfAB2688f',
+    [eArbitrumNetwork.arbitrumGoerli]: '0x52E945c241ba97160b8Df28FD2917Dd8d8b2B1d9',
+    [eBaseNetwork.base]: '0x94aFb2C17af24cFAcf19f364628F459dfAB2688f',
+    [eBaseNetwork.baseGoerli]: '0x52E945c241ba97160b8Df28FD2917Dd8d8b2B1d9',
   },
 };

@@ -102,7 +102,7 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
     }
 
     const poolAddressesProviderRegistry = await getPoolAddressesProviderRegistry();
-    const gaugeFactory = await getGaugeFactory();
+    // const gaugeFactory = await getGaugeFactory();
     const aclManager = (await getACLManager(await poolAddressesProvider.getACLManager())).connect(
       aclSigner
     );
@@ -181,11 +181,11 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
           : 'REVOKED',
         assert: !(await aclManager.hasRole(hre.ethers.constants.HashZero, deployer)),
       },
-      {
-        role: 'FlashBorrower is contract',
-        address: (await aclManager.isFlashBorrower(flashBorrower)) ? flashBorrower : ZERO_ADDRESS,
-        assert: await aclManager.isFlashBorrower(flashBorrower),
-      },
+      // {
+      //   role: 'FlashBorrower is contract',
+      //   address: (await aclManager.isFlashBorrower(flashBorrower)) ? flashBorrower : ZERO_ADDRESS,
+      //   assert: await aclManager.isFlashBorrower(flashBorrower),
+      // },
       {
         role: 'PoolAdmin is multisig',
         address: (await aclManager.isPoolAdmin(desiredPoolAdminMultisig))
@@ -222,11 +222,11 @@ task(`view-protocol-roles`, `View current admin of each role and contract`).setA
         address: await getProxyAdminBySlot(treasuryProxy.address),
         assert: (await getProxyAdminBySlot(treasuryProxy.address)) === proxyAdminAddress,
       },
-      {
-        role: 'GaugeFactory operator',
-        address: (await gaugeFactory.isOperator(operator)) ? operator : ZERO_ADDRESS,
-        assert: await gaugeFactory.isOperator(operator),
-      },
+      // {
+      //   role: 'GaugeFactory operator',
+      //   address: (await gaugeFactory.isOperator(operator)) ? operator : ZERO_ADDRESS,
+      //   assert: await gaugeFactory.isOperator(operator),
+      // },
     ];
 
     console.table(result);

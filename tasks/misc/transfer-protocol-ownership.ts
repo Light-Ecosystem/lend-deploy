@@ -49,7 +49,6 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
       );
       exit(403);
     }
-
     console.log('--- CURRENT DEPLOYER ADDRESSES ---');
     console.table({
       poolAdmin,
@@ -71,7 +70,7 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
 
     const poolAddressesProvider = await getPoolAddressesProvider();
     const poolAddressesProviderRegistry = await getPoolAddressesProviderRegistry();
-    const gaugeFactory = await getGaugeFactory();
+    // const gaugeFactory = await getGaugeFactory();
     const wrappedGateway = await getWrappedTokenGateway();
     const treasuryController = await getTreasuryController();
     const reservesSetupHelper = await getReservesSetupHelper();
@@ -94,21 +93,23 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
     }
 
     // Setup flashBorrower
-    const isFlashBorrower = await aclManager.isFlashBorrower(flashBorrower);
-    if (!isFlashBorrower && getAddress(flashBorrower) !== getAddress(ZERO_ADDRESS)) {
-      await waitForTx(await aclManager.addFlashBorrower(flashBorrower));
-      console.log(`- Setup FlashBorrower (${flashBorrower}) successful`);
+    if (flashBorrower) {
+      const isFlashBorrower = await aclManager.isFlashBorrower(flashBorrower);
+      if (!isFlashBorrower && getAddress(flashBorrower) !== getAddress(ZERO_ADDRESS)) {
+        await waitForTx(await aclManager.addFlashBorrower(flashBorrower));
+        console.log(`- Setup FlashBorrower (${flashBorrower}) successful`);
+      }
     }
 
     /** Start of grant operator to GaugeFactory */
-    const isDeployerOperatorAtGaugeFactory = await gaugeFactory.isOperator(deployer);
-    if (isDeployerOperatorAtGaugeFactory) {
-      console.log('- Transferring the OPERATOR_ROLE to the operator address');
-      await waitForTx(await gaugeFactory.addOperator(operator));
-      console.log('- Revoking deployer as OPERATOR_ROLE to the operator address');
-      await waitForTx(await gaugeFactory.removeOperator(deployer));
-      console.log('- Revoked OPERATOR_ROLE to deployer');
-    }
+    // const isDeployerOperatorAtGaugeFactory = await gaugeFactory.isOperator(deployer);
+    // if (isDeployerOperatorAtGaugeFactory) {
+    //   console.log('- Transferring the OPERATOR_ROLE to the operator address');
+    //   await waitForTx(await gaugeFactory.addOperator(operator));
+    //   console.log('- Revoking deployer as OPERATOR_ROLE to the operator address');
+    //   await waitForTx(await gaugeFactory.removeOperator(deployer));
+    //   console.log('- Revoked OPERATOR_ROLE to deployer');
+    // }
     /** End of grant operator to GaugeFactory */
 
     /** Start of Emergency Admin transfer */
@@ -206,11 +207,11 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
           : poolAdmin,
         assert: await aclManager.isPoolAdmin(desiredPoolAdminMultisig),
       },
-      {
-        role: 'FlashBorrower',
-        address: (await aclManager.isFlashBorrower(flashBorrower)) ? flashBorrower : ZERO_ADDRESS,
-        assert: await aclManager.isFlashBorrower(flashBorrower),
-      },
+      // {
+      //   role: 'FlashBorrower',
+      //   address: (await aclManager.isFlashBorrower(flashBorrower)) ? flashBorrower : ZERO_ADDRESS,
+      //   assert: await aclManager.isFlashBorrower(flashBorrower),
+      // },
       {
         role: 'PoolAddressesProvider owner',
         address: await poolAddressesProvider.owner(),
@@ -223,11 +224,11 @@ task(`transfer-protocol-ownership`, `Transfer the ownership of protocol from dep
         pendingOwnerAddress: await poolAddressesProviderRegistry.pendingOwner(),
         assert: (await poolAddressesProviderRegistry.pendingOwner()) === desiredMultisig,
       },
-      {
-        role: 'GaugeFactory operator',
-        address: (await gaugeFactory.isOperator(operator)) ? operator : ZERO_ADDRESS,
-        assert: await gaugeFactory.isOperator(operator),
-      },
+      // {
+      //   role: 'GaugeFactory operator',
+      //   address: (await gaugeFactory.isOperator(operator)) ? operator : ZERO_ADDRESS,
+      //   assert: await gaugeFactory.isOperator(operator),
+      // },
       {
         role: 'WrappedTokenGateway owner',
         address: await wrappedGateway.owner(),

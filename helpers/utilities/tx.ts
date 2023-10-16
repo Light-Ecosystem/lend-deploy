@@ -54,14 +54,12 @@ export const fillNonceTransaction = async (transactionCount: number) => {
   console.log(`[Transaction] Send ${transactionCount} empty transaction`);
   for (let i = 0; i < transactionCount; i++) {
     const nonce = await signer.getTransactionCount();
-    const emptyTransaction = {
-      nonce: nonce,
-      gasLimit: 21000,
+    const tx = await hre.deployments.rawTx({
+      from: signer.address,
       to: signer.address,
-      value: 0,
-    };
-
-    await waitForTx(await signer.sendTransaction(emptyTransaction));
+      data: '0x',
+    });
+    console.log(`[Transaction] Nonce ${nonce} TxHash: ${tx.transactionHash}`);
   }
 };
 

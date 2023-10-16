@@ -198,6 +198,7 @@ export default {
       '@hopelend/core/contracts/mocks/helpers/MockL2Pool.sol',
       '@hopelend/core/contracts/dependencies/openzeppelin/contracts/IERC20Detailed.sol',
       '@hopelend/core/contracts/mocks/oracle/PriceOracle.sol',
+      '@hopelend/core/contracts/mocks/oracle/SequencerOracle.sol',
       '@hopelend/core/contracts/mocks/tokens/MintableDelegationERC20.sol',
       '@hopelend/core/contracts/protocol/tokenization/L2HToken.sol',
       '@hopelend/core/contracts/protocol/tokenization/L2StableDebtToken.sol',

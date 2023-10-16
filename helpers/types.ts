@@ -516,7 +516,7 @@ export interface IBaseConfiguration {
   ProviderRegistryOwner?: iParamsPerNetwork<tEthereumAddress | undefined>;
   FallbackOracle?: iParamsPerNetwork<tEthereumAddress>;
   SequencerOracle?: iParamsPerNetwork<tEthereumAddress>;
-  gracePeriod?: string;
+  GracePeriod?: string;
   ChainlinkAggregator: iParamsPerNetwork<ITokenAddress>;
   WrappedTokenGateway?: iParamsPerNetwork<tEthereumAddress>;
   ReserveFactorTreasuryAddress: iParamsPerNetwork<tEthereumAddress>;
